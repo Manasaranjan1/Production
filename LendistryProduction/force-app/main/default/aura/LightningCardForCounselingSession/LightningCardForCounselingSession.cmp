@@ -1,0 +1,52 @@
+<aura:component controller = "CounsellorlListcontroller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="recordId" type="String" />
+    
+    <lightning:card iconName="standard:user" title="Counseling Session">     
+        <div class="slds-p-left_large slds-p-right_medium">          
+            <lightning:recordEditForm 
+                                      recordId="{!v.recordId}"
+                                      objectApiName="Counseling_Session__c"
+                                      density="comfy"
+                                      >                  
+                <div class="slds-grid">
+                    
+                    <div  class="slds-col slds-size_1-of-2 slds-p-around_medium textInput"> 
+                         <!-- <lightning:OutputField  fieldName="Name" />-->
+                         <lightning:recordForm
+                                      recordId="{!v.recordId}"
+                                      objectApiName="Counseling_Session__c"
+                                      fields="Name"
+                                      density="comfy"
+                                                        mode="View"/>
+                    </div>
+                    <div  class="slds-col slds-size_1-of-2 slds-p-around_medium">
+                        <lightning:OutputField fieldName="LeadFormula__c" />
+                    </div>
+                </div>
+                <div class="slds-grid">
+                    
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_medium">
+                         <lightning:recordForm
+                                      recordId="{!v.recordId}"
+                                      objectApiName="Counseling_Session__c"
+                                      fields="Note__c"
+                                      density="comfy"
+                                                        mode="View"/>
+
+                        <!--<lightning:InputField fieldName="Note__c" />-->
+                        
+                    </div>
+                    <div class="slds-col slds-size_1-of-2 slds-p-around_medium"> 
+                        <!-- <lightning:OutputField fieldName="is_intrested_in_financing__c" />-->
+                         <lightning:recordForm
+                                      recordId="{!v.recordId}"
+                                      objectApiName="Counseling_Session__c"
+                                      fields="is_intrested_in_financing__c"
+                                      density="comfy"
+                                                        mode="View"/>
+                    </div>   
+                </div>
+            </lightning:recordEditForm>
+        </div>
+    </lightning:card>              
+</aura:component>

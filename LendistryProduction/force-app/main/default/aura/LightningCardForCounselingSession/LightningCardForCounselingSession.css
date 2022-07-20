@@ -1,0 +1,29 @@
+.THIS .slds-card__header  {
+    background-color: #070A8C;
+    color: #EAEEF3;
+    font-family: Poppins;
+}
+.THIS .slds-form-element__static{
+    width: 152px !important;
+}
+.THIS .slds-text-heading_small{
+    margin-bottom: 6px;
+}
+.THIS .slds-media__figure {
+   margin-bottom: 6px;
+}
+.THIS .slds-has-flexi-truncate {
+    flex: 1 1 0%;
+    min-width: 0;
+   
+}
+.THIS .slds-m-left_large{
+        padding-left: 90%;
+}
+.THIS span.slds-form-element__label {
+    font-size: medium;
+}
+.THIS .textInput{
+    color: #00008B;
+    
+}

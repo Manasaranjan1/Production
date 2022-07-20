@@ -1,0 +1,45 @@
+<aura:component controller="DisclosureController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="items" type="Object"/>
+    <aura:attribute name="hideSpinner" type="Boolean" default="true" description="shoe hide spinner"/>
+    <aura:attribute name="recordId" type="String" />   
+    <aura:handler name="init" value="{!this}" action="{!c.initData}"/>
+    <aura:handler name="disEvent" event="c:DisclosureEvent" action="{!c.initData}"/>
+    <aura:If isTrue="{!v.hideSpinner}">
+        <div class="slds-spinner_container" >
+            <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+                <span class="slds-assistive-text">Loading, Please Wait...</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>      
+    </aura:If>  
+    <html>
+        
+        <div >
+            <table class="slds-table slds-table--bordered" >
+                
+                <thead >
+                    <tr class="slds-text-heading--label" >
+                        <th   scope="col" style="background-color: lightgray;color:dimgray;font-family: Poppins;"  class="pointerCss slds-is-sortable slds-text-title--caps" >
+                            <div class="slds-truncate a"  title=""  >Question </div>
+                        </th>
+                        
+                        <th   scope="col" style="background-color: lightgray;color:dimgray;font-family: Poppins;"  class="pointerCss slds-is-sortable slds-text-title--caps">
+                            <div class="slds-truncate a"  title=""  > Answer</div>
+                        </th>
+                        <th   scope="col" style="background-color: lightgray;color:dimgray;font-family: Poppins;"  class="pointerCss slds-is-sortable slds-text-title--caps">
+                            <div class="slds-truncate a"  title=""  >Action</div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:DatDisplayCmp mydata="{!v.items}" hideSpinner="{!v.hideSpinner}" recordId="{!v.recordId}"/>
+                </tbody>
+                
+            </table>
+           
+        </div>
+        
+    </html>
+    
+</aura:component>

@@ -1,0 +1,49 @@
+<aura:component controller ="contactsLeadController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+   
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.initData}"/>
+     <!-- Attributes declaration--> 
+    <aura:attribute name="wrapperData" type="list"/>
+    <aura:attribute name="recordId" type="Id" />
+    <lightning:card title="Leads"  iconName="standard:lead" class="slds-card slds-text-heading_small slds-card_boundary">
+    <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+        <thead>
+            <tr class="slds-line-height_reset">
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="Lead Name">Lead Name</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="Contact Name">Contact Name</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="Lead Status">Lead Status</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="Created Date">Created Date</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.wrapperData}" var="each">
+                <tr class="slds-hint-parent">
+                    <th scope="row" data-label="Lead Name">
+                        <div class="slds-truncate" title="{!each.LeadName}"> <ui:outputURL aura:id="{!each.LeadId}" value="{!'/'+each.LeadId}"  label="{!each.LeadName}" target="_blank"/> </div>
+                        
+                    </th>
+                    <th scope="row" data-label="Contact Name">
+                        <div class="slds-truncate" title="{!each.ContactName}"> <ui:outputURL aura:id="{!each.ContactId}" value="{!'/'+each.ContactId}"  label="{!each.ContactName}" target="_blank"/></div>
+                        
+                    </th>
+                    <td data-label="Created Date">
+                        <div class="slds-truncate" title="{!each.LeadStatus}">{!each.LeadStatus}</div>
+                    </td>
+                    <td data-label="Created Date">
+                        <div class="slds-truncate" title="{!each.LeadName}">{!each.CreatedDate}</div>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+    </lightning:card>
+</aura:component>

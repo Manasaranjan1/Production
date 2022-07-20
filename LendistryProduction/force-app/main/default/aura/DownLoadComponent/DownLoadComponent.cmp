@@ -1,0 +1,138 @@
+<aura:component controller="counselloeListViewController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="selectedDocumentId" type="string"/>hasPreviewOpen
+    <aura:attribute name="hasModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="hasPreviewOpen" type="boolean" default="false"/>
+    <aura:attribute name="idForDelete" type="String"/>
+    <aura:attribute name="hideSpinner" type="Boolean" default="false" description="shoe hide spinner"/>
+    <aura:handler name="init" value="{!this}" action="{!c.initData}"/>
+    <aura:attribute name="myAttachments" type="Object[]" description="for storing the apex class object"/>
+    <aura:attribute name="isOpen" type="Boolean" />
+    <aura:attribute name="showDownLoadAttach" type="Boolean" />
+    <aura:attribute name="isfinalDelete" type="Boolean" default="false" />
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <aura:If isTrue="{!v.hideSpinner}">
+            <div class="slds-spinner_container" >
+                <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+                    <span class="slds-assistive-text">Loading, Please Wait...</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>      
+        </aura:If> 
+        <div class="slds-modal__container">
+            <!-- ###### MODAL BOX HEADER Start ######-->
+            <header class="slds-modal__header">
+                <lightning:buttonIcon iconName="utility:close"
+                                      onclick="{! c.closeModel }"
+                                      alternativeText="close"
+                                      variant="bare-inverse"
+                                      class="slds-modal__close closeBtncss" />
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">DownLoad/Delete Files</h2>
+            </header>
+            <!--###### MODAL BOX BODY Part Start######-->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <html>
+                    <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_col-bordered">
+                        <thead>
+                            <tr>
+                                <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >                                
+                                    <div class="slds-truncate a"  title="Document Name"  >Document Name</div> 
+                                </th>
+                                <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                    <div class="slds-truncate a"  title="Document Name"   >Size(BYTES)</div>
+                                </th>
+                                <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                    <div class="slds-truncate a"  title="Document Name"   >Type</div>
+                                </th>
+                                <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                    <div class="slds-truncate a"  title="Document Name"  >Action</div>
+                                </th>                    
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <aura:iteration items="{!v.myAttachments}" var="obj" indexVar="index1">          
+                                <tr  class="slds-line-height_reset" >
+                                    <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                        
+                                       {!obj.Title}
+                                    </td>
+                                    <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                        {!obj.ContentDocument.ContentSize}
+                                    </td>
+                                    <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                        {!obj.FileExtension}
+                                    </td>
+                                    
+                                    <td> 
+                                        <div class="slds-col">
+                                            <a onclick="{!c.deleteFile}" title="{!obj.ContentDocumentId}">
+                                                <lightning:buttonIcon iconName="utility:delete" variant="brand" Name="delete" alternativeText="delete" title="delete"> delete </lightning:buttonIcon>
+                                             <!-- <img src="{!$Resource.Delete}" style="width: 30px;" title="{!obj.ContentDocumentId}"/>  --> </a> &nbsp;
+                                            <a onclick="{!c.downloadFile}" title="{!obj.ContentDocumentId}"> 
+                                                <lightning:buttonIcon iconName="utility:download" variant="brand" Name="download" alternativeText="download" title="download"> download </lightning:buttonIcon>
+                                              <!--<img src="{!$Resource.DownLoad1}" style="width: 30px;" title="{!obj.ContentDocumentId}"/> -->
+                                            </a> &nbsp;
+                                            <a onclick="{!c.previewFile}" title="{!obj.ContentDocumentId}"> 
+                                                <lightning:buttonIcon iconName="utility:preview" variant="brand" Name="preview" alternativeText="preview" title="preview"> preview </lightning:buttonIcon>
+                                              <!--<img src="{!$Resource.PreviewIcon}" style="width: 30px;" title="{!obj.ContentDocumentId}"/> -->
+                                            </a> &nbsp;
+                                            
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                            </aura:iteration>
+                        </tbody>
+                    </table>
+                </html>
+            </div>
+            <!--###### MODAL BOX FOOTER Part Start ######-->
+            <!--<footer class="slds-modal__footer">
+                <lightning:button variant="neutral" 
+                                  label="Cancel"
+                                  title="Cancel"
+                                  onclick="{! c.closeModel }"/>
+                
+            </footer>-->
+        </div>
+        <aura:If isTrue="{!v.isfinalDelete}">
+            <div class="demo-only" style="height:20px;">
+                <section style="width: 300px;padding-left: 38%;" role="alertdialog" tabindex="0" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt" aria-modal="true">
+                    <div class="slds-modal__container">
+                        <header class="slds-modal__header slds-theme_error slds-theme_alert-texture">
+                            
+                            <h2 class="slds-text-heading_medium" id="prompt-heading-id">Are You Sure?</h2>
+                        </header>
+                        <div class="slds-modal__content slds-p-around_medium" id="prompt-message-wrapper">
+                        </div>
+                        <footer class="slds-modal__footer slds-theme_default">
+                            <lightning:button variant="brand" label="Yes" onclick="{!c.finalDelete}" />
+                            <lightning:button variant="brand" label="No" onclick="{!c.cancelDelete}" />
+                        </footer>
+                    </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open"></div>
+            </div>
+        </aura:If>
+        <aura:if isTrue="{!v.hasModalOpen}">
+            <section onclick="{!c.closeModelPreview}"
+                     role="dialog"
+                     aria-modal="true"
+                     class="slds-modal slds-fade-in-open"> 
+                <div class="slds-modal__container">
+                    <div class="slds-modal__content slds-p-around_medium slds-text-align_center"
+                         style="background: transparent;">
+                        <div style="width: 50%; margin: 0 auto; text-align: left">
+                            <!--<lightning:fileCard> to preview file using content document Id -->
+                            <lightning:fileCard fileId="{!v.selectedDocumentId}"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if> 
+        
+    </section>
+     <div class="slds-backdrop slds-backdrop_open"></div>
+</aura:component>

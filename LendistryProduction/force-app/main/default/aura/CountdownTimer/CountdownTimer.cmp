@@ -1,0 +1,12 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                controller = "CounsellorlListcontroller"  access="global" >
+	<aura:attribute name="startTime" type="String"/>
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:attribute name="timeLeft" type="String"/>
+ 
+                    
+                    <div style="font-size: 20px;width: 130px;text-align: center;border: 2px solid cornflowerblue;border-radius: 20px;">
+                       {!v.timeLeft}
+                    </div>
+
+</aura:component>

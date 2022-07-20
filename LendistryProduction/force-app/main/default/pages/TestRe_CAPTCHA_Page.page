@@ -1,0 +1,1484 @@
+<apex:page docType="html-5.0" Controller="lendistryController"  showHeader="false" sidebar="false"> 
+ 
+<META HTTP-EQUIV="Content-type" CONTENT="text/html; charset=UTF-8"/>
+<script>
+    function inputLimiter(e,allow) {
+            var AllowableCharacters = '';
+
+            if (allow == 'Letters'){AllowableCharacters=' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';}
+            if (allow == 'Numbers'){AllowableCharacters='1234567890';}
+            if (allow == 'NameCharacters'){AllowableCharacters=' ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-.\'';}
+            if (allow == 'NameCharactersAndNumbers'){AllowableCharacters='1234567890 ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-\'';}
+            if (allow == 'Currency'){AllowableCharacters='1234567890.';}
+
+            var k = document.all?parseInt(e.keyCode): parseInt(e.which);
+            if (k!=13 && k!=8 && k!=0){
+                if ((e.ctrlKey==false) && (e.altKey==false)) {
+                return (AllowableCharacters.indexOf(String.fromCharCode(k))!=-1);
+                } else {
+                return true;
+                }
+            } else {
+                return true;
+            }
+        } 
+</script>
+
+<script src="https://www.google.com/recaptcha/api.js"></script>
+ 
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> 
+     <script>
+$(document).ready(function(){
+    $('.LT_primaryown').keyup(function(){
+        if ($(this).val() > 100 || $(this).val() < 1){
+             document.getElementById("errorpercentowner").innerHTML = 'Ownership % cannot be less than 1 or greater that 100';
+        } else{
+            document.getElementById("errorpercentowner").innerHTML = '';   
+        }
+    });
+         
+});
+
+    </script>
+ <script>
+ $(document).ready(function(){
+     var btn = document.getElementById("uploadBtnId");
+    btn.onclick = function() { 
+    var requiredDiv = document.getElementById("requiredDiv");
+    if (requiredDiv.innerHTML.trim().length == 0) {
+      alert("Please fill the div as well.");
+      
+    }
+    }
+  };
+</script>
+<script>
+$(document).ready(function(){
+ var modal = document.getElementById("Modalpopup");
+var btn = document.getElementById("Finishbutton");
+var closeicon = document.getElementsByClassName("close")[0];
+
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+closeicon.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+    });
+
+      </script>    
+    
+    
+<script>
+ function timestamp()
+{ 
+    var response = document.getElementById("g-recaptcha-response"); 
+    if (response == null || response.value.trim() == "") 
+    {
+        var elems = JSON.parse(document.getElementsByName("captcha_settings")[0].value);
+        elems["ts"] = JSON.stringify(new Date().getTime());
+        document.getElementsByName("captcha_settings")[0].value = JSON.stringify(elems);
+    } 
+    else 
+    enableButton();// 
+} 
+setInterval(timestamp, 500);
+</script>
+    
+    <script>
+  (function() {
+    var windowOnload = window.onload;
+    window.onload = function() {
+      if (windowOnload) windowOnload();
+      var select = document.getElementById('calYearPicker');
+      if (!select) return;
+
+      select.innerHTML = '';
+      var startYear = new Date().getFullYear() - 30;
+      for (var year = startYear; year < startYear + 30; year++) {
+        select.options[select.options.length] = new Option(year, year);
+      }
+    }
+  }());
+</script>
+
+<script type="text/javascript">
+    function loadspinner(this1){
+        //this1.disabled=true; 
+        document.getElementById("loader").style.display='block';
+        window.location = '/Lendistry_Lead_FileUpload';
+        //window.location = 'http://uat-lendistry-sba-ppp-application.cs124.force.com/FileUpload';
+    } 
+       
+    var businessObject = {
+    "Manufacturer": {
+        "Food Products": ["Meat and Dairy", "Canned, Frozen and Preserved Products","Grain Mill","Bakery, Sugar, Fats and Oils","Beverages","Other Products"],
+        "Textile": ["Fabric Mill (Cotton, wool, silk & other)", "Knitting Mill","Dyeing and Finishing","Carpets and Rugs","Yarn and Thread"],
+        "Apparel": ["Mens, Women's, children", "Hats and Caps","Miscellaneous Apparel and accessories","Miscellaneous Fabricated Textile"],
+        "Furniture and Fixtures": ["Household Furniture", "Office Furniture","Public Building and Related","Office and Store Fixtures"],
+        "Printing": ["Commercial Printing", "Manifold Business Forms","Greeting cards","Service industries for printing trade","Miscellaneous"],
+        "Rubber, Plastic, Leather/glass": ["Tires/tubes/hoses/beltings", "Plastic products","Any leather goods","Glass and other glass products"],
+        "Cement/Clay/Stone/Metal": ["Any cement product", "Any Clay product","Any stone product","Fabricated Metal product"],
+        "Industrial/Commercial Machinery and Computer Equipment": ["Transportation", "Farm and Garden","Construction and Metalworking","Medical","Computer and Office","Refrigeration","Electronic/Electrical(including Household appliances, lighting,A&V)"]
+    },
+    "Sells Products": {
+        "Whole Sale - Durable": ["Moter Vehicles", "Furniture and Fixtures","Lumber and other construction","Professional and Commercial Equipment","Metals and Minerals","Machinery & Equipment","Hardware/Plumbing/Heating/Electrical"],
+        "Whole Sale - Non Durable": ["Paper &  Paper Products", "Apparel","Groceries & Related Products","Farm Products","Chemical and Petroleum","Beer, Wine and Distilled"],
+        "Retail Trade": ["Building Materials/Hardware/Garden/Mobile Homes", "General Merchandise","Food and Grocery","Automotive Dealers and Gasoline","Apparel and accessory","Home furniture, furnishings and equipment","Pharmacy"]
+    }
+    ,
+    "Service Business": {
+        "Entertainment": ["Full Service Restaurant", "Limited Service Restaurant","Franchise","Full Service Bar/Lounge","Bar/lounge including entertainment"],
+        "Insurance/Real Estate": ["Independent Insurance Carriers", "Insurance Agent/Broker/Service","Real Estate Operators","Real Estate Agent/Manager"],
+        "Hotels/Camps and Lodging": ["Hotels/Motels and Boarding Houses", "Camps and RV Parks","Lodging Houses"],
+        "Personal Services": ["Laundry/cleaning/Garment", "Photographic and Portrait","Beauty/Barber/Nail","Shoe repair","Funeral Services"],
+        "Business Services": ["Advertising/Marketing", "Reporting Agencies","Services to dwelling and other","Equipment rental and leasing","Personal supply services","Computer related"],
+        "Auto repair and Services": ["Rental", "Parking","Services (except repair)","Repair"],
+        "Amusement and Recreation": ["Dance Studios", "Theater and Band","Bowling","Commercial sports"],
+        "Health Services": ["Offices and clinics", "Nursing and personal care","Hospitals","Medical and dental labs","Home health care services"],
+        "Professional": ["Legal", "Educational","Social","Arts","Engineering","Accounting","Mgmt and Public relations"]
+    }
+    ,
+    "Construction Business": {
+        "General Contractor": ["Single Family", "Residential - other then Single","Industrial/Warehouse","Nonresidential - other then industrial"],
+        "Special Trade Contractor": ["Plumbing, heating, Air-conditioning", "Painting and Paper Hanging","Electrical","Masonary, Stonework, Tile and plastering","Carpentry and Floor Work","Roofing","Concrete","Other Special Trade Contrator"]
+    }
+    ,
+    "Transportation/Communication": {
+        "Transportation": ["Railroad", "Local and suburban Transportation","Buses (all)","Motor Freight Transport and Warehousing","Water Transportation","Air Transportation","Transportation Services (agencies, operators, etc)"],
+        "Communications": ["Telephone", "Radio","Cable"],
+        "Electric/Gas/Sanitary": ["Electrical services", "Gas Prodcution and Distribution","Water Supply","Sanitary Services","Steam and Irrigation"]
+    }
+}   
+    
+function ChangeBusinessList() {
+    var businessSel = document.getElementById("business_dotype"),
+        businessTypeSel = document.getElementById("businesstypeLT"),
+        businessTellmore = document.getElementById("morebusinessLT");
+    for (var business in businessObject) {
+        businessSel.options[businessSel.options.length] = new Option(business, business);
+    }
+    businessSel.onchange = function () {
+        businessTypeSel.length = 1; 
+        businessTellmore.length = 1; 
+        if (this.selectedIndex < 1) return;    
+        for (var businesstype in businessObject[this.value]) {
+            businessTypeSel.options[businessTypeSel.options.length] = new Option(businesstype, businesstype);
+        }
+    }
+    businessSel.onchange(); 
+    businessTypeSel.onchange = function () {
+        businessTellmore.length = 1; 
+        if (this.selectedIndex < 1) return;    
+        var businessmore = businessObject[businessSel.value][this.value];
+        for (var i = 0; i < businessmore.length; i++) {
+            businessTellmore.options[businessTellmore.options.length] = new Option(businessmore[i], businessmore[i]);
+        }
+    }
+    
+} 
+        
+function loanPurpose(id) {
+    //alert('id----->>'+id);
+    //  var Bussinessinput = (document.getElementById('id'));
+    // alert('Bussinessinput'+Bussinessinput);
+    var textinput = (document.getElementById("otherfield"));
+    //  alert('Bussinessinput.value'+Bussinessinput.value);
+        if (id == "Other"){
+            //alert('Bussinessinput.value'+Bussinessinput.value);
+            textinput.style.visibility = "visible";
+        } else {
+            textinput.style.visibility = "hidden";
+        }
+    }
+ </script>
+    
+    <script>
+    function ValidateEmail(mail) {
+    
+      commomValidate('email',mail);
+    }
+    function ValidatePhone(phone) {
+    
+      commomValidate('phone',phone);
+    }
+    function ValidateBusinessPhone(Business) {
+    
+      commomValidate('Business',Business);
+    }
+    function ValidateSSN(ssn) {
+    
+      commomValidate('ssn',ssn);
+    }
+    
+    function ValidateRequestedAmount(Amount){
+        commomValidate('RequestedAmount',Amount);
+    }
+    function ValidateWebsite(Website){
+        commomValidate('WebSiteAddress',Website);
+    }
+    function ValidateRent(Rent){
+        commomValidate('MonthlyRent',Rent);
+    }
+    
+     function commomValidate(type,val){
+         if(type=='MonthlyRent'){
+             var num1 = val;
+ if(isNaN(num1)){
+        document.getElementById("errorRent").innerHTML = 'Enter a Valid Number';
+ }
+}
+         
+        if(type=='WebSiteAddress'){
+             var Webformat = /^((ftp|http|https):\/\/)?(www.)?(?!.*(ftp|http|https|www.))[a-zA-Z0-9_-]+(\.[a-zA-Z]+)+((\/)[\w#]+)*(\/\w+\?[a-zA-Z0-9_]+=\w+(&[a-zA-Z0-9_]+=\w+)*)?$/;
+             if(val.match(Webformat)){
+                 document.getElementById("errorWebsite").innerHTML = '';
+             }
+             else{
+                 document.getElementById("j_id0:mainFormId:LT_website").style.border="2px solid rgba(255, 0, 0, 0.7)";
+                  document.getElementById("errorWebsite").innerHTML = 'Enter a Valid Webaddress';
+             
+             }
+             
+         }
+         
+         if(type=='email'){
+             var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+             if(val.match(mailformat)){
+                 document.getElementById("errorEmailId").innerHTML = '';
+             }
+             else{
+                 document.getElementById("j_id0:mainFormId:email").style.border="2px solid rgba(255, 0, 0, 0.7)";
+                  document.getElementById("errorEmailId").innerHTML = 'Invalid Email Format';
+             
+             }
+             
+         }
+         
+         if(type=='RequestedAmount'){
+             //var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+             if(val>=10000 && val<=250000){
+                 document.getElementById("errorRequestedAmount").innerHTML = '';
+             }
+             else{
+                 document.getElementById("j_id0:mainFormId:RequestedAmount").style.border="2px solid rgba(255, 0, 0, 0.7)";
+                  document.getElementById("errorRequestedAmount").innerHTML = 'Amount Requested should be between 10000 and 250000';
+             
+             }
+             
+         }
+         
+          if(type=='phone'){
+            var phoneNumberPattern = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
+             if(val.match(phoneNumberPattern )){
+                 document.getElementById("errorPhoneId").innerHTML = '';
+             }
+             else{
+              document.getElementById("j_id0:mainFormId:LT_Phone").style.border="2px solid rgba(255, 0, 0, 0.7)";   
+              document.getElementById("errorPhoneId").innerHTML = 'Enter Phone in format XXX-XXX-XXXX';
+                 }
+             
+         }
+         if(type=='Business'){
+            var phoneNumberPattern = /^(\()?\d{3}(\))?(-|\s)?\d{3}(-|\s)\d{4}$/;
+             if(val.match(phoneNumberPattern )){
+                 document.getElementById("errorBusinessPhoneId").innerHTML = '';
+             }
+             else{
+                 document.getElementById("j_id0:mainFormId:Business").style.border="2px solid rgba(255, 0, 0, 0.7)";
+              document.getElementById("errorBusinessPhoneId").innerHTML = 'Enter Phone in format XXX-XXX-XXXX';
+             
+         }
+         }
+         
+         if(type=='ssn'){
+            var ssnformat = /^(1\s?)?((\([0-9]{3}\))|[0-9]{3})[\s\-]?[\0-9]{3}[\s\-]?[0-9]{4}$/;
+             if(val.match(ssnformat)){
+                document.getElementById("errorSSNId").innerHTML = '';
+             }
+             else{
+                 document.getElementById("j_id0:mainFormId:LT_SSN").style.border="2px solid rgba(255, 0, 0, 0.7)";
+              document.getElementById("errorSSNId").innerHTML = 'Enter SSN in format XXX-XX-XXXX';
+             }
+         }
+             
+         }
+         
+</script>
+    
+<script>    
+     function errorValidate(){
+         var elements = document.getElementsByClassName("LT_input");
+         //var firstinput = document.getElementsByClassName("condRequiredInput")[0].children[1].children;
+         //var secondinput = document.getElementsByClassName("condRequiredInput")[1].children[1].children;
+        
+             for (var i = 0; i < elements.length; i++) {
+       
+             if ((elements[i].value.length == 0) && (elements[i].hasAttribute('required') || elements[i].hasAttribute('title'))){
+                 elements[i].style.border="2px solid rgba(255, 0, 0, 0.7)";
+                 
+             } 
+             if ((elements[i].value.length > 0) && (elements[i].hasAttribute('required') || elements[i].hasAttribute('title'))){
+                 elements[i].style.border="2px solid #EFEFEF";  
+             } 
+            }
+     }
+     
+</script>
+    
+    <style type="text/CSS">
+        .slds-size_3-of-12.loanother{
+        visibility:hidden;
+        }
+        .LT_naics{
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 16px !important;
+        font-weight: 700;
+        font-style: normal;
+        text-decoration:underline !important;
+            color: #000 !important;
+        }
+        input.slds-input.LT_input, textarea.slds-input.LT_input , select.LT_input{
+        padding: 2px 5px;
+        font-family: 'Lucida Grande','Lucida Grande',Tahoma,Arial,sans-serif;
+        font-weight: 400;
+        color: #666666;
+        border: 3px solid #EFEFEF;
+        border-radius: 8px;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2) inset;
+        outline: medium none;
+        background: none repeat scroll 0 0 #FBFBFB;
+        width:96%;
+        height: 40px;
+        font-size: 15px;
+        }
+        
+        #loader{
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display:none;
+        }
+        
+        button.slds-button.slds-button_neutral.LT_submit{
+        color: #fff;
+        text-transform: uppercase;
+        background: #462d78;
+        font-size: 20px;
+        line-height: 20px;
+        vertical-align: middle;
+        font-weight: 400;
+        text-align: center;
+        border-radius: 4px;
+        border: 1px solid #462d78;
+        outline: 0!important;
+        cursor: pointer;
+        box-shadow: none;
+        padding: 12px 25px;
+        float: right;
+        }
+        
+        .slds-form-element__row{
+        display:flex;
+        margin: 0px 5px 0px;
+        }
+        
+        label.slds-form-element__label  {
+        color: #4a4a56;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 15px !important;
+        font-weight: 700;
+        font-style: normal;
+        height: 50px;
+        vertical-align: bottom;
+        display: table-cell !important;
+        padding-bottom: 5px !important;
+        padding-top: 0px !important;
+        }
+        
+        .contactform{
+        width: 92%;
+        padding: 0px 0px 20px 20px;
+        margin: 0px auto;
+        }
+        
+        .divider{
+        height: 3px;
+        display: block;
+        background-color: rgba(0,0,0,0.1);
+        margin: 1em 0 1em;
+        width: 100%;
+        }
+        
+        /*.checkbusiness{
+        display:none;
+        }
+        
+        .morebusiness{
+        display:none; } */
+        
+         .LT_nav{
+        width: 93%;
+        margin: 20px auto;
+        padding: 15px 0px 25px 0px;
+        }
+        
+        .LT_subheader{
+        font-size: 1.8em;
+        font-weight: 500;
+        color: #462d78;
+        margin: 40px 0px 10px;
+        }
+        .LT_marginmedium{
+            margin: 20px 5px 0px;
+        }
+        
+        .modal {
+         display: none; 
+         position: fixed; 
+         z-index: 1; 
+         padding-top: 100px; 
+         left: 0;
+         top: 0;
+         width: 100%;
+         height: 100%; 
+         overflow: auto; 
+         background-color: rgb(0,0,0); 
+         background-color: rgba(0,0,0,0.4); 
+         }
+
+         .modal-content {
+         background-color: #462d78;
+         margin: auto;
+         border: 1px solid #462d78;
+         width: 40%;
+         height: 250px;
+         color: #fff;
+         text-align: center;
+         padding: 80px 20px 0px;
+         font-size: 1.5em;
+         position: relative;
+         border-radius: 3px;
+         top: 125px;
+         margin-top: -125px;
+         }
+
+         .close , .close:hover {
+         color: #fff !important;
+         float: right;
+         font-size: 35px;
+         font-weight: bold;
+         position: absolute;
+         text-decoration:none !important;
+         top: 0;
+         right: 15px;
+         }
+        
+        LT_form{
+            padding-left:20px;
+            }
+        
+         @media (min-width:50px) and (max-width:767px){
+            .contactform{
+            padding: 0 10px 20px 10px;
+            width:100%;
+            }
+            
+            LT_form{
+            padding-left:10px;
+            }
+        
+            label.slds-form-element__label{
+                font-size: 14px !important;
+        }
+         }
+    </style>
+    <apex:pagemessages />
+
+    <apex:form id="mainFormId">
+   <apex:actionFunction name="enableButton" action="{!enableBtnMethod}" reRender="uploadBtnId"/>
+     <apex:slds />
+    
+     <!-- ====================
+     Uat reCAPTCHA==================================================== 
+    <input type="hidden" name='captcha_settings' value='{"keyname":"Lendistry_reCAPTCHA","fallback":"true","orgId":"00D3J0000008jS7","ts":""}'/>
+    <!--input type="hidden" name="oid" value="00D3J0000008jS7"/-->
+    <!--input type="hidden" name="retURL" value="https://lendistry--uat--c.visualforce.com/apex/Lendistry_Lead_FileUpload"/-->
+    <!-- ====================Uat reCAPTCHA====================================================  -->
+    
+    
+     <!-- ====================production reCAPTCHA==================================================== -->
+    <input type="hidden" name='captcha_settings' value='{"keyname":"Lendistry2","fallback":"true","orgId":"00Df4000004koBu","ts":""}'/>
+    <!-- ====================production reCAPTCHA==================================================== -->
+    
+    <div class="LT_nav">
+        <apex:image id="theImage" value="{!$Resource.LendistryLogo}" width="200" height="200" alt="LendistryLogo"/>
+    </div>
+    
+    <div class="contactform" style="" >
+        <h1 style="font-size: 2em;color:#462d78">Contact Details</h1>
+        <div class="slds-align_absolute-center">
+            <div class="is-divider divider clearfix" style="margin-top:0px; color:#000"></div>
+        </div> 
+        
+        <div class="slds-form-element__control LT_form" style="">
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="form-element-id-05">Primary Owner First Name</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText styleclass="slds-input LT_input" required="true" title="Primary Owner First Name" id="LT_FirstName"  maxlength="40" value="{!objLead.FirstName}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element" >
+                        <label class="slds-form-element__label" for="form-element-id-06">Primary Owner Last Name</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText styleclass="slds-input LT_input" required="true" title="Primary Owner Last Name" maxlength="40" value="{!objLead.LastName}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="form-element-id-06"> Primary Owner E-Mail</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField type="email" id="email"  required="true"  onchange="ValidateEmail(this.value)"  styleclass="slds-input LT_input" value="{!objLead.Email}" />
+                        <p id="errorEmailId" style="color:red;font-size:10px;position: absolute;"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="form-element-id-06">Primary Owner Phone</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField type="tel" required="true" id="LT_Phone"  onchange="ValidatePhone(this.value)" styleclass="slds-input LT_input" value="{!objLead.Phone}"  />
+                        <p id="errorPhoneId" style="color:red;font-size:10px;position: absolute;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Primary Owner Address</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText styleclass="slds-input LT_input" required="true" title="Primary Owner Address" value="{!objLead.Street_Owner_1__c}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Primary Owner Address 2</label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="form-element-id-06"  class="slds-input LT_input" value="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Primary Owner City</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField type="text" required="true"  styleclass="slds-input LT_input" value="{!objLead.City_Owner_1__c}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Primary Owner State</label>
+                        <div class="slds-form-element__control">
+                            <apex:selectList size="1" required="true" title="state" styleclass="LT_input"  value="{!objLead.State_Owner_1__c}">
+                                <apex:selectOption itemValue="" itemLabel="--None--"/>  
+                                 
+                                <apex:selectOption itemValue="AL" itemLabel="AL - Alabama"></apex:selectOption>
+                                <apex:selectOption itemValue="AK" itemLabel="AK - Alaska"></apex:selectOption>
+                                <apex:selectOption itemValue="AS" itemLabel="AS - American Samoa"></apex:selectOption>
+                                <apex:selectOption itemValue="AZ" itemLabel="AZ - Arizona"></apex:selectOption>
+                                <apex:selectOption itemValue="AR" itemLabel="AR - Arkansas"></apex:selectOption>
+                                <apex:selectOption itemValue="CA" itemLabel="CA - California"></apex:selectOption>
+                                <apex:selectOption itemValue="CO" itemLabel="CO - Colorado"></apex:selectOption>
+                                <apex:selectOption itemValue="CT" itemLabel="CT - Connecticut"></apex:selectOption>
+                                <apex:selectOption itemValue="DE" itemLabel="DE - Delaware"></apex:selectOption>
+                                <apex:selectOption itemValue="DC" itemLabel="DC - District of Columbia"></apex:selectOption>
+                                <apex:selectOption itemValue="FM" itemLabel="FM - Federated States of Micronesia"></apex:selectOption>
+                                <apex:selectOption itemValue="FL" itemLabel="FL - Florida"></apex:selectOption>
+                                <apex:selectOption itemValue="GA" itemLabel="GA - Georgia"></apex:selectOption>
+                                <apex:selectOption itemValue="GU" itemLabel="GU - Guam"></apex:selectOption>
+                                <apex:selectOption itemValue="HI" itemLabel="HI - Hawaii"></apex:selectOption>
+                                <apex:selectOption itemValue="ID" itemLabel="ID - Idaho"></apex:selectOption>
+                                <apex:selectOption itemValue="IL" itemLabel="IL - Illinois"></apex:selectOption>
+                                <apex:selectOption itemValue="IN" itemLabel="IN - Indiana"></apex:selectOption>
+                                <apex:selectOption itemValue="IA" itemLabel="IA - Iowa"></apex:selectOption>
+                                <apex:selectOption itemValue="KS" itemLabel="KS - Kansas"></apex:selectOption>
+                                <apex:selectOption itemValue="KY" itemLabel="KY - Kentucky"></apex:selectOption>
+                                <apex:selectOption itemValue="LA" itemLabel="LA - Louisiana"></apex:selectOption>
+                                <apex:selectOption itemValue="ME" itemLabel="ME - Maine"></apex:selectOption>
+                                <apex:selectOption itemValue="MH" itemLabel="MH - Marshall Islands"></apex:selectOption>
+                                <apex:selectOption itemValue="MD" itemLabel="MD - Maryland"></apex:selectOption>
+                                <apex:selectOption itemValue="MA" itemLabel="MA - Massachusetts"></apex:selectOption>
+                                <apex:selectOption itemValue="MI" itemLabel="MI - Michigan"></apex:selectOption>
+                                <apex:selectOption itemValue="MN" itemLabel="MN - Minnesota"></apex:selectOption>
+                                <apex:selectOption itemValue="MS" itemLabel="MS - Mississippi"></apex:selectOption>
+                                <apex:selectOption itemValue="MO" itemLabel="MO - Missouri"></apex:selectOption>
+                                <apex:selectOption itemValue="MT" itemLabel="MT - Montana"></apex:selectOption>
+                                <apex:selectOption itemValue="NE" itemLabel="NE - Nebraska"></apex:selectOption>
+                                <apex:selectOption itemValue="NV" itemLabel="NV - Nevada"></apex:selectOption>
+                                <apex:selectOption itemValue="NH" itemLabel="NH - New Hampshire"></apex:selectOption>
+                                <apex:selectOption itemValue="NJ" itemLabel="NJ - New Jersey"></apex:selectOption>
+                                <apex:selectOption itemValue="NM" itemLabel="NM - New Mexico"></apex:selectOption>
+                                <apex:selectOption itemValue="NY" itemLabel="NY - New York"></apex:selectOption>
+                                <apex:selectOption itemValue="NC" itemLabel="NC - North Carolina"></apex:selectOption>
+                                <apex:selectOption itemValue="ND" itemLabel="ND - North Dakota"></apex:selectOption>
+                                <apex:selectOption itemValue="MP" itemLabel="MP - Northern Mariana Islands"></apex:selectOption>
+                                <apex:selectOption itemValue="OH" itemLabel="OH - Ohio"></apex:selectOption>
+                                <apex:selectOption itemValue="OK" itemLabel="OK - Oklahoma"></apex:selectOption>
+                                <apex:selectOption itemValue="OR" itemLabel="OR - Oregon"></apex:selectOption>
+                                <apex:selectOption itemValue="PW" itemLabel="PW - Palau"></apex:selectOption>
+                                <apex:selectOption itemValue="PA" itemLabel="PA - Pennsylvania"></apex:selectOption>
+                                <apex:selectOption itemValue="PR" itemLabel="PR - Puerto Rico"></apex:selectOption>
+                                <apex:selectOption itemValue="RI" itemLabel="RI - Rhode Island"></apex:selectOption>
+                                <apex:selectOption itemValue="SC" itemLabel="SC - South Carolina"></apex:selectOption>
+                                <apex:selectOption itemValue="SD" itemLabel="SD - South Dakota"></apex:selectOption>
+                                <apex:selectOption itemValue="TN" itemLabel="TN - Tennessee"></apex:selectOption>
+                                <apex:selectOption itemValue="TX" itemLabel="TX - Texas"></apex:selectOption>
+                                <apex:selectOption itemValue="UT" itemLabel="UT - Utah"></apex:selectOption>
+                                <apex:selectOption itemValue="VT" itemLabel="VT - Vermont"></apex:selectOption>
+                                <apex:selectOption itemValue="VI" itemLabel="VI - Virgin Islands"></apex:selectOption>
+                                <apex:selectOption itemValue="VA" itemLabel="VA - Virginia"></apex:selectOption>
+                                <apex:selectOption itemValue="WA" itemLabel="WA - Washington"></apex:selectOption>
+                                <apex:selectOption itemValue="WV" itemLabel="WV - West Virginia"></apex:selectOption>
+                                <apex:selectOption itemValue="WI" itemLabel="WI - Wisconsin"></apex:selectOption>
+                                <apex:selectOption itemValue="WY" itemLabel="WY - Wyoming"></apex:selectOption>
+                                <apex:selectOption itemValue="AA" itemLabel="AA - Armed Forces Americas"></apex:selectOption>
+                                <apex:selectOption itemValue="AE" itemLabel="AE - Armed Forces Europe"></apex:selectOption>
+                                <apex:selectOption itemValue="AP" itemLabel="AP - Armed Forces Pacific"></apex:selectOption>
+                                  </apex:selectList>
+                            <!--apex:inputField type="text"   styleclass="slds-input LT_input" value="{!objLead.State_Owner_1__c}" /-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Primary Owner ZIP</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputtext maxlength="5" required="true" title="Primary Owner ZIP" onkeypress="return inputLimiter(event,'Numbers');" styleclass="slds-input LT_input" value="{!objLead.Zip_Code_Owner_1__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="form-element-id-05">Primary Owner Social Security#</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText maxlength="11"  styleclass="slds-input LT_input" required="true" title="Primary Owner Social Security#" id="LT_SSN"  onchange="ValidateSSN(this.value)" value="{!objLead.SSN1__c}"  />
+                       <p id="errorSSNId" style="color:red;font-size:10px;position: absolute;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                  <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Primary Owner (% of Ownership)</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputtext maxlength="3"  required="true" title="Primary Owner (% of Ownership)" onkeypress="return inputLimiter(event,'Numbers');" styleclass="slds-input LT_input LT_primaryown" value="{!objLead.of_Ownership_Owner__c}" id="LT_primaryown"/>
+                            <p id="errorpercentowner" style="color:red;font-size:10px;position: absolute;"></p>
+                        </div>
+                    </div>
+                
+           
+            </div>
+                
+            </div>
+            
+            
+            
+            <!--Business Detail -->
+            <div class="slds-size_12-of-12 LT_subheader">
+                    <h1>Business Information:</h1>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Business Name</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText id="form-element-id-05" required="true" title="Business Name" styleclass="slds-input LT_input" value="{!objLead.Company}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">DBA (Doing Business As)-[ Note -If no DBA type NONE ]</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText styleclass="slds-input LT_input" required="true" title="DBA (Doing Business As)-[ Note -If no DBA type NONE ]" value="{!objLead.DBA__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Business EIN (Only digits, Cannot contain Special Characters or Spaces)</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText styleclass="slds-input LT_input" maxlength="10" title="Business EIN (Only digits, Cannot contain Special Characters or Spaces)" required="true" onkeypress="return inputLimiter(event,'Numbers');"  value="{!objLead.Business_EIN__c}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Business Phone #</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField id="Business" styleclass="slds-input LT_input" required="true"  onchange="ValidateBusinessPhone(this.value)" value="{!objLead.Business_Phone__c}" />
+                        <p id="errorBusinessPhoneId" style="color:red;font-size:10px;position: absolute;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Business Type</label>
+                        <div class="slds-form-element__control">
+                            <apex:selectList size="1" required="true"  id="LT_dropdown" title="Business Type" styleclass="LT_input LT_selectoption" value="{!objLead.Entity_Type__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                      <apex:selectOption itemValue="Corporation" itemLabel="Corporation"/>
+                                      <apex:selectOption itemValue="Limited Liability Company (LLC)" itemLabel="Limited Liability Company (LLC)"/>
+                                      <apex:selectOption itemValue="Partnership" itemLabel="Partnership"/>
+                                      <apex:selectOption itemValue="Sole Proprietor (With Employees)" itemLabel="Sole Proprietor (With Employees)"/>
+                                      <apex:selectOption itemValue="Sole Proprietor (Without Employees)" itemLabel="Sole Proprietor (Without Employees)"/>
+                                      <apex:selectOption itemValue="Professional Corporation" itemLabel="Professional Corporation"/>
+                                      <apex:selectOption itemValue="Limited Partnership (LP)" itemLabel="Limited Partnership (LP)"/>
+                                      <apex:selectOption itemValue="Limited Liability Partnership (LLP)" itemLabel="Limited Liability Partnership (LLP)"/>
+                                </apex:selectList> 
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">State of Incopration</label>
+                        <div class="slds-form-element__control">
+                            <!--apex:inputText styleclass="slds-input LT_input"   value="{!objLead.State_of_incopration__c}" /-->
+                        <apex:selectList size="1" required="true" title="State of Incopration" styleclass="LT_input LT_selectoption"  value="{!objLead.State_of_incopration__c}">
+                                <apex:selectOption itemValue="" itemLabel="--None--"/>  
+                                 
+                                <apex:selectOption itemValue="AL" itemLabel="AL - Alabama"></apex:selectOption>
+                                <apex:selectOption itemValue="AK" itemLabel="AK - Alaska"></apex:selectOption>
+                                <apex:selectOption itemValue="AS" itemLabel="AS - American Samoa"></apex:selectOption>
+                                <apex:selectOption itemValue="AZ" itemLabel="AZ - Arizona"></apex:selectOption>
+                                <apex:selectOption itemValue="AR" itemLabel="AR - Arkansas"></apex:selectOption>
+                                <apex:selectOption itemValue="CA" itemLabel="CA - California"></apex:selectOption>
+                                <apex:selectOption itemValue="CO" itemLabel="CO - Colorado"></apex:selectOption>
+                                <apex:selectOption itemValue="CT" itemLabel="CT - Connecticut"></apex:selectOption>
+                                <apex:selectOption itemValue="DE" itemLabel="DE - Delaware"></apex:selectOption>
+                                <apex:selectOption itemValue="DC" itemLabel="DC - District of Columbia"></apex:selectOption>
+                                <apex:selectOption itemValue="FM" itemLabel="FM - Federated States of Micronesia"></apex:selectOption>
+                                <apex:selectOption itemValue="FL" itemLabel="FL - Florida"></apex:selectOption>
+                                <apex:selectOption itemValue="GA" itemLabel="GA - Georgia"></apex:selectOption>
+                                <apex:selectOption itemValue="GU" itemLabel="GU - Guam"></apex:selectOption>
+                                <apex:selectOption itemValue="HI" itemLabel="HI - Hawaii"></apex:selectOption>
+                                <apex:selectOption itemValue="ID" itemLabel="ID - Idaho"></apex:selectOption>
+                                <apex:selectOption itemValue="IL" itemLabel="IL - Illinois"></apex:selectOption>
+                                <apex:selectOption itemValue="IN" itemLabel="IN - Indiana"></apex:selectOption>
+                                <apex:selectOption itemValue="IA" itemLabel="IA - Iowa"></apex:selectOption>
+                                <apex:selectOption itemValue="KS" itemLabel="KS - Kansas"></apex:selectOption>
+                                <apex:selectOption itemValue="KY" itemLabel="KY - Kentucky"></apex:selectOption>
+                                <apex:selectOption itemValue="LA" itemLabel="LA - Louisiana"></apex:selectOption>
+                                <apex:selectOption itemValue="ME" itemLabel="ME - Maine"></apex:selectOption>
+                                <apex:selectOption itemValue="MH" itemLabel="MH - Marshall Islands"></apex:selectOption>
+                                <apex:selectOption itemValue="MD" itemLabel="MD - Maryland"></apex:selectOption>
+                                <apex:selectOption itemValue="MA" itemLabel="MA - Massachusetts"></apex:selectOption>
+                                <apex:selectOption itemValue="MI" itemLabel="MI - Michigan"></apex:selectOption>
+                                <apex:selectOption itemValue="MN" itemLabel="MN - Minnesota"></apex:selectOption>
+                                <apex:selectOption itemValue="MS" itemLabel="MS - Mississippi"></apex:selectOption>
+                                <apex:selectOption itemValue="MO" itemLabel="MO - Missouri"></apex:selectOption>
+                                <apex:selectOption itemValue="MT" itemLabel="MT - Montana"></apex:selectOption>
+                                <apex:selectOption itemValue="NE" itemLabel="NE - Nebraska"></apex:selectOption>
+                                <apex:selectOption itemValue="NV" itemLabel="NV - Nevada"></apex:selectOption>
+                                <apex:selectOption itemValue="NH" itemLabel="NH - New Hampshire"></apex:selectOption>
+                                <apex:selectOption itemValue="NJ" itemLabel="NJ - New Jersey"></apex:selectOption>
+                                <apex:selectOption itemValue="NM" itemLabel="NM - New Mexico"></apex:selectOption>
+                                <apex:selectOption itemValue="NY" itemLabel="NY - New York"></apex:selectOption>
+                                <apex:selectOption itemValue="NC" itemLabel="NC - North Carolina"></apex:selectOption>
+                                <apex:selectOption itemValue="ND" itemLabel="ND - North Dakota"></apex:selectOption>
+                                <apex:selectOption itemValue="MP" itemLabel="MP - Northern Mariana Islands"></apex:selectOption>
+                                <apex:selectOption itemValue="OH" itemLabel="OH - Ohio"></apex:selectOption>
+                                <apex:selectOption itemValue="OK" itemLabel="OK - Oklahoma"></apex:selectOption>
+                                <apex:selectOption itemValue="OR" itemLabel="OR - Oregon"></apex:selectOption>
+                                <apex:selectOption itemValue="PW" itemLabel="PW - Palau"></apex:selectOption>
+                                <apex:selectOption itemValue="PA" itemLabel="PA - Pennsylvania"></apex:selectOption>
+                                <apex:selectOption itemValue="PR" itemLabel="PR - Puerto Rico"></apex:selectOption>
+                                <apex:selectOption itemValue="RI" itemLabel="RI - Rhode Island"></apex:selectOption>
+                                <apex:selectOption itemValue="SC" itemLabel="SC - South Carolina"></apex:selectOption>
+                                <apex:selectOption itemValue="SD" itemLabel="SD - South Dakota"></apex:selectOption>
+                                <apex:selectOption itemValue="TN" itemLabel="TN - Tennessee"></apex:selectOption>
+                                <apex:selectOption itemValue="TX" itemLabel="TX - Texas"></apex:selectOption>
+                                <apex:selectOption itemValue="UT" itemLabel="UT - Utah"></apex:selectOption>
+                                <apex:selectOption itemValue="VT" itemLabel="VT - Vermont"></apex:selectOption>
+                                <apex:selectOption itemValue="VI" itemLabel="VI - Virgin Islands"></apex:selectOption>
+                                <apex:selectOption itemValue="VA" itemLabel="VA - Virginia"></apex:selectOption>
+                                <apex:selectOption itemValue="WA" itemLabel="WA - Washington"></apex:selectOption>
+                                <apex:selectOption itemValue="WV" itemLabel="WV - West Virginia"></apex:selectOption>
+                                <apex:selectOption itemValue="WI" itemLabel="WI - Wisconsin"></apex:selectOption>
+                                <apex:selectOption itemValue="WY" itemLabel="WY - Wyoming"></apex:selectOption>
+                                <apex:selectOption itemValue="AA" itemLabel="AA - Armed Forces Americas"></apex:selectOption>
+                                <apex:selectOption itemValue="AE" itemLabel="AE - Armed Forces Europe"></apex:selectOption>
+                                <apex:selectOption itemValue="AP" itemLabel="AP - Armed Forces Pacific"></apex:selectOption>
+                                  </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Business Address</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText styleclass="slds-input LT_input" required="true" title="Business Address" value="{!objLead.Street}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Address 2</label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="form-element-id-06"  class="slds-input LT_input" value="" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row LT_marginmedium">
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">City</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText styleclass="slds-input LT_input" required="true"  value="{!ObjLead.City}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Country</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText styleclass="slds-input LT_input" required="true" maxlength="30" value="{!ObjLead.County__c}" />
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">State</label>
+                        <div class="slds-form-element__control">
+                            <!--apex:inputText styleclass="slds-input LT_input"   value="{!objLead.State}" /-->
+                            <apex:selectList size="1" styleclass="LT_input" title="State" required="true" value="{!objLead.State}">
+                                <apex:selectOption itemValue="" itemLabel="--None--"/>  
+                                 
+                                <apex:selectOption itemValue="AL" itemLabel="AL - Alabama"></apex:selectOption>
+                                <apex:selectOption itemValue="AK" itemLabel="AK - Alaska"></apex:selectOption>
+                                <apex:selectOption itemValue="AS" itemLabel="AS - American Samoa"></apex:selectOption>
+                                <apex:selectOption itemValue="AZ" itemLabel="AZ - Arizona"></apex:selectOption>
+                                <apex:selectOption itemValue="AR" itemLabel="AR - Arkansas"></apex:selectOption>
+                                <apex:selectOption itemValue="CA" itemLabel="CA - California"></apex:selectOption>
+                                <apex:selectOption itemValue="CO" itemLabel="CO - Colorado"></apex:selectOption>
+                                <apex:selectOption itemValue="CT" itemLabel="CT - Connecticut"></apex:selectOption>
+                                <apex:selectOption itemValue="DE" itemLabel="DE - Delaware"></apex:selectOption>
+                                <apex:selectOption itemValue="DC" itemLabel="DC - District of Columbia"></apex:selectOption>
+                                <apex:selectOption itemValue="FM" itemLabel="FM - Federated States of Micronesia"></apex:selectOption>
+                                <apex:selectOption itemValue="FL" itemLabel="FL - Florida"></apex:selectOption>
+                                <apex:selectOption itemValue="GA" itemLabel="GA - Georgia"></apex:selectOption>
+                                <apex:selectOption itemValue="GU" itemLabel="GU - Guam"></apex:selectOption>
+                                <apex:selectOption itemValue="HI" itemLabel="HI - Hawaii"></apex:selectOption>
+                                <apex:selectOption itemValue="ID" itemLabel="ID - Idaho"></apex:selectOption>
+                                <apex:selectOption itemValue="IL" itemLabel="IL - Illinois"></apex:selectOption>
+                                <apex:selectOption itemValue="IN" itemLabel="IN - Indiana"></apex:selectOption>
+                                <apex:selectOption itemValue="IA" itemLabel="IA - Iowa"></apex:selectOption>
+                                <apex:selectOption itemValue="KS" itemLabel="KS - Kansas"></apex:selectOption>
+                                <apex:selectOption itemValue="KY" itemLabel="KY - Kentucky"></apex:selectOption>
+                                <apex:selectOption itemValue="LA" itemLabel="LA - Louisiana"></apex:selectOption>
+                                <apex:selectOption itemValue="ME" itemLabel="ME - Maine"></apex:selectOption>
+                                <apex:selectOption itemValue="MH" itemLabel="MH - Marshall Islands"></apex:selectOption>
+                                <apex:selectOption itemValue="MD" itemLabel="MD - Maryland"></apex:selectOption>
+                                <apex:selectOption itemValue="MA" itemLabel="MA - Massachusetts"></apex:selectOption>
+                                <apex:selectOption itemValue="MI" itemLabel="MI - Michigan"></apex:selectOption>
+                                <apex:selectOption itemValue="MN" itemLabel="MN - Minnesota"></apex:selectOption>
+                                <apex:selectOption itemValue="MS" itemLabel="MS - Mississippi"></apex:selectOption>
+                                <apex:selectOption itemValue="MO" itemLabel="MO - Missouri"></apex:selectOption>
+                                <apex:selectOption itemValue="MT" itemLabel="MT - Montana"></apex:selectOption>
+                                <apex:selectOption itemValue="NE" itemLabel="NE - Nebraska"></apex:selectOption>
+                                <apex:selectOption itemValue="NV" itemLabel="NV - Nevada"></apex:selectOption>
+                                <apex:selectOption itemValue="NH" itemLabel="NH - New Hampshire"></apex:selectOption>
+                                <apex:selectOption itemValue="NJ" itemLabel="NJ - New Jersey"></apex:selectOption>
+                                <apex:selectOption itemValue="NM" itemLabel="NM - New Mexico"></apex:selectOption>
+                                <apex:selectOption itemValue="NY" itemLabel="NY - New York"></apex:selectOption>
+                                <apex:selectOption itemValue="NC" itemLabel="NC - North Carolina"></apex:selectOption>
+                                <apex:selectOption itemValue="ND" itemLabel="ND - North Dakota"></apex:selectOption>
+                                <apex:selectOption itemValue="MP" itemLabel="MP - Northern Mariana Islands"></apex:selectOption>
+                                <apex:selectOption itemValue="OH" itemLabel="OH - Ohio"></apex:selectOption>
+                                <apex:selectOption itemValue="OK" itemLabel="OK - Oklahoma"></apex:selectOption>
+                                <apex:selectOption itemValue="OR" itemLabel="OR - Oregon"></apex:selectOption>
+                                <apex:selectOption itemValue="PW" itemLabel="PW - Palau"></apex:selectOption>
+                                <apex:selectOption itemValue="PA" itemLabel="PA - Pennsylvania"></apex:selectOption>
+                                <apex:selectOption itemValue="PR" itemLabel="PR - Puerto Rico"></apex:selectOption>
+                                <apex:selectOption itemValue="RI" itemLabel="RI - Rhode Island"></apex:selectOption>
+                                <apex:selectOption itemValue="SC" itemLabel="SC - South Carolina"></apex:selectOption>
+                                <apex:selectOption itemValue="SD" itemLabel="SD - South Dakota"></apex:selectOption>
+                                <apex:selectOption itemValue="TN" itemLabel="TN - Tennessee"></apex:selectOption>
+                                <apex:selectOption itemValue="TX" itemLabel="TX - Texas"></apex:selectOption>
+                                <apex:selectOption itemValue="UT" itemLabel="UT - Utah"></apex:selectOption>
+                                <apex:selectOption itemValue="VT" itemLabel="VT - Vermont"></apex:selectOption>
+                                <apex:selectOption itemValue="VI" itemLabel="VI - Virgin Islands"></apex:selectOption>
+                                <apex:selectOption itemValue="VA" itemLabel="VA - Virginia"></apex:selectOption>
+                                <apex:selectOption itemValue="WA" itemLabel="WA - Washington"></apex:selectOption>
+                                <apex:selectOption itemValue="WV" itemLabel="WV - West Virginia"></apex:selectOption>
+                                <apex:selectOption itemValue="WI" itemLabel="WI - Wisconsin"></apex:selectOption>
+                                <apex:selectOption itemValue="WY" itemLabel="WY - Wyoming"></apex:selectOption>
+                                <apex:selectOption itemValue="AA" itemLabel="AA - Armed Forces Americas"></apex:selectOption>
+                                <apex:selectOption itemValue="AE" itemLabel="AE - Armed Forces Europe"></apex:selectOption>
+                                <apex:selectOption itemValue="AP" itemLabel="AP - Armed Forces Pacific"></apex:selectOption>
+                                  </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row LT_marginmedium">
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">ZIP</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText maxlength="5" required="true" onkeypress="return inputLimiter(event,'Numbers');" styleclass="slds-input LT_input" value="{!objLead.Postalcode}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding ">
+                        <label class="slds-form-element__label" for="form-element-id-06">Date Business Established</label>
+                        <div class="slds-form-element__control " style="width:80%">
+                            <apex:inputField styleclass="slds-input LT_input " required="true" value="{!objLead.Business_Start_Date__c}" id="calYearPicker"/>
+                        </div>
+                    </div>
+                </div>
+                  <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Business Website URL - (If no website type none.com)</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputText styleclass="slds-input LT_input" style="width:93%" required="true"  id="LT_website"  value="{!objLead.Website}" onchange="ValidateWebsite(this.value)"/>
+                        <p id="errorWebsite" style="color:red;font-size:10px;position: absolute;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                        
+            <div class="slds-form-element__row LT_marginmedium">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Do you Rent/Own your Business Location?</label>
+                        <div class="slds-form-element__control">
+                            <apex:selectList size="1" required="true" title="Do you Rent/Own your Business Location?" styleclass="LT_input" value="{!objLead.Do_you_rent_own_business_space__c}">
+                                   <apex:selectOption itemValue="" itemLabel="--None--"/>   
+                                   <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Amount of Rent/Mtg</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="slds-input LT_input" required="true"  value="{!objLead.Monthly_Rent_Mtg__c}" />
+                        <p id="errorRent" style="color:red;font-size:10px;position: absolute;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+           <!-- <div class="slds-form-element__row">
+                <div class="slds-size_12-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Who Is Your Customer Base?</label>
+                        <div class="slds-form-element__control" >
+                            <select id="selectVeteran" name="selectVeteran" size="1" class="LT_input" style="width:98%">
+                                <option value="Select" selected="selected">Select</option>
+                                <option value= "">B2B</option>
+                                <option value="">B2C</option>
+                                <option value="">Both</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+            
+            <div class="slds-form-element__row LT_marginmedium">
+                  <div class="slds-size_3-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Who Is Your Customer Base?</label>
+                        <div class="slds-form-element__control" >
+                            <apex:selectList size="1" required="true" styleclass="LT_input" title="Who Is Your Customer Base?" style="width:94%" value="{!objLead.Who_is_Your_Customer_Base1__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>  
+                                    <apex:selectOption itemValue="B2B" itemLabel="B2B"/>
+                                      <apex:selectOption itemValue="B2C" itemLabel="B2C"/>
+                                <apex:selectOption itemValue="B2B;B2C" itemLabel="Both"/>
+                                </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_3-of-12">
+                    <div class="slds-form-element LT_padding" style="margin-left:5px;">
+                        <label class="slds-form-element__label" for="form-element-id-05">What Does Your Business Do?</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input" required="true" rendered="true" style="width:92%" value="{!objLead.What_does_your_Business_do__c}"/>
+                            
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="slds-size_3-of-12 checkbusiness" id="BusinessDo" >
+                    <div class="slds-form-element LT_padding" style="" >
+                        <label class="slds-form-element__label" for="form-element-id-05">What Type of Business is it?</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input" id="businessinput" required="true" style="width:94%" value="{!objLead.What_type_of_Business_is_it__c}"/>        
+                              
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-size_3-of-12 morebusiness" id="BusinessType">
+                    <div class="slds-form-element " style="" >
+                        <label class="slds-form-element__label" for="form-element-id-05">Tell us More?</label>
+                        <div class="slds-form-element__control">
+                            <!--<input type="text" id="form-element-id-06" required="" class="slds-input LT_input" value="" style="width:98%;" /-->
+                            <apex:inputField styleclass="LT_input" required="true"  style="width:92%" value="{!objLead.Tell_us_more__c}"/>
+                            
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            
+           <!-- <div class="slds-form-element__row morebusiness" id="BusinessType">
+                <div class="slds-size_12-of-12">
+                    <div class="slds-form-element " style="" >
+                        <label class="slds-form-element__label" for="form-element-id-05">Tell us More?</label>
+                        <div class="slds-form-element__control">
+                            <input type="text" id="form-element-id-06" required="" class="slds-input LT_input" value="" style="width:98%;" />
+                        </div>
+                    </div>
+                </div> 
+            </div> -->
+            
+            <div class="slds-form-element__row LT_marginmedium">
+                <div class="slds-size_3-of-12">
+                    <div class="slds-form-element " style="" >
+                        <label class="slds-form-element__label" for="">NAICS CODE</label>
+                        <div class="slds-form-element__control">
+                             <apex:inputText styleclass="slds-input LT_input" required="true" maxlength="6"  onkeypress="return inputLimiter(event,'Numbers');" value="{!objLead.NAICS_CODE__c}" style="width:94%;"  />
+                          
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_8-of-12" style="padding-top:60px;padding-left:5px">
+                    <a href="https://www.naics.com/" target="_blank" class="LT_naics">Click here to find your NAICS CODE</a>
+                </div>
+           </div>
+            
+            <div class="slds-size_12-of-12 LT_subheader">
+                    <h1>Business Data For Loan:</h1>
+            </div>
+            
+          <div class="slds-form-element__row">
+                <div class="slds-size_3-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Purpose of the Loan</label>
+                        <div class="slds-form-element__control">
+                            <!--apex:inputField styleclass="LT_input" id="selectpurpose" onchange="loanPurpose()"   value="{!objLead.Purpose_of_the_loan__c}"/-->
+                           <apex:selectList size="1" required="true" id="selectpurpose" title="Purpose of the Loan" styleclass="LT_input" style="width: 94%;" onchange="loanPurpose(this.value);" value="{!objLead.Purpose_of_the_loan__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                    <apex:selectOption itemValue="Payroll" itemLabel="Payroll"/>
+                                    <apex:selectOption itemValue="Rent/Mortgage interest" itemLabel="Rent/Mortgage interest"/>
+                                    <apex:selectOption itemValue="Utilities" itemLabel="Utilities"/>
+                                    <apex:selectOption itemValue="Group Healthcare" itemLabel="Group Healthcare"/>
+                                    <apex:selectOption itemValue="Other" itemLabel="Other"/>
+                                  </apex:selectList>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_3-of-12  loanother" id="otherfield">
+                    <div class="slds-form-element LT_padding" style="">
+                        <label class="slds-form-element__label" for="form-element-id-05">Other</label>
+                        <div class="slds-form-element__control">
+                            
+                            <apex:inputField styleclass="slds-input LT_input"  value="{!objLead.Other__c}" style="width: 92%;" />
+                        
+                        </div>
+                    </div>
+                </div> 
+                <div class="slds-size_3-of-12">
+                    <div class="slds-form-element LT_padding" style="">
+                        <label class="slds-form-element__label" for="form-element-id-05">Amount Requested</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="slds-input LT_input" required="true"  style="width:94%;" value="{!ObjLead.Requested_Amount__c}" id="RequestedAmount"  onchange="ValidateRequestedAmount(this.value)"/>
+                            <p id="errorRequestedAmount" style="color:red;font-size:10px;position: absolute;"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_3-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Will This Loan Create More Jobs?</label>
+                        <div class="slds-form-element__control">
+                            <apex:selectList size="1" required="true" title="Will This Loan Create More Jobs?" styleclass="LT_input" style="width:92%;" value="{!objLead.Will_this_loan_create_more_Jobs__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>  
+                                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_3-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05"># of Current Employees</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField type="number" required="true"  styleclass="slds-input LT_input" style="width: 94%;" value="{!ObjLead.of_Current_Employees__c}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_3-of-12">
+                    <div class="slds-form-element LT_padding" style="margin-left:5px;">
+                        <label class="slds-form-element__label" for="form-element-id-06"># of Jobs Created (30th June) </label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField type="number" required="true"  styleclass="slds-input LT_input" style="width: 92%;" value="{!objLead.of_Jobs_Created_30th_June__c}"  />
+                            
+                        </div>
+                    </div>
+                </div>
+            <!--</div>
+            
+            <div class="slds-form-element__row">-->
+                <div class="slds-size_3-of-12">
+                    <div class="slds-form-element LT_padding" style="">
+                        <label class="slds-form-element__label" for="form-element-id-05"># of Jobs Retained</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField type="number" required="true"  styleclass="slds-input LT_input" style="width: 94%;" value="{!objLead.of_Jobs_Retained__c}" />
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_3-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Average Monthly Payroll</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField type="number" required="true"  styleclass="slds-input LT_input" style="width:92%;" value="{!objLead.Average_Monthly_Payroll__c}" />
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Woman Owned Business</label>
+                        <div class="slds-form-element__control">
+                            <apex:selectList size="1" required="true" title="women" Styleclass="LT_input" value="{!objLead.Women_Owned__c}">
+                                   <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                      <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Veteran</label>
+                        <div class="slds-form-element__control">
+                            <apex:selectList size="1" required="true" title="Veteran" styleclass="LT_input" value="{!objLead.Veteran__c}">
+                                      <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                      <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Disabled</label>
+                        <div class="slds-form-element__control">
+                            <apex:selectList size="1"  required="true" title="Disabled" styleclass="LT_input" style="width:94%;" value="{!objLead.Disabled__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                      <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Race</label>
+                        <div class="slds-form-element__control">
+                            <apex:selectList size="1" required="true" title="Race" styleclass="LT_input" value="{!objLead.Race__c}">
+                                   <apex:selectOption itemValue="" itemLabel="--None--"/>
+                                      <apex:selectOption itemValue="American Indian" itemLabel="American Indian"/>
+                                        <apex:selectOption itemValue="Asian" itemLabel="Asian"/>
+                                        <apex:selectOption itemValue="African-American" itemLabel="African-American"/>
+                                        <apex:selectOption itemValue="Hawaiian Native" itemLabel="Hawaiian Native"/>
+                                        <apex:selectOption itemValue="White" itemLabel="White"/>
+                                        <!--apex:selectOption itemValue="Not Given" itemLabel="Not Given"/-->
+                                        <apex:selectOption itemValue="Alaskan Native" itemLabel="Alaskan Native"/>
+                                        <apex:selectOption itemValue="Other Pacific Islander" itemLabel="Other Pacific Islander"/>
+                                        <!--apex:selectOption itemValue="Not Applicable" itemLabel="Not Applicable"/-->
+                                  </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+               <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label"   for="form-element-id-06">Ethnicity</label>
+                        <div class="slds-form-element__control">
+                            <apex:selectList id="selectVeteran" required="true" title="Ethnicity" size="1" styleClass="LT_input" value="{!objLead.Ethnicity__c}">
+                                     <apex:selectOption itemValue="" itemLabel="--None--"/> 
+                                     <apex:selectOption itemValue="Hispanic or Latino" itemLabel="Hispanic or Latino"/> 
+                                      <apex:selectOption itemValue="Not Hispanic or Latino" itemLabel="Not Hispanic or Latino"/>
+                                      <!--apex:selectOption itemValue="Not Disclosed" itemLabel="Not Disclosed"/-->
+                                  </apex:selectList>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Franchise</label>
+                        <div class="slds-form-element__control">
+                            <apex:InputField styleclass="LT_input" required="true" value="{!objLead.Franchise__c}"/>
+                                   
+                        </div>
+                    </div>
+                </div>
+               <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Current SBA Economic Disaster Injury Loan Balance?</label>
+                        <div class="slds-form-element__control">
+                            <apex:InputField type="number" required="true" styleclass="slds-input LT_input" value="{!objLead.Curr_SBA_Econ_Disaster_Injury_Loan_Bal__c}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <div class="slds-form-element__row">
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Rural </label>
+                        <div class="slds-form-element__control">
+                            <apex:InputField styleclass="LT_input" required="true" value="{!objLead.Rural__c}"/>
+                                   
+                        </div>
+                    </div>
+                </div>
+               <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">10KSB Scholar / Alumni</label>
+                        <div class="slds-form-element__control">
+                            <apex:InputField styleclass="LT_input" required="true" value="{!objLead.X0KSB_Scholar_Alumni__c}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_4-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Do 50% of more your employees earn less than $51,859?</label>
+                        <div class="slds-form-element__control">
+                            <apex:InputField styleclass="LT_input" required="true" value="{!objLead.Do_50_of_empl_earn_less_than_51859__c}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="slds-size_12-of-12 LT_subheader">
+                    <h1>Please answer for the Primary Owner</h1>
+            </div>
+            
+            <div class="slds-form-element__row LT_marginmedium">             
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Have you ever been convicted of a crime?</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input"  required="true"  value="{!objLead.Have_you_ever_been_convicted_of_a_crime__c}"/>
+                            <!--apex:selectList size="1"   styleclass="LT_input" value="{!objLead.Have_you_ever_been_convicted_of_a_crime__c}">
+                                     <apex:selectOption itemValue="" itemLabel="--None--"/> 
+                                     <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList-->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Are there any legal actions pending against you? (or your spouse)</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input" required="true"   value="{!objLead.Legal_action_pending_against_youspouse__c}"/>
+                            <!--apex:selectList size="1"   styleclass="LT_input" value="{!objLead.Legal_action_pending_against_youspouse__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>   
+                                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList-->
+                        </div>
+                    </div>
+                </div>  
+            </div>
+            
+            <div class="slds-form-element__row LT_marginmedium">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Do you have a tax lien?</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input"  required="true"  value="{!objLead.Do_you_have_a_tax_lien_of_taxes_due__c}"/>
+                            <!--apex:selectList size="1"   styleclass="LT_input" value="{!objLead.Do_you_have_a_tax_lien_of_taxes_due__c}">
+                                     <apex:selectOption itemValue="" itemLabel="--None--"/> 
+                                     <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList-->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-05">Have you exhausted all personal and non-SBA financing options? <br/></label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input"  required="true"  value="{!objLead.exhausted_personal_nonSBA_financing__c}"/>
+                            <!--apex:selectList size="1"   styleclass="LT_input" value="{!objLead.exhausted_personal_nonSBA_financing__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>   
+                                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                </apex:selectList-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row LT_marginmedium">           
+                 <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Have you ever defaulted on a government loan? (Including SBA loan,Student loan)  </label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input"  required="true"  value="{!objLead.Have_you_ever_defaulted_on_a_govt_loan__c}"/>
+                            <!--apex:selectList size="1"   styleclass="LT_input" value="{!objLead.Have_you_ever_defaulted_on_a_govt_loan__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>  
+                                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList-->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label" for="form-element-id-06">Is the United States the principal place of residence for all employees of the Applicant included in the Applicant’s payroll calculation above?</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input" required="true"   value="{!objLead.Is_the_US_Principal_place_of_residence__c}"/>
+                            <!--apex:selectList size="1"   styleclass="LT_input" value="{!objLead.Majority_owner_US_CitizenLegal_Resident__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>   
+                                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="slds-form-element__row LT_marginmedium">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        
+                        <label class="slds-form-element__label"   for="form-element-id-05" >Does the business have existing SBA debt?</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input" required="true"   value="{!objLead.Does_the_Business_have_existing_SBA_Debt__c}"/>
+                            <!--apex:selectList size="1" styleclass="LT_input" value="{!objLead.Does_the_Business_have_existing_SBA_Debt__c}">
+                                   <apex:selectOption itemValue="" itemLabel="--None--"/>   
+                                   <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList-->
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element LT_padding">
+                        <label class="slds-form-element__label"   for="form-element-id-06">Have you submitted a loan request to SBA or any other agency or financial institution in connection with Covid-19?</label>
+                        <div class="slds-form-element__control">
+                            <apex:inputField styleclass="LT_input" required="true"   value="{!objLead.Submit_loan_req_SBAfinancial_COVID19__c}"/>
+                            <!--apex:selectList size="1" styleclass="LT_input" value="{!objLead.Submit_loan_req_SBAfinancial_COVID19__c}">
+                                    <apex:selectOption itemValue="" itemLabel="--None--"/>  
+                                    <apex:selectOption itemValue="Yes" itemLabel="Yes"/>
+                                      <apex:selectOption itemValue="No" itemLabel="No"/>
+                                  </apex:selectList-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+               <div class="slds-form-element__row LT_marginmedium">
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element">
+                    <!--   <div class="g-recaptcha" data-sitekey="6LdyCugUAAAAACJrXq7NkpQ8oUNkq5_ee84LPsuc"></div><br/> -->
+                         
+                         <!-- =======================Production==reCAPTCHA==================-->
+                        <div class="g-recaptcha" data-sitekey="6Ld9WugUAAAAAG1Yf9MhQ3cdows4uY1gZXbI0pgR"></div><br/>
+                         <!-- =======================Production==reCAPTCHA==================-->
+                    </div>
+                </div>
+                <div class="slds-size_6-of-12">
+                    <div class="slds-form-element" style="float: right;margin-right: 25px;" >
+                        <apex:commandButton id="uploadBtnId" action="{!SaveMethod}" onclick="errorValidate()" styleClass="slds-button slds-button_brand LT_submit" value="Submit"/>
+                    <div class="demo-only" id="loader" style=""> 
+                        <div class="slds-spinner_container">
+                            <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                                <span class="slds-assistive-text">Loading</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+   
+        </div>
+    </div>
+   
+        </apex:form>
+     
+</apex:page>

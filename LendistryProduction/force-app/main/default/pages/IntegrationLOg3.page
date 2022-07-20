@@ -1,0 +1,45 @@
+<apex:page Controller="IntegrationLogCls3" readOnly="true" sidebar="false" showHeader="false" >
+    <head>
+        <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js"/>
+        <apex:includescript value="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"/>
+        <apex:stylesheet value="//cdn.datatables.net/1.10.4/css/jquery.dataTables.css"/>
+        <script>
+        j$ = jQuery.noConflict();
+        j$(document).ready( function () {
+            var accTable = j$('[id$="accTable"]').DataTable({
+                 
+            });
+        });
+        </script>
+    </head>
+    <body>
+        <table id="accTable" class="display">
+            <thead>
+                <tr>
+                    <th>Application_ID__c</th>
+                    <th>Lead Id</th>
+                    <th>Opportunity Id</th>
+                    <th>Business Id</th>
+                    <th>CreatedDate</th>
+                    <th>Success/Error Code</th>
+                    <th>Request Body</th>
+                    <th>Response Body</th>
+                </tr>
+            </thead>
+            <tbody>
+                <apex:repeat value="{!listOfLogs}" var="each">
+                    <tr>
+                        <td>{!each.Application_ID__c}</td>
+                        <td>{!each.Lead_Id__c}</td>
+                        <td>{!each.Opportunity_Id__c}</td>
+                        <td>{!each.Business_Id__c}</td>
+                        <td>{!each.CreatedDate}</td>
+                        <td>{!each.Success_Error_Code__c}</td>
+                        <td>{!each.Request__c}</td>
+                        <td>{!each.Response__c}</td>
+                    </tr>
+                </apex:repeat>
+            </tbody>
+        </table>
+    </body>
+</apex:page>

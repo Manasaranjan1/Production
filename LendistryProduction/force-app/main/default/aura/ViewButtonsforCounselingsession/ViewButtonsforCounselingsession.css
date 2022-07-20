@@ -1,0 +1,9 @@
+.THIS .dark {
+    color: #000;
+}
+.THIS .slds-button .slds-button_icon .slds-button_icon-brand {
+    color: aliceblue;
+}
+.THIS button.slds-button.slds-button_icon.slds-button_icon-brand {
+    color: aliceblue;
+}

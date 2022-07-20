@@ -1,0 +1,45 @@
+<aura:component controller="LeadHistoryController" implements="flexipage:availableForAllPageTypes,lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" >
+    
+    <aura:attribute type="LeadHistoryController.HistoryWrapper[]" name="LeadHistory"/>
+    <aura:attribute name="isShow" type="Boolean" default="false"/>
+    <aura:attribute name="recordId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.fetchLeadHistoryList}"/>
+    
+    <!-- Event for Refreshing Opp Table Starts Name="OppRecordCreated"-->
+    <aura:handler event="c:OppRecordCreated" action="{!c.fetchOppHistoryList}" />
+    <aura:registerEvent name="OppRecordCreated" type="c:OppRecordCreated"/>
+    <!-- Event for Refreshing Opp Table Ends-->
+    
+    
+    
+    <aura:if isTrue="{!v.isShow}">
+        
+        <div class="slds">
+            <div class="slds-scrollable" style="height: 10rem;">
+                <table class="slds-table slds-table--bordered">    	
+                    <thead>
+                        <tr class="slds-text-heading--label">            	
+                            
+                            <th >Status </th> 
+                            <th >Start Date </th> 
+                            <th >Close Date </th> 
+                            <th >Duration </th>                
+                        </tr>        	 
+                    </thead>
+                    <tbody>
+                        <!-- Limitation - we cannot use indexvar of iterator control to refer header json information else, instead of defining css class for each column, we could have used it from header only -->
+                        <aura:iteration items="{!v.LeadHistory}" var="row">
+                            
+                            <tr class="slds-hint-parent">                         
+                                <td >{!row.status}</td>
+                                <td >{!row.startDate}</td> 
+                                <td >{!row.endDate}</td> 
+                                <td >{!row.noOfDays }</td>  
+                            </tr>
+                        </aura:iteration>              
+                    </tbody>    
+                </table>
+            </div>
+        </div>
+    </aura:if>
+</aura:component>

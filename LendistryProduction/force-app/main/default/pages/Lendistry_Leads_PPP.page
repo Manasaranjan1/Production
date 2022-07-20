@@ -1,0 +1,438 @@
+<apex:page docType="html-5.0" sidebar="false" showHeader="false">
+<script type="text/javascript">
+    function sendspinner(this1){    
+        this1.disabled=true;    
+       var landingURL = window.location.href;
+        //alert('landingURL---->>'+landingURL );
+        if( landingURL.includes("Lendistry_Leads_PPP"))
+        {
+        document.getElementById("loader").style.display='block';    
+        var pageUrl = window.location.href.replace('force.com/Lendistry_Leads_PPP', 'force.com/Lendistry_Leadapplication');    
+        
+        window.location = pageUrl ; //window.location.href; // '/Lendistry_Leadapplication';    
+       }
+       else
+       {
+        document.getElementById("loader").style.display='block';    
+        var pageUrl = window.location.href.replace('force.com/', 'force.com/Lendistry_Leadapplication');    
+        
+        window.location = pageUrl ; //window.location.href; // '/Lendistry_Leadapplication'; 
+       }
+    } 
+    </script>
+    
+
+    <style type="text/CSS">
+        .Leadlist{
+        list-style: disc !important;
+        font-size: medium;
+        text-align: left;
+        font-weight: 400;
+        margin-top: 10px !important;
+        width:90%;
+        }
+
+        .slds-page-header.LT_topheader {
+        border-radius: 0;
+        border: 0;
+        background-color: #462d78;
+        color: #fff;
+        text-align: center;
+        padding: 12px 20px;
+        }
+
+        .slds-page-header__col-title.LT_title{
+        font-size: 2em;
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: bold;
+        }
+
+        .LT_button{
+        font-family: Arial,Helvetica,sans-serif;
+        font-weight: bold;
+        color: #462d78;
+        }
+
+        .LT_nav{
+        /*width: 93%;
+        margin: 20px auto;
+        padding: 15px 0px 25px 0px*/
+        width: 50%;
+        padding: 40px 0px 45px 55px;
+        display: inline-block;
+        }
+
+        .LT_containertext{
+        background-color: #462d78;
+        color: #fff;
+        text-align: center;
+        }
+
+        .divider{
+        height: 3px;
+        display: block;
+        background-color: rgba(0,0,0,0.1);
+        margin: 1em 0 1em;
+        width: 100%;
+        }
+
+        button.slds-button.slds-button_neutral.LT_submit{
+        color: #fff;
+        text-transform: uppercase;
+        background: #462d78;
+        font-size: 20px;
+        line-height: 20px;
+        vertical-align: middle;
+        font-weight: 400;
+        text-align: center;
+        border-radius: 4px;
+        border: 1px solid #462d78;
+        outline: 0!important;
+        cursor: pointer;
+        box-shadow: none;
+        padding: 12px 25px;
+        }
+
+        p.slds-align_absolute-center.innerpara{
+        text-align: center;
+        font-size: 1.3em;
+        font-weight: 500;
+        margin-top: 10px;
+        }
+
+        select.LT_input:placeholder, select.LT_input option{
+        font-family: 'Lucida Grande','Lucida Grande',Tahoma,Arial,sans-serif;
+        font-weight: 400;
+        color: #666666;
+        }
+
+        .slds-grid.slds-wrap.LT_applysection {
+        margin-top: 45px;
+        }
+
+        h1.LT_apply{
+        font-size: 2.8em;
+        font-weight: 600;
+        /* color: #462d78; */
+        padding: 5px 0px 50px;
+        }
+
+        .LT_secimage.slds-align_absolute-center {
+        margin-top: 20px;
+        }
+
+        .LT_secpara {
+        margin-top: 10px;
+        }
+
+        p.secparatext span{
+        color: #4a4a56 !important;
+        font-weight: 500;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 15px !important;
+        padding: 0px 15px;
+        }
+
+        input.slds-input.LT_input.LT_file{
+        background-color: #505050;
+        background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, #505050), color-stop(1, #707070) );
+        background-position: center top;
+        border-radius: 30px;
+        border: 2px solid #808080;
+        color: #FFF !important;
+        font: bold 12px Arial, Helvetica, sans-serif;
+        text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+        }
+
+        #loader{
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display:none;
+        }
+
+        .LT_secimage.slds-align_absolute-center img{
+        max-height: 350px;
+        margin-top: -30px;
+        }
+
+        .slds-col.slds-size_6-of-12.LT_imgres {
+        max-height:470px;
+        height:470px;
+        }
+
+         .LT_containerdiv{
+        padding: 60px 35px 145px 40px;
+        max-height:470px;
+        height: 446px;
+        }
+
+        .LT_applydiv{
+        padding:0 40px;
+        }
+
+        .LT_imgres img{
+        height:90%;}
+
+        #acceptingfile{
+        font-size: 1.4em;
+        font-weight: 800;
+        margin-top: 30px;
+        text-align: center;
+        }
+
+        sup{
+        vertical-align: sub !important;
+        font-size: medium !important;
+        font-weight: 600;
+        }
+
+        .Goldman_partner{
+        margin: 0px auto;
+        font-size: 1.3em;
+        color: #ffffff;
+        padding: 15px 15px;
+        font-weight: 600;
+        background: #462d78;
+        }
+
+        .LT_partner img{
+        width:200px;
+        }
+
+        .LT_partnertwo{
+        width:28%;
+        }
+
+        .LT_partner{
+        width:20%;
+        padding-right: 15px;}
+        @media (min-width:50px) and (max-width:767px){
+        .Ld_Leadres{
+        width:100% !important;
+        display:block;
+        }
+
+        .Leadorder2
+        { Order:1; }
+
+        .Leadorder1
+        { Order:0; }
+
+        .slds-page-header__col-title.LT_title {
+        font-size: 1.5em;
+        }
+
+        .slds-page-header.LT_topheader{
+         padding: 12px 10px;
+        }
+
+        .LT_nav {
+        width: 45%;
+        padding: 40px 15px 45px 20px;
+        }
+
+        .LT_partner{
+        width: 23%;
+        }
+
+        .LT_partner img{
+        width:150px;
+        }
+
+        .LT_partnertwo {
+        width: 30%;
+        }
+        }
+
+         @media (min-device-width:320px) and (max-device-width:640px){
+        .Ld_Leadres{
+        width:100% !important;
+        display:block;
+        }
+
+        .Leadorder2
+        { Order:1; }
+
+        .Leadorder1
+        { Order:0; }
+
+        .slds-page-header__col-title.LT_title {
+        font-size: 1.5em;
+        }
+
+        .slds-page-header.LT_topheader{
+         padding: 12px 10px;
+        }
+
+        .LT_nav {
+        width: 40%;
+        padding: 40px 15px 45px 20px;
+        }
+
+        .LT_nav.LT_partner {
+        width: 23%;
+        }
+
+        .LT_nav.LT_partnertwo {
+        width: 35%;
+        }
+        }
+
+
+        @media only screen and (max-width: 992px) {
+        .slds-col.slds-size_6-of-12.LT_imgres {
+        width: 100%;
+        height: auto !important;
+        max-height: fit-content !important;
+        }
+
+        .LT_imgres img{
+        height:auto;}
+
+        .slds-col.slds-size_6-of-12.LT_containertext {
+        width: 100%;
+        margin: 0px;
+        }
+
+        .LT_containerdiv{
+        padding: 70px 30px 110px;
+        max-height: fit-content;
+        height: auto;
+        }
+
+        .LT_applydiv{
+        width: 50% !important;
+        padding: 15px 20px;
+        }
+        }
+
+    </style>
+    <apex:slds />
+    <div class="slds-page-header LT_topheader">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title LT_title">
+                Looking for information on the SBA Paycheck Protection Program?
+            </div>
+            <div class="slds-page-header__col-actions" style="margin-top: 5px;">
+                <a href="https://lendistry.com/">
+
+                    <a  class="slds-button slds-button_neutral LT_button" href="https://mmc-protal-loadtest-bucket.s3-us-west-2.amazonaws.com/salesforceupload/Resource-Guide.pdf" style="" download="Resource-Guide.pdf" target="_blank">Learn More</a>
+                </a>
+            </div>
+        </div>
+    </div>
+
+     <!--div class="LT_header">
+        <div class="LT_nav">
+            <apex:image value="{!$Resource.Logo}" width="200" height="200" alt="LendistryLogo"/>
+            
+        </div>
+
+        <div class="LT_nav LT_partner" style="padding-left:0">
+           <apex:image value="{!$Resource.PartnerLogo}" alt="PartnersLogo"/>
+        </div>
+
+          <div class="LT_nav LT_partnertwo" style="padding-left:0">
+           <apex:image value="{!$Resource.PartnersLogo2}" alt="PartnersLogo"/>
+        </div>
+    </div>
+
+    <div class="slds-grid slds-wrap" style="">
+        <div class="slds-col slds-size_6-of-12 Ld_Leadres Leadorder2" style="">
+            <apex:image value="{!$Resource.Lead_Photo}" width="100%" height="100%"  alt="Lendistry innerImage"/>
+        </div>
+        <div class="slds-col slds-size_6-of-12 Ld_Leadres Leadorder1" >
+            <apex:image value="{!$Resource.Lnd_acceptingapp}" width="100%" height="100%"  alt="Lendistry Items needed"/>
+        </div>
+
+    </div-->
+    
+    <div class="slds-grid slds-wrap" style="">
+        <div class="slds-col slds-size_12-of-12 Ld_Leadres Leadorder2" style="">
+            <apex:image value="{!$Resource.Lead_Goldmanheader2_60}" width="100%" height="100%"  alt="Lendistry innerImage"/>
+        </div>
+    </div>
+
+    <div class="slds-grid slds-wrap LT_applysection">
+        <!--h1 style="" class="slds-col slds-size_12-of-12 slds-align_absolute-center LT_apply">The PPP Loan Process</h1-->
+        <div class="slds-col slds-size_4-of-12 text-center LT_applydiv" style="">
+            <div class="LT_secimage slds-align_absolute-center">
+                <apex:image value="{!$Resource.Lead_apply}"  alt=""/>
+                <!--img src="https://lendistry--pertesting--c.visualforce.com/resource/1585898755000/Lead_apply?" alt=""/-->
+            </div>
+            <div class="LT_secpara">
+                <p style="text-align: center;font-size:2.5em;margin-bottom:25px">
+                    <!--<strong><span style="color: #462d78;">01-</span></strong>&nbsp;--><strong><span style="color: #000000;">Apply</span></strong>
+                </p>
+                <p style="text-align: center;" class="secparatext"><span>Complete our application below to process your loan
+                    for review. Please upload as much information as you can in order to proceed through the review process
+                    quicker, including proof of payroll items and the SBA Application Form.</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="slds-col slds-size_4-of-12 text-center LT_applydiv" style="">
+            <div class="LT_secimage slds-align_absolute-center">
+                <apex:image id="theImage" value="{!$Resource.Lead_connect}" alt=""/>
+                <!--img src="https://lendistry--pertesting--c.visualforce.com/resource/1585898993000/Lead_connect?" alt=""/-->
+            </div>
+            <div class="LT_secpara">
+                <p style="text-align: center;font-size:2.5em;margin-bottom:25px">
+                    <!--<strong> <span style="color: #462d78;">02-</span></strong>&nbsp;--><strong><span style="color: #000000;">Connect</span></strong>
+                </p>
+                <p style="text-align: center;" class="secparatext"><span> Once your application has been submitted and
+                    entered into our system, you will receive a confirmation email with a username and password to our
+                    portal. Once logged in, connect your bank account through our verified system, Plaid. You can also
+                    upload additional documents.</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="slds-col slds-size_4-of-12 text-center LT_applydiv" style="">
+            <div class="LT_secimage slds-align_absolute-center">
+                <apex:image value="{!$Resource.Lead_review}" alt=""/>
+                <!--img src="https://lendistry--pertesting--c.visualforce.com/resource/1585899215000/Lead_review?" alt=""/-->
+            </div>
+            <div class="LT_secpara">
+                <p style="text-align: center;font-size:2.5em;margin-bottom:25px">
+                    <!--<strong> <span style="color: #462d78;">03-</span></strong>&nbsp;--><strong><span style="color: #000000;">Review</span></strong>
+                </p>
+                <p style="text-align: center;" class="secparatext"><span>After your bank account has been verified,
+                    your application will be queued for review by our team. Please allow up to 48 hours for our team
+                    to follow up for additional questions and/or requirements. You will be updated on the progress of
+                    your application through the portal and email. </span>
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="slds-form-element__row" style="margin:50px auto 40px;">
+        <div class="slds-size_12-of-12 slds-align_absolute-center">
+            <button class="slds-button slds-button_neutral LT_submit" onclick="sendspinner(this);">Start Your Application</button>
+            <div class="demo-only" id="loader" style="">
+                <div class="slds-spinner_container">
+                    <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                        <span class="slds-assistive-text">Loading</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="slds-form-element__row Goldman_partner" style="">
+        Goldman Sachs 10,000 Small Businesses is an investment to help entrepreneurs create jobs and economic opportunity
+        by providing greater access to education, capital and business support services. To date, more than 9,700 business
+        owners have graduated from the program across all 50 states in the US, Puerto Rico and Washington, D.C. The program
+        gets capital in the hands of  small businesses through lending partnerships with Community Development Financial
+        Institutions ("CDFls") and other mission-driven lenders, who have long track records of reaching small businesses
+        often underserved by the traditional banking system.
+    </div>
+
+
+</apex:page>

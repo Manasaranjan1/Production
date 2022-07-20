@@ -1,0 +1,79 @@
+<aura:component  implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="recordId" type="String"/>    
+    <aura:attribute name="whichpage" type="Integer"/>
+    <aura:attribute name="LeadId" type="String"/>
+    <aura:attribute name="LeadName" type="String"/>
+    <aura:attribute name="isNewSessionRecord" type="Boolean" default="true"/>
+    <aura:attribute name="ltngCurrTime" type="String" default="00:00:00"/>
+    <aura:attribute name="showDetail" type="Boolean"  description="shoe hide spinner"/>
+    <aura:attribute name="mydata" type="object[]" description="for storing the apex class object"/> 
+    <aura:attribute name="mydataTemp" type="object[]" description="for storing the apex class object"/> 
+    
+    <aura:handler name="init" value="{!this}" action="{!c.initData}"/>
+    
+    <aura:If isTrue="{!v.hideSpinner}">
+        <div class="slds-spinner_container" >
+            <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+                <span class="slds-assistive-text">Loading, Please Wait...</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>      
+    </aura:If>  
+      <!-- LOOP -->
+    <aura:iteration items="{!v.mydata}" var="obj" indexVar="index1">
+        
+        <tr  class="slds-line-height_reset" style="font-family: Poppins;">
+            <!-- LOOP -->
+            <aura:iteration items="{!obj.listColWrap}" var="objinner" indexVar="indexinner">
+              
+                <aura:if  isTrue="{!and(objinner.typeValue!='ID',and(objinner.apiName!='Lead__c',and(objinner.apiName!='Note__c',objinner.apiName!='Counsellor1__c')))}" > 
+                    <td scope="col"  class="pointerCss fontSizecssChild" >                    
+                         <aura:if  isTrue="{!objinner.typeValue=='BOOLEAN'}" > 
+                            <label class="slds-checkbox" >                                              
+                                <aura:if  isTrue="{!or(objinner.columnValue==true,objinner.columnValue=='true')}" >
+                                    <ui:inputCheckbox  
+                                                      value="true"
+                                                      disabled="true"/>
+                                    <aura:set attribute="else">
+                                        <ui:inputCheckbox  
+                                                          value="false"
+                                                          disabled="true"/>
+                                    </aura:set>
+                                </aura:if>
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-form-element__label text"></span>
+                            </label>
+                            <aura:set attribute="else">
+                                <aura:if  isTrue="{!or(objinner.typeValue=='DATE',objinner.typeValue=='DATETIME')}" > 
+                                    <div class="slds-truncate a" >
+                                        <div  onclick="{!c.openRecordPage}"  title="{!objinner.recordId}" style="padding-left: 15px;">
+                                            <lightning:formattedDateTime value="{!objinner.columnValue}" 
+                                                                         year="2-digit" month="short" day="2-digit"/> 
+                                                                         
+                                                                         
+                                        </div>
+                                    </div>
+                                    <aura:set attribute="else">
+                                        <aura:if  isTrue="{!objinner.apiName=='Name'}" > 
+                                            <p title="{!objinner.recordId}" name="{!objinner.LeadId}" text="{!objinner.LeadName}" class="a pointerCss" onclick="{!c.openPage}">
+                                                <a href="" id="{!objinner}" name="{!objinner.LeadId}" title="{!objinner.recordId}">{!objinner.columnValue}</a>
+                                                
+                                            </p>
+                                            <aura:set attribute="else">
+                                                {!objinner.columnValue}                                                
+                                            </aura:set>
+                                        </aura:if>                                        
+                                    </aura:set>
+                                </aura:if>
+                            </aura:set>                            
+                        </aura:if>                           
+                    </td>                    
+                </aura:if>
+               
+            </aura:iteration> 
+           
+        </tr>         
+    </aura:iteration>  
+    
+</aura:component>

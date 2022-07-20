@@ -1,0 +1,66 @@
+<apex:page showHeader="false" sidebar="false">
+    
+    <div class="content-container policy-madal">
+  <div class="main-authorization">
+    <!-- <h3>AUTHORIZATIONS</h3> -->
+    <p>
+      <span>CONSENT TO CREDIT REPORTING:</span>
+      The Borrower and Owner(s)/Officer(s) identified above (individually,
+      an "Applicant") each represents, acknowledges and agrees that (1) all information and documents
+      provided to Lendistry are true, accurate and complete, (2) Applicant will immediately notify LENDISTRY
+      of any change in such information or financial condition, (3) Applicant authorizes LENDISTRY to disclose
+      all information and documents that LENDISTRY may obtain excluding credit reports to other persons or
+      entities (collectively, "Assignees") that may be involved with or acquire commercial loans. (4) By
+      agreeing to this authorization, I authorize LENDISTRY and/or Assignees to investigate my credit history
+      and financial records including my banking records. As part of such investigation, I authorize LENDISTRY,
+      to request and obtain consumer credit reports in connection with the opening, monitoring, renewal, and
+      extension of this and other accounts with Experian. If I request, LENDISTRY will tell me whether my
+      consumer credit report was requested, and, if so, the name and address of the consumer credit
+      reporting agency that furnished the report. (5) LENDISTRY Assignees, and each of their representatives,
+      successors, assigns and designees (collectively, "Recipients") are authorized to request and receive any
+      investigative reports, credit reports, statements from creditors or financial institutions, verification of
+      information, or any other information that a Recipient deems necessary, (6) Applicant waives and
+      releases any claims against Recipients and any information providers arising from any act or omission
+      relating to requesting, receiving or release of information, and (7) each Owner/Officer represents that
+      he or she is authorized to sign this form on behalf of Borrower, Business and any additional Owners
+      listed within the application.
+    </p>
+    <div class="sub-authorization">
+      <p>
+        <span>TCPA DISCLOSURE &amp; CONSENT:</span>
+        By marking &quot;I accept the Terms and Conditions,&quot; notwithstanding any
+        current or prior election to opt in or opt out of receiving telemarketing calls or SMS messages (including
+        text messages) from Recipients, you expressly consent to receiving marketing and other calls and
+        messages, to a landline, wireless or similar devices, including auto-dialed and prerecorded message
+        calls, and SMS messages (including text messages) from Recipients, at telephone numbers that you have
+        provided. Message and data rates may apply. Consent may be revoked at any time and by any
+        reasonable means.
+      </p>
+
+      <p>
+        <span>E-SIGN ACT CONSENT TO ELECTRONIC DISCLOSURES:</span>
+        By marking &quot;I accept the Terms and Conditions,&quot;
+        you expressly consent to receiving disclosures and documents electronically. If you do not consent to
+        receiving disclosures and documents electronically, you will not be able to receive a loan from Lendistry.
+        Your consent applies to all the documents and disclosures that we provide to you electronically in
+        connection with your application for a Lendistry loan. If you want to withdraw consent before you have
+        finished applying for the loan, you may do so by withdrawing your application. Withdrawal of consent
+        will not be effective for documents that we have already provided to you electronically.
+      </p>
+
+      <!--
+      <p>
+        <span>CONSENT TO ELECTRONIC DISCLOSURES:</span>
+        You expressly consent to transactions and disclosures with Recipients online and electronically. Disclosure will
+        be provided to you either on the screen, on Recipients' website or via electronic mail to the email address you
+        provided.
+      </p>-->
+      <p>LENDISTRY is a licensed California Financial Lender, License # 60DBO66872</p>
+
+    </div>
+  </div>
+ 
+
+</div>
+
+</apex:page>

@@ -1,0 +1,49 @@
+<aura:component controller="OpportunityFieldHistoryController" implements="flexipage:availableForAllPageTypes,lightning:actionOverride,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:appHostable,force:lightningQuickAction" >
+    
+    <aura:attribute type="Opportunity_Field_History__C[]" name="OppHistoryList"/>
+    <aura:attribute name="mycolumns" type="List"/>
+    <aura:attribute name="recordId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.fetchOppHistoryList}"/>
+    
+    <!-- Event for Refreshing Opp Table Starts Name="OppRecordCreated"-->
+    <aura:handler event="c:OppRecordCreated" action="{!c.fetchOppHistoryList}" />
+    <aura:registerEvent name="OppRecordCreated" type="c:OppRecordCreated"/>
+    <!-- Event for Refreshing Opp Table Ends-->
+    
+    <!--
+<lightning:datatable data="{! v.OppHistoryList }" 
+      columns="{! v.mycolumns }" 
+      keyField="id"
+      hideCheckboxColumn="true"/>
+
+-->
+    
+    
+    
+    <div class="slds">
+        <table class="slds-table slds-table--bordered">    	
+            <thead>
+                <tr class="slds-text-heading--label">            	
+                    
+                    <th >Stage </th> 
+                    <th >Start Date </th> 
+                    <th >Close Date </th> 
+                    <th >Duration </th>                
+                </tr>        	 
+            </thead>
+            <tbody>
+                <!-- Limitation - we cannot use indexvar of iterator control to refer header json information else, instead of defining css class for each column, we could have used it from header only -->
+                <aura:iteration items="{!v.OppHistoryList}" var="row">
+                    
+                    <tr class="slds-hint-parent">                         
+                        <td >{!row.Stage_New__c}</td>
+                        <td >{!row.Stage_Start_Date__c}</td> 
+                        <td >{!row.Stage_Close_Date__c}</td> 
+                        <td >{!row.Stage_Duration_Hidden__c}</td>  
+                    </tr>
+                </aura:iteration>              
+            </tbody>    
+        </table>
+    </div>
+    
+</aura:component>

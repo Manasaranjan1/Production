@@ -1,0 +1,92 @@
+<aura:component controller="AdditionalDocumentController"  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	 <!--aura doInit handler--> 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+     <!--Declare Handlers-->
+    <!--aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/-->
+    
+    
+    <!--aura attributes-->  
+     <aura:attribute name="Spinner" type="boolean" default="false"/>
+     <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="selectedDocumentId" type="string"/>
+    <aura:attribute name="lstContentDoc" type="object"/>
+    <aura:attribute name="hasModalOpen" type="boolean" default="false"/>
+   
+ <ltng:require styles="{!$Resource.QuickActionModalStyle}" />    
+    
+     <!--loading spinner start... style=Brand Medium (blue dots)-->
+ <aura:if isTrue="{!v.Spinner}">
+    <div aura:id="spinnerId" class="slds-spinner_container">
+       <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+         <span class="slds-assistive-text">Loading</span>
+         <div class="slds-spinner__dot-a"></div>
+         <div class="slds-spinner__dot-b"></div>
+       </div>
+    </div>
+ </aura:if>
+  <!-- Loading spinner end-->    
+    
+    <!-- Custom DataTable to Display List Of Available ContentDocuments Start-->  
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+        <thead>
+            <tr class="slds-line-height_reset">
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="Title">Title</div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="FileType">File Type </div>
+                </th>
+                <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="Upload To AWS S3">Upload To AWS S3 </div>
+                </th>
+                 <th class="slds-text-title_caps" scope="col">
+                    <div class="slds-truncate" title="Documents Status"> Documents Status </div>
+                </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.lstContentDoc}" var="CD">
+                <tr>
+                    <th scope="row">
+                        <div class="slds-truncate" title="{!CD.Title}">
+                            <!--store contentDocument Id in data-Id attribute-->
+                            <a onclick="{!c.getSelected}" data-Id="{!CD.Id}">{!CD.Title}</a>
+                        </div>
+                    </th>
+                    <th scope="row">
+                        <div class="slds-truncate" title="{!CD.FileType}">{!CD.FileType}</div>
+                    </th>
+                    <th scope="row">
+                        
+                    	<lightning:button tabindex="{!index}" name="{!CD.Id}" disabled="{!CD.IsDisableBtn}" aura:id="{!CD.Id}"  class="deleteButtons" label="upload" iconName="utility:upload" iconPosition="left" onclick="{!c.getSelected}"/>
+                    </th>
+                    <th scope="row">
+                        <div class="slds-truncate" title="{!CD.Status}">{!CD.Status}</div>
+                    </th>
+                </tr>  
+            </aura:iteration>
+        </tbody>
+    </table>
+    <!-- Custom DataTable to Display List Of Available ContentDocuments End-->  
+    <!--###### FILE PREVIEW MODAL BOX START ######--> 
+    <aura:if isTrue="{!v.hasModalOpen}">
+        <section onclick="{!c.closeModel}"
+                 role="dialog"
+                 aria-modal="true"
+                 class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <div class="slds-modal__content slds-p-around_medium slds-text-align_center"
+                     style="background: transparent;">
+                    <div style="width: 50%; margin: 0 auto; text-align: left">
+                        <!--<lightning:fileCard> to preview file using content document Id -->
+                        <lightning:fileCard fileId="{!v.selectedDocumentId}"/>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+    <!--###### FILE PREVIEW MODAL BOX END ######-->
+</aura:component>

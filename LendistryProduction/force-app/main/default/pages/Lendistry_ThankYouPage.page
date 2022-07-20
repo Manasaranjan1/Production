@@ -1,0 +1,75 @@
+<apex:page sidebar="false" showHeader="false">
+    
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+        
+        <script type="text/javascript">
+    function sendspinner(this1){
+        this1.disabled=true; 
+        document.getElementById("loader").style.display='block';
+        window.location = 'lendistry.com';
+        //window.location = 'http://uat-lendistry-sba-ppp-application.cs124.force.com/PPP';
+    } 
+</script>
+        
+        <style type="text/CSS">
+        .LT_Popup{
+            max-width:60% !important;
+            }
+            
+         .LT_popupcontent{
+          padding:30px 50px !important;
+            }
+        </style>
+<head>
+
+<!-- Import the Lightning Design System style sheet -->
+<apex:slds />
+</head>
+
+</html>
+
+<body>
+
+<!-- REQUIRED SLDS WRAPPER -->
+<div class="slds-scope">
+<!-- Modal -->
+    <div class="slds-m-around--xx-large">
+       
+       
+            <!--Modal Box Start-->
+            <div role="dialog" class="slds-modal slds-fade-in-open ">
+                <div class="slds-modal__container LT_Popup">
+                    <div class="slds-modal__header">
+                       <a href="http://www.lendistry.com/"><button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" >
+                            X
+                            <span class="slds-assistive-text">Close</span>
+                           </button></a>
+                        <h1 class="slds-text-heading--medium"></h1>
+                    </div>
+                     
+                    <!--Modal Box Header-->
+                    <div class="slds-modal__content slds-p-around--medium LT_popupcontent">
+						<h1 class="display-3"><strong>Thank You!</strong></h1>
+                        <br/>
+  <p class="lead"><strong>Your application is on its way. You will receive an Email to link your 
+                                bank account in the next 72hours.</strong> </p>                        
+
+                    </div>
+                    <!--Modal Box Button-->
+                    <div class="slds-modal__footer">
+                       <a href="http://www.lendistry.com/">
+                           <button class="slds-button slds-button--brand" onclick="sendspinner(this);">Close</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop--open"></div>            
+       
+    </div>
+
+<!-- / Modal -->
+<div class="slds-backdrop slds-backdrop--open"></div>
+
+</div>
+</body>
+</apex:page>

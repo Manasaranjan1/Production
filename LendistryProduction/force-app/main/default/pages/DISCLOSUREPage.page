@@ -1,0 +1,265 @@
+<apex:page standardcontroller="Lead" extensions="DISCLOSURESCtrl" showHeader="false" sidebar="false">
+    
+    
+    <head>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A==" crossorigin="anonymous"></script>
+        
+        <style>
+            .container-fluid {
+            margin-top: 10px;
+            }
+        </style>
+    </head>
+    <style>        
+        /* DivTable.com */
+        .divTable{
+        display: table;
+        width: 100%;
+        /*border: 2px solid rgba(195, 195, 195, 0.6);*/
+        border: 1px solid #dddbda;
+        }
+        .divTableRow {
+        display: table-row;
+        }
+        .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+        }
+        .divTableCell, .divTableHead {
+        border: 1px solid #f1f1f1;
+        display: table-cell;
+        padding: 13px 13px;
+        }
+        .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+        font-weight: bold;
+        }
+        .divTableFoot {
+        background-color: #EEE;
+        display: table-footer-group;
+        font-weight: bold;
+        }
+        .divTableBody {
+        display: table-row-group;
+        }
+        
+        .poc_QA , .POC_Ans .slds-truncate{
+        font-size: var(--lwc-inputStaticFontSize,0.875rem);
+        font-weight: var(--lwc-inputStaticFontWeight,400);
+        color: var(--lwc-inputStaticColor,rgb(8, 7, 7));
+        }
+        
+        .Poc_Check{
+        height: 16px;
+        width: 16px;  
+        }
+        
+        .dataCell , .modal-body div input{
+        font-size: var(--lwc-inputStaticFontSize,1.4rem);
+        font-weight: var(--lwc-inputStaticFontWeight,400);
+        color: var(--lwc-inputStaticColor,rgb(8, 7, 7)) !important;;
+        font-family: var(--lwc-fontFamily,'Salesforce Sans', Arial, sans-serif);
+        line-height: var(--lwc-varLineHeightText,1.5) !important;;
+        padding-right:20px !important;
+        }
+        
+
+.btnClose , .btnSave{
+    color: rgba(0, 112, 210, 1) !important;
+    padding: 4px 15px !important;
+    font-size: 15px !important;
+    border: 1px solid #c3c3c3 !important;
+    font-weight: 500 !important;
+        }
+
+        
+     .Edittbutton, .btnClose , .btnSave{   
+     position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    background: transparent;
+    background-clip: border-box;
+    border: var(--lwc-borderWidthThin,1px) solid transparent;
+    border-radius: var(--lwc-buttonBorderRadius,.25rem);
+    line-height: var(--lwc-lineHeightButton,1.875rem);
+    text-decoration: none;
+    color: var(--lwc-brandAccessible,rgb(0, 112, 210));
+    -webkit-appearance: none;
+    white-space: normal;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+        
+    .Edittbutton .glyphicon.glyphicon-edit{
+        margin-right: var(--lwc-spacingXSmall,0.5rem);
+        margin-top:-4px;
+     }
+        
+     .Quesdropdown{
+       padding: 2px 3px; 
+     }
+        
+    .QuesCheckbox{
+     width:15px;
+     height: 15px;
+    }
+        
+    .QuesBlock .bPageBlock{
+        padding: 0px !important;
+        margin: 0px !important;
+        border: 1px solid #c3c3c3 !important;
+    }
+        
+      .QuesBlock .bPageBlock .pbBody{
+        padding: 0px !important;
+        margin: 0px !important;
+     }
+        
+     .QuesfunBlock table thead tr th.headerRow , .modal-body div label{
+        font-size: var(--lwc-pageHeaderTitleFontSize,1.5rem) !important;
+        font-weight: var(--lwc-pageHeaderTitleFontWeight,700) !important;
+        line-height: var(--lwc-lineHeightHeading,1.25) !important; 
+        padding:10px 15px !important;
+     }
+        
+        .modal-body div label{
+        padding:0px !important}
+        
+     .QuesfunBlock table .list tr.dataRow th, .QuesfunBlock table.list tr.dataRow td{
+        border-bottom: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));
+        }
+        
+        .modal-body{
+        border-radius: 5px;
+        padding: 20px 25px;
+        border: 1px solid #c3c3c3;
+        }
+    </style>
+    
+    <script>
+    // On mouse-over, execute myFunction
+    function myFunction() {
+        document.getElementById("btnId").click(); // Click on the checkbox
+    }
+    
+    function reloadPage()
+    {
+        //alert('oncomplete');
+        window.location.reload();
+    }
+    </script>
+    
+    <script>
+    
+    function sendRecord( recordId ){
+        
+        
+        updateQuestion(recordId);
+        callModal();
+        
+    }
+    </script>   
+    <script>
+    function callModal() {
+        setTimeout(function(){ document.getElementById("btnId").click();  }, 3000);
+    }
+    </script>
+    
+    <apex:form id="formId" styleclass="QuesBlock">
+        
+        <apex:actionFunction action="{!updateQuestion}" name="updateQuestion" reRender="modalPanelId"> 
+            <apex:param value="" name="recordId" />     
+        </apex:actionFunction>
+        <apex:pageBlock >
+            <apex:outputPanel styleclass="QuesfunBlock" id="tblPanelId"> 
+                <apex:pageBlockTable id="tblId"  Styleclass="table table-bordered" value="{!lstOfLeadQuestions}" var="each" title="Results" >
+                    <!--  <apex:inlineEditSupport showOnEdit="update, cancelButton" hideOnEdit="editButton" event="ondblclick" changedStyleClass="myBoldClass" resetFunction="resetInlineEdit"></apex:inlineEditSupport> -->
+                    <apex:column headerValue="Action" styleClass="tableheaderRow">
+                        <div style="display:none;">
+                            
+                            <button type="button" id="btnId" class="btn btn-info Editbutton" data-toggle="modal" data-target="#myModal" >
+                                <span class="glyphicon glyphicon-edit" /> Edit
+                            </button>
+                        </div>
+                        <button type="button" id="btnIddd" onclick=" sendRecord('{!each.id}');" class="Edittbutton" >
+                            <span class="glyphicon glyphicon-edit" /> Edit
+                        </button>
+                    </apex:column>
+                    <apex:column headerValue="Questions" styleClass="tableheaderRow">
+                        
+                        <apex:outputfield value="{!each.Question__c}" styleclass="disQues"/>
+                    </apex:column>
+                    <!-- <apex:column headerValue="Question Type">
+
+<apex:outputfield value="{! each.Question_Type__c}"/>
+</apex:column>
+-->
+                    <apex:column headerValue="Answers" >
+                         <div class="POC_Ans" style="{!if( ( each.Question_Type__c=='text' || each.Question_Type__c=='number'),'display: inherit;','display: none;' )}">
+                            
+                            <apex:outputfield value="{!each.Answer__c}"/>
+                        </div>
+                        <div style="{!if(each.Question_Type__c=='checkbox','display: inherit;','display: none;' )}">
+                            <apex:inputCheckbox value="{!each.Answer__c}" styleclass="QuesCheckbox"/>
+                        </div>
+                        
+                        
+                        <div class="POC_Ans" style="{!if(each.Question_Type__c=='DropDown','display: inherit;','display: none;' )}">
+                            
+                            
+                            <select name="DropDown" id="DropDownId" class="Quesdropdown">
+                                <option value="{!each.Answer__c}">{!each.Answer__c}</option>
+                            </select>
+                        </div>
+                        
+                        
+                        <div class="POC_Ans" style="{!if((each.Question_Type__c=='RadioButton' || each.Question_Type__c=='radio'),'display: inherit;','display: none;' )}">
+                            <form>
+                                <label class="radio-inline">
+                                    <input type="radio" name="{!each.Answer__c}" checked="true"/> {!each.Answer__c}
+                                </label>
+                                
+                            </form>
+                            
+                            
+                        </div>
+                    </apex:column>
+                    <!-- <apex:inlineEditSupport event="ondblClick" showOnEdit="saveButton,cancelButton" hideOnEdit="editButton" /> -->
+                </apex:pageBlockTable>
+            </apex:outputPanel>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">                       
+                        <apex:outputPanel id="modalPanelId">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label>Question</label><br />
+                                    <apex:inputText value="{!objLeadQuestion.Question__c}" styleClass="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Answer</label><br />
+                                    <apex:inputField id="AnsId" value="{!objLeadQuestion.Answer__c}" styleClass="form-control"/>
+                                </div>
+                                <div class="form-group">
+                                    <label>Question Type</label><br />
+                                    <apex:inputField value="{!objLeadQuestion.Question_Type__c}" styleClass="form-control"/>
+                                </div>
+                            </div>
+                        </apex:outputPanel>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btnClose" data-dismiss="modal">Close</button>                                                
+                            <apex:commandButton styleclass="btn btn-primary btnSave" reRender="tblPanelId, AnsId" value="Save" action="{!quickUpdat}" onComplete="$('#myModal').modal('hide');$('body').removeClass('modal-open');$('.modal-backdrop').remove();reloadPage();"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </apex:pageBlock>  
+    </apex:form>
+    
+</apex:page>

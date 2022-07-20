@@ -1,0 +1,52 @@
+<apex:page Controller="GetCounselingSessions" renderAs="pdf" readonly="true" standardStylesheets="false" applyBodyTag="false" applyHtmlTag="false" sidebar="false" showHeader="false">
+   <!-- <apex:form>  --> 
+    <html>
+    <head>
+      <title> </title>
+       
+    </head>
+    
+    <body>
+       <apex:form >  
+   
+        <apex:pageBlock >
+              <center><h2 style="solid Tomato; color:Blue;"> Report of Counselors </h2> </center> 
+               <apex:repeat value="{!WrapList}" var="csl" > 
+                   <!-- <apex:outputText  style="font-weight:800"> Total Time : {!csl.tTime} </apex:outputText> -->
+                   <h3 style="solid Tomato; color:#2E86C1;">Total Time : {!csl.tTime} </h3>
+                   <!--  <bold> <span class="slds-badge slds-theme_success">Total Time : {!csl.tTime} </span> </bold>   --> 
+                   <!-- </apex:column> -->
+                   
+                   <!--*** -->
+                   <apex:pageBlockTable value="{!csl.CSList}" var="csll">
+                      <apex:column headerValue="Counselor Name"  value="{!csll.Counsellor_Name__c}" width="200px" style="border:0.5px solid black;">  
+                        
+                      </apex:column>    
+                       
+                       <apex:column headerValue="Counseling Session" value="{!csll.Name}" width="250px" style="border:0.5px solid black">                      
+                         
+                       </apex:column> 
+                     
+                       <apex:column headerValue="Hours" value="{!csll.CS_Hours__c}" width="70px" style="border:0.5px solid black">  
+                         
+                       </apex:column>
+                       <apex:column headerValue="Minutes" value="{!csll.CS_Minutes__c}" width="70px" style="border:0.5px solid black"> 
+                          
+                       </apex:column>
+                      <apex:column headerValue="Time" value="{!csll.Cumulative_Time2__c}" width="70px" style="border:0.5px solid black"> 
+                          
+                       </apex:column>                    
+                     </apex:pageBlockTable>
+                   
+                   <!--*** -->
+                   <br/><center><apex:outputText >********</apex:outputText> </center><br/>
+               </apex:repeat> 
+                 
+        </apex:pageBlock>
+             
+         </apex:form>            
+      </body>
+     </html>      
+    
+    <!-- </apex:form>  -->   
+</apex:page>

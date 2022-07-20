@@ -1,0 +1,134 @@
+<aura:component controller="counselloeListViewController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <aura:attribute name="fields" type="String[]"  />
+    <aura:registerEvent name="handleHide" type="c:callSecondCmp" description="its a handler for clear the picklist"/>
+    <aura:attribute name="showViewOrEdit" type="Boolean" />
+    <aura:attribute name="whichpage" type="Integer" default="3"/>  
+    
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="LeadId" type="String" />
+    <aura:attribute name="detailFields" type="String[]" />
+    <aura:attribute name="listClientData" type="String[]" />
+    <aura:attribute name="listBusinessInformation" type="String[]" />
+    <aura:attribute name="listSalesInformation" type="String[]" />
+    <aura:attribute name="listOneonOneConsulting" type="String[]" />
+    <aura:attribute name="listOnlinecourses" type="String[]" />
+    <aura:attribute name="listAdditionalInformation" type="String[]" />
+    <aura:attribute name="isOpen" type="boolean" default="false"/>
+    <aura:attribute name="isOpenLead" type="boolean" default="false"/>
+    <aura:attribute name="DisableViewLead" type="boolean" default="false"/>  
+    <aura:handler name="init" value="{!this}" action="{!c.initData}"/>    
+    
+    
+    <div >
+        <!--<lightning:button variant="brand"
+                          label="View Lead"
+                          title="View Lead"
+                          onclick="{! c.openModel }" />-->
+        
+        <aura:if isTrue="{!v.isOpenLead}">  
+            <div class="slds-float_right"> 
+                <button onclick="{!c.likenClose}">
+                    <img src="{!$Resource.CloseButton}" style="width: 20px;" />                
+                </button>
+            </div>
+            <div style="">
+                <force:recordData aura:id="propertyRecord"
+                                  recordId="{!v.LeadId}"                                  
+                                  targetFields="{!v.property}"
+                                  layoutType="FULL"/>
+                <lightning:card iconName="standard:lead" title="Lead Detail">
+                    <div class="slds-p-left_large slds-p-right_medium">
+                        <lightning:recordForm aura:id="brokerForm"
+                                              recordId="{!v.LeadId}"
+                                              objectApiName="Lead"
+                                              fields="{!v.detailFields}"
+                                              columns="2"
+                                              density="comfy"
+                                            />
+                    </div>           
+                </lightning:card>        
+            </div>
+            <lightning:card iconName="" title="">
+                <lightning:accordion aura:id="accordion" activeSectionName="[A,B]" allowMultipleSectionsOpen="true">
+                    <lightning:accordionSection name="A" label="Client Data" >
+                        
+                        <div class="slds-p-left_large slds-p-right_medium">
+                            <lightning:recordForm aura:id="brokerForm"
+                                                  recordId="{!v.LeadId}"
+                                                  objectApiName="Lead"
+                                                  fields="{!v.listClientData}"
+                                                  columns="2"
+                                                  density="comfy"
+                                                 />
+                        </div>
+                        
+                        
+                    </lightning:accordionSection>
+                    <lightning:accordionSection name="B" label="Business Information">
+                        <div class="slds-p-left_large slds-p-right_medium">
+                            <lightning:recordForm aura:id="brokerForm"
+                                                  recordId="{!v.LeadId}"
+                                                  objectApiName="Lead"
+                                                  fields="{!v.listBusinessInformation}"
+                                                  columns="2"
+                                                  density="comfy"
+                                                 />
+                        </div>
+                    </lightning:accordionSection>
+                    <lightning:accordionSection name="C" label="Sales Information">
+                        <div class="slds-p-left_large slds-p-right_medium">
+                            <lightning:recordForm aura:id="brokerForm"
+                                                  recordId="{!v.LeadId}"
+                                                  objectApiName="Lead"
+                                                  fields="{!v.listSalesInformation}"
+                                                  columns="2"
+                                                  density="comfy"
+                                                  />
+                        </div>
+                    </lightning:accordionSection>
+                    <lightning:accordionSection name="D" label="One-on-One Consulting">
+                        <div class="slds-p-left_large slds-p-right_medium">
+                            <lightning:recordForm aura:id="brokerForm"
+                                                  recordId="{!v.LeadId}"
+                                                  objectApiName="Lead"
+                                                  fields="{!v.listOneonOneConsulting}"
+                                                  columns="2"
+                                                  density="comfy"
+                                                  />
+                        </div>
+                    </lightning:accordionSection>
+                    <lightning:accordionSection name="E" label="Online courses">
+                        <div class="slds-p-left_large slds-p-right_medium">
+                            <lightning:recordForm aura:id="brokerForm"
+                                                  recordId="{!v.LeadId}"
+                                                  objectApiName="Lead"
+                                                  fields="{!v.listOnlinecourses}"
+                                                  columns="2"
+                                                  density="comfy"
+                                                />
+                        </div>
+                    </lightning:accordionSection>
+                    <lightning:accordionSection name="F" label="Additional Information">
+                        <div class="slds-p-left_large slds-p-right_medium">
+                            <lightning:recordForm aura:id="brokerForm"
+                                                  recordId="{!v.LeadId}"
+                                                  objectApiName="Lead"
+                                                  fields="{!v.listAdditionalInformation}"
+                                                  columns="2"
+                                                  density="comfy"
+                                                 />
+                        </div>
+                    </lightning:accordionSection>
+                </lightning:accordion>        
+            </lightning:card>  
+            <!--footer class="slds-modal__footer">
+                <lightning:button variant="brand" 
+                                  label="Close"
+                                  title="Close"
+                                  onclick="{! c.likenClose }"/>
+            </footer>-->
+        </aura:if>
+    </div>
+    <br/>
+</aura:component>

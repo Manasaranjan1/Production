@@ -1,0 +1,58 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 08-04-2021
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+  Modifications Log 
+  Ver   Date         Author                               Modification
+  1.0   05-26-2021   ChangeMeIn@UserSettingsUnder.SFDoc   Initial Version
+-->
+
+<template>
+    <div class="slds-grid slds-gutters" >
+    <div class="slds-col" style="margin-left: 25%;">
+        <div class="slds-card slds-align_absolute-center" style="width:230px;padding:8px; height:70px;padding:2px;" >
+            <div class="slds-grid slds-wrap" >
+                <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" style="font-weight: bold;" >
+                    {timeVal}
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" style="color:white">
+                    <template if:true={showStartBtn}>
+                        <lightning-button variant="brand" disabled={showAutoTimerButton}  label="Start" title="Start" onclick={start} ></lightning-button>
+                    </template>
+                    <template if:false={showStartBtn}>
+                        <lightning-button variant="destructive" disabled={showAutoTimerButton} label="Stop" title="Stop" onclick={stop}></lightning-button>
+                    </template>
+                    <lightning-button variant="success" disabled={showAutoTimerButton} label="Reset" onclick={reset} style="margin-left: 10px;"></lightning-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slds-col" style="margin-left: 15%;">
+        <div class="slds-card" style="width:235px;padding:2px; height:70px;padding:2px;" >
+            <div class="slds-grid slds-wrap" >
+                <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" >
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-align_absolute-center">
+                    <div>
+                        <lightning-input type="number" class="manualHoursClass" value={manualHours} label="Hours">
+                        </lightning-input>
+                    </div>&nbsp;
+                    <div>
+                        <lightning-input type="number" class="manualMinutesClass" value={manualMinutes} label="Minutes">
+                        </lightning-input>
+                    </div> &nbsp;&nbsp;
+                    <div>
+                        <span>
+                            <br/>
+                            <lightning-button variant="brand" disabled={showManualTimerButton} label="Submit" title="Submit" onclick={submit} ></lightning-button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</template>

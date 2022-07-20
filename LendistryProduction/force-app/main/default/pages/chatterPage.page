@@ -1,0 +1,56 @@
+<apex:page sidebar="false"  controller="ChatterController" standardStylesheets="true" showHeader="false">
+    
+ <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+   
+    <script>
+            
+        // Capture all clicks on <a> elements and change the URL for the whole window
+        // Some <a> elements are used for JavaScript function calls, so only capture them
+        //  when the URL starts with the / character.
+        jQuery(document).ready(function($) {
+            $('#chatter-container').contents().on('click', 'a', function(e) {
+                if($(this).attr('href').charAt(0) == '/') {
+                    e.preventDefault();
+                    top.window.location.href = $(this).attr('href');
+                }
+            });
+            
+            $('.actorentitylink').removeAttr("href");
+            $('span a').removeAttr("href");
+        });
+        
+    </script>
+
+    <div id="chatter-container">
+        <!-- <chatter:feed entityId="0062a000006iddZ"/> -->
+     <chatter:feed entityId="{!oppRecordId}"/>
+         
+    </div>
+    
+    <style type="text/css">
+       .quickActionContainer{
+
+    width: 350px!important;
+
+    display: block;
+
+    top: 200px!important;
+
+    left: 1rem;
+    margin-left:0!important;
+
+}
+
+ 
+
+.overlayBackground {
+
+    width: 24rem;
+
+    height: 51rem;
+
+    display: block;
+
+}
+    </style>
+</apex:page>

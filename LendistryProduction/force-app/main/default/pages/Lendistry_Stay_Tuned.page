@@ -1,0 +1,49 @@
+<apex:page docType="html-5.0" sidebar="false" showHeader="false"> 
+    
+    <style type="text/CSS">
+        body{
+      background: rgba(235, 235, 235, 0.3);
+        }
+        
+        .LT_header{
+          padding: 65px 0px 5px;
+    text-align: center;
+        }
+        
+        .LN_StayTunepage{
+        width: 60%;
+        margin: 0 auto;
+        }
+        
+        .LN_update {
+        text-align: center;
+        padding: 80px 0px;
+        }
+        
+        .LN_text{
+        font-size: 2.5em;
+        font-family: 'Salesforce Sans',Arial,sans-serif;
+        font-weight: 500;
+        line-height:1.4em;
+        }
+    </style>
+    
+    <div class="LN_StayTunepage">
+        
+        <div class="LT_header">
+            <div class="LT_nav">
+                <apex:image value="{!$Resource.Logo}" width="200" alt="LendistryLogo"/>
+            </div>
+        </div>
+        
+        <div class="LN_update">
+            <h1 class="LN_text">
+                We are temporarily pausing new applications while we process SBA PPP Loans from Round 1&amp;2.</h1>
+             <h1 class="LN_text" style="margin-top:15px;display:block;font-size: 1.5em;color: #462d78;"> 
+                 We will resume accepting new applications soon.
+                 Please check back for updates.
+            </h1>         
+        </div>
+        
+    </div>
+</apex:page>

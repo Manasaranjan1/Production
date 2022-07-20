@@ -1,0 +1,69 @@
+.THIS label {
+    
+    font-size: larger;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+.THIS .logoContainer {
+padding-left: 23%;
+    
+}
+.THIS .accordionHeader
+{
+    font-size: x-large;
+    font-weight: bold;
+    font-style: unset;
+    font-family: sans-serif;
+    background-color: #8363C4;
+    color: white;
+}
+.THIS .slds-checkbox .slds-checkbox__label .slds-form-element__label {
+    display: inline;
+    vertical-align: middle;
+    font-size: medium !important;
+    font-style: unset !important;
+    font-family: sans-serif !important;
+}
+ 
+.THIS.slds-spinner_container {  
+  z-index: 10000;
+  position: fixed;   
+}
+.THIS .slds-button 
+{
+    
+    font-size: larger !important;
+    font-weight: bold !important;
+}
+.THIS  .slds-button_reset 
+{
+    font-size: larger !important;
+    font-weight: bold !important;
+}
+.THIS .slds-accordion__summary-action
+{
+   color: white !important;
+    font-size: larger !important;
+    font-weight: bold !important;
+    
+}
+.THIS .slds-accordion__summary
+{
+    background-color:#070A8C !important;
+    color: white !important;
+    font-size: larger !important;
+    font-weight: bold !important;
+    height: 27px !important;
+}
+.THIS .error-text {
+    display:none;
+}
+
+.THIS .show {
+    display:flex;
+    color:red;
+}
+.THIS .selectList
+{
+    font-size: medium !important;
+}

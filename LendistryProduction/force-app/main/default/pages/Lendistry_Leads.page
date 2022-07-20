@@ -1,0 +1,45 @@
+<apex:page sidebar="false" showHeader="false"> 
+    
+     <script type="text/javascript">
+     window.onload=function()       
+    {     
+          
+        var landingURL = window.location.href;
+        //alert('landingURL---->>'+landingURL );
+        if( landingURL.includes("ReferralPartnerName=Urbanleague"))
+        {
+           
+       // var pageUrl = window.location.href.replace('force.com/', 'force.com/Lendistry_Leadapplication');    
+        
+        window.location = "https://lendistry.com/national-urban-league/ "; //pageUrl ; //window.location.href; // '/Lendistry_Leadapplication';   
+        }
+        else
+        {
+        var pageUrl = window.location.href.replace('force.com/', 'force.com/Lendistry_Leads_PPP');
+         window.location = pageUrl ;
+        } 
+         
+    }
+    
+    </script>
+    
+    <apex:slds />
+    <div class="slds-scope">
+    <apex:form id="form" >
+        <!-- SPINNER -->
+        <div id="spinner">
+            <div class="slds-spinner_container">
+                <div role="status" class="slds-spinner slds-spinner_large slds-spinner_brand">
+                    <span class="slds-assistive-text">Loading</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>
+        </div>
+        <!-- / SPINNER -->
+    </apex:form>
+    </div>
+    
+    
+    
+</apex:page>

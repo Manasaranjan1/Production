@@ -1,0 +1,14 @@
+.THIS .slds-card__header  {
+    background-color: #070A8C;
+    color: #EAEEF3;
+    font-family: Poppins;
+}
+.THIS .slds-card__body  {
+    background-color: #070A8C;
+}
+.THIS .slds-card__footer  {
+    background-color: #070A8C;
+}
+.THIS div#listviewSearchTooltip-47 {
+    background-color: whitesmoke;
+}

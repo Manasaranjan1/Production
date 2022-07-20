@@ -1,0 +1,43 @@
+<aura:component controller = "CounsellorlListcontroller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="recordId" type="String" /> 
+     <aura:attribute name="oldCounsellor" type="String" /> 
+    <aura:attribute name="errormessage" type="String" />
+    <aura:attribute name="showCounsellor" type="boolean" default="false"/> 
+    <aura:attribute name="isSpinner" type="boolean" default="false"/>
+    <aura:attribute name="objCSC" type="String"/>
+     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:if isTrue="{!v.isSpinner}">
+        <lightning:spinner alternativeText="Loading" size="small" />
+    </aura:if>
+    <aura:if isTrue="{!v.showCounsellor}">       
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <!-- ###### MODAL BOX HEADER Start ######-->
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Change Counselor</h2>
+                </header>
+                <!--###### MODAL BOX BODY Part Start######-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1" style=" height: 150px;">
+                    <p style="color:red">{!v.errormessage}</p>
+                    <lightning:recordEditForm 
+                                              recordId="{!v.recordId}"
+                                              objectApiName="Counseling_Session__c"
+                                              density="comfy">                       
+                        <lightning:inputField fieldName="Counsellor1__c" aura:id="Counsellor1Id" />
+                    </lightning:recordEditForm>
+                </div>
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <div class="slds-align_absolute-center">
+                        <lightning:button variant="brand" onclick="{!c.EditCounselor}" disabled="{!v.isSpinner}" label="{!v.isSpinner == true ? 'Saving...' : 'Save'}" />
+                        <lightning:button variant="brand" 
+                                          label="Cancel"
+                                          title="Cancel"
+                                          onclick="{! c.Close }"/>
+                    </div>
+                </footer>
+            </div>       
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </aura:if>
+</aura:component>

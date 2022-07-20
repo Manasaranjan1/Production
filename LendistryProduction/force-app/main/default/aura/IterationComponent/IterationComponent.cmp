@@ -1,0 +1,25 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="sortingIcon" type="String" default="&#9650;"/>
+    <aura:attribute name="conditionTypeOptions" type="List" 
+                    default="[{'label':'--none--','value':''}]" 
+                    description="used ofr display the pipeline picklist"/>
+    <aura:registerEvent name="handleColumn" type="c:Eqnx_IterationComponentEvt" 
+                        description="its a handler for clear the picklist"/>
+    <aura:attribute name="showDetail" type="Boolean"  description="shoe hide spinner"/>
+    
+    <aura:iteration items="{!v.conditionTypeOptions}" var="source" indexVar="indx">
+        <aura:if  isTrue="{!and(source.flabel!='Record ID',and(source.fapi!='Lead__c',and(source.fapi!='Note__c',source.fapi!='Counsellor1__c')))}" >   
+            <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;font-family: Poppins;"  class="pointerCss slds-is-sortable slds-text-title--caps" title="{!source.fapi}" onclick="{!c.sortTheData}">
+                <aura:if  isTrue="{!v.sortingIcon=='asc'}" > 
+                    <div class="slds-truncate a"  title="{!source.fapi}"  id="{!source.typeValue}" style="{!source.colmNwidth}">{!source.flabel} &nbsp;  &#9660;</div>
+                    <aura:set attribute="else">
+                        <div class="slds-truncate a"  title="{!source.fapi}"  id="{!source.typeValue}" style="{!source.colmNwidth}">{!source.flabel} &nbsp;  &#9650;</div>
+                    </aura:set>
+                </aura:if>
+               
+            </th>
+             
+        </aura:if>
+    </aura:iteration> 
+   
+</aura:component>

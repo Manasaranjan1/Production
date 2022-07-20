@@ -1,0 +1,459 @@
+<aura:component controller="counselloeListViewController" implements="forceCommunity:themeLayout,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="listOptions" type="List" default="[]" description="Genre Picklist Values"/>
+    <aura:attribute name="requiredOptions" type="List" default="[]"/>
+    <aura:attribute name="PaginationList" type="Object[]"/>
+    <aura:attribute name="recordId" type="String"/>
+    <aura:attribute name="LeadLookUpId" type="String"/>
+    <aura:attribute name="CounselorId" type="String"/>
+    <aura:attribute name="userId" type="String"/>
+    <aura:attribute name="brokerFields" type="String[]"/>
+    <aura:attribute name="pageList" type="List"/>
+    <aura:attribute name="ltngCurrTime" type="String" default="00:00:00"/>
+    <aura:attribute name="ltngIsDisplayed" type="boolean" default="false"/> 
+    <aura:attribute name="LeadName" type="String"/>
+    <aura:attribute name="timeInput" type="String"/>
+    <aura:attribute name="trackerName" default="Start Tracking" type="String"/>
+    <aura:attribute name="LeadId" type="String"/>
+    <aura:attribute name="fieldName" type="String"/>
+    <aura:attribute name="startPage" type="Integer" />
+    <aura:attribute name="whichpage" type="Integer" default="1"/>
+    <aura:attribute name="oldPage" type="Integer" default="1"/>
+    <aura:attribute name="newPage" type="Integer" />
+    <aura:attribute name="showDetail" type="Boolean" default="true" description="shoe hide spinner"/>
+    <aura:attribute name="continue" type="Boolean" default="true" description="shoe hide spinner"/>    
+    <aura:attribute name="currentPageNumber" type="Integer" default="1"/>
+    <aura:attribute name="pageSize" type="Integer" default="50"/>
+    <aura:attribute name="totalPages" type="Integer" default="0"/>
+    <aura:attribute name="filterApi" type="Object"/>
+    <aura:attribute name="fieldSelectedValue" type="String"/>
+    <aura:attribute name="whichField" type="String"/>
+    <aura:attribute name="sortColumnName" type="String"/>
+    <aura:attribute name="btnName" type="String" default="show filter"/>
+    <aura:attribute name="btnName2" type="String" default="Generate Report"/>
+    <aura:attribute name="Filter" type="String"/>
+    <aura:attribute name="picklistValue" type="List" default="[]" description="Genre Picklist Values"/>
+    <aura:attribute name="fieldColumn" type="List" default="[]" description="Genre Picklist Values"/>
+    <aura:attribute name="operatorColumn" type="List" default="[]" description="Genre Picklist Values"/>
+    <aura:attribute name="defaultOptions" type="List" default="[]" />
+    <aura:attribute name="isShowFilter" type="boolean" default="false"></aura:attribute>
+    <aura:attribute name="showAddColumn" type="boolean" default="false" description="for show hide add note action"/>
+    <aura:attribute name="showfilter" type="boolean" default="false" description="for show hide add note action"/>
+    <aura:attribute name="typeValue" type="String"  description="for show hide add note action"/>
+    <aura:attribute name="mapOfFieldset" type="Object"  description="for show hide add note action"/>
+    <aura:attribute name="wholeData" type="Object"  description="for show hide add note action"/>
+    <aura:attribute name="selectedValue" type="String"  description="for show hide add note action"/>
+    <aura:attribute name="sortOrder" type="String"  description="for show hide add note action"/>
+    <aura:attribute name="orderBy" type="String"  description="for show hide add note action"/>
+    <aura:attribute name="query" type="String"  description="for show hide add note action"/>
+    <aura:attribute name="finalString" type="String"  description="for show hide add note action"/>
+    <aura:attribute name="operator" type="String"  description="for show hide add note action"/>
+    <aura:attribute name="conditionTypeOptions" type="List" default="[{'label':'--none--','value':''}]" description="used ofr display the pipeline picklist"/>
+    <aura:attribute name="mydata" type="Object[]" description="for storing the apex class object"/> 
+    <aura:attribute name="hideSpinner" type="Boolean" default="true" description="shoe hide spinner"/>
+    <aura:attribute name="hidevalueInput" type="Boolean" default="false" description="shoe hide spinner"/>
+    <aura:attribute name="showData" type="Boolean" default="false" description="shoe hide spinner"/>
+    <aura:attribute name ="startTimeTracking" type="DateTime"/>
+    <aura:attribute name="accounts" type="List" />
+    <aura:attribute name="key" type="String" /> 
+    <aura:attribute name="DisplayCSessionsBtn" type="String" default="Generate Report"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    
+    <aura:handler name="handleColumn" event="c:Eqnx_IterationComponentEvt" action="{!c.sortTheData}" description="handler of piclist selected"/>
+    <aura:handler name="Idprovider" event="c:selectedLeadIdEvent" action="{!c.handleComponentEvent}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.initData}"/>
+    
+    <div class="slds-grid slds-gutters" >
+        <div style="margin-left:-11px;">
+            <span> <img src="{!$Resource.CenterLogo}" style="width: 200px;"/></span>
+        </div>
+          <div style="margin-left:110px;">
+            <br/>
+            <c:CountdownTimer />
+        </div>
+        
+        <!--Newly Added-->
+      <aura:if isTrue="{!v.recordId}">
+            <c:theAutomaticTimeTracking name="theAutomaticTimeTracking" />
+            <aura:set attribute="else" >
+                <div class="slds-hidden">
+                    <c:theAutomaticTimeTracking name="theAutomaticTimeTracking" />
+                </div>
+                
+            </aura:set>
+  		</aura:if>
+        
+        
+        <!-- Newly Added --> 
+        
+        <!-- Time Tracker Start -->            
+        <div class="slds-col">
+            <div class="slds-card slds-align_absolute-center" 
+                                    style="width:230px;padding:8px; height:70px;padding:2px;" >
+                <div class="slds-grid slds-wrap" >
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" >
+                        {!v.ltngCurrTime}
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" style="color:white">
+                        <lightning:button variant="brand" label="Start" 
+                                          onclick="{! c.handleStartClick }" 
+                                          disabled="{!v.DisableStart}" class="whiteCss"/>
+                        <lightning:button variant="brand" label="Stop" 
+                                          onclick="{! c.handleStopClick }" 
+                                          disabled="{!v.DisableStop}" class="whiteCss"/>
+                        <lightning:button variant="brand" label="Reset" 
+                                          onclick="{! c.handleResetClick }" 
+                                          disabled="{!v.DisableReset}" class="whiteCss"/>
+                    </div>
+                </div>
+            </div>
+        </div> 
+        <!-- Time Tracker EnD -->
+        
+        <!-- Input Time Field HH MM Part 2 -->
+        
+        <!-- ====Boddh  <div class="slds-col" style="margin-left: 15%;">        
+            <div class="slds-card" style="width:210px;padding:2px; height:70px;padding:2px;" >
+                <div class="slds-grid slds-wrap" >
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" >
+                        
+                    </div> 
+                    
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-align_absolute-center">                       
+                        
+                        <div>                              
+                            <lightning:input type="text" 
+                                             name="input2"
+                                             style="width:60px"
+                                             label="HH" value="{!v.TimeinHH}" aura:id="hh" maxlength="2" />
+                            
+                        </div>&nbsp;
+                        <div>  
+                            <lightning:input type="text" 
+                                             name="input3"
+                                             style="width:60px"
+                                             label="MM" value="{!v.TimeinMM}" aura:id="mm" maxlength="2" />
+                        </div> &nbsp;&nbsp;   
+                        
+                        <div>
+                            <span>
+                                <br/>
+                                <lightning:button variant="brand" 
+                                                  label="OK"  class="whiteCss"
+                                                  title="Ok" onclick="{!c.saveTime2}" disabled="{!v.DisableBtn2}" />
+                            </span>    
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>    Boddh -->    
+        <!-- Input Time Field HH MM Part 2 -->
+        
+        
+        <!-- Newly Added Close -->
+        
+        <!-- Noti bell Logout -->
+        <div class="slds-col"> 
+            <span>  <br/> <br/>
+                <div class="slds-grid slds-wrap slds-float_right">
+                    <div class="slds-col slds-size_1-of-4">
+                        <!--<button class="slds-button slds-button_brand" onclick="{!c.openCSModel}">
+                          <lightning:buttonIcon iconName="utility:preview" variant="brand" alternativeText="Generate Report" title="preview"> Generate Report </lightning:buttonIcon>             
+                          <p style="color:white"> {!v.DisplayCSessionsBtn}</p> 
+                                                </button>-->
+
+                         <a onclick="{!c.openCSModel}" title="{!v.btnName2}"><img src="{!$Resource.Report}" style="height: 19px;"/> </a>
+                    </div>             
+                    
+                    <div class="slds-col slds-size_1-of-4">
+                                                <a onclick="{!c.toggle}" title="{!v.btnName}"><img src="{!$Resource.Filter}" style="height: 19px;"/> </a>
+                        <!-- <a onclick="{!c.back}" title="Back"><img src="{!$Resource.back}"/></a>  -->
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <c:NotificationBellicon/>
+                    </div>
+                    <div class="slds-col slds-size_1-of-4">
+                        <a onclick="{!c.logout}" title="Logout"><img src="{!$Resource.logout}"/></a>
+                    </div>  
+                </div>   
+            </span>
+        </div> 
+        <!-- Noti bell Logout --> 
+    </div>
+    <lightning:layoutItem class="slds-align_absolute-center">
+        <lightning:layoutItem class="slds-align_absolute-right" size = "4">
+            <lightning:input type="text" name="searchKey" aura:id="searchKey" onchange="{!c.searchKeyChange}" placeholder="Search"/>     
+        </lightning:layoutItem>
+        <!--New -->
+        <!-- 
+        <lightning:layoutItem class="slds-align_absolute-right">
+            <button class="slds-button slds-button_brand" onclick="{!c.openCSModel}">
+                <lightning:buttonIcon iconName="utility:preview" variant="brand" Name="preview" alternativeText="preview" title="preview"> preview </lightning:buttonIcon>             
+                <p style="color:white"> {!v.DisplayCSessionsBtn}</p>
+            </button>
+         </lightning:layoutItem>  -->   
+      <!--New end-->    
+        
+    </lightning:layoutItem>
+    
+    
+    
+    
+    <br/>    
+    <aura:If isTrue="{!v.showDetail}">        
+        <aura:if isTrue="{!v.isShowFilter}"> 
+            <lightning:buttonMenu alternativeText="Show menu" variant="border-filled" 
+                                  label="Filter Actions" class="slds-float_left"  onselect="{!c.seletecFilterMenu}">
+                <lightning:menuItem value="AddRemoveColumn" label="Add/Remove Column" />
+                <lightning:menuItem value="AddFilter" label="Add Filter" />
+                <lightning:menuItem value="RemoveAllFilter" label="Remove All Filter" />
+                
+            </lightning:buttonMenu>
+        </aura:if>
+        
+        <div class="slds-grid slds-gutters" aura:id="text" >
+            
+            <div class="slds-col fontstyle">
+                <span>
+                    
+                    <!--<lightning:button variant="brand" label="Add/Remove Column" onclick="{!c.addRemoveColumn}" />-->
+                    <aura:If isTrue="{!v.showAddColumn}">     <!-- @@@@@ -->
+                        <div class="slds-m-around_xx-large">
+                            
+                            
+                            <!--Use aura:if tag to display Model Box, on the bese of conditions. [isOpen boolean attribute] -->   
+                            
+                            
+                            <!--###### MODAL BOX Start######--> 
+                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <!-- ###### MODAL BOX HEADER Start ######-->
+                                    <header class="slds-modal__header">
+                                        <lightning:buttonIcon iconName="utility:close"
+                                                              onclick="{!c.closeModel}"
+                                                              alternativeText="close"
+                                                              variant="bare-inverse"
+                                                              class="slds-modal__close"/>
+                                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Available Columns</h2>
+                                    </header>
+                                    
+                                    <!--###### MODAL BOX BODY Part Start######-->
+                                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                        <div class="">
+                                            <c:MultiPicklistCmp availablePickList="{!v.listOptions}"
+                                                                finalString="{!v.finalString}" 
+                                                                mapOfFieldset="{#v.mapOfFieldset}" 
+                                                                brokerFields="{!v.brokerFields}"   
+                                                                conditionTypeOptions="{!v.conditionTypeOptions}"                  
+                                                                selectedPickList="{!v.defaultOptions}"/>
+                                        </div>
+                                    </div>
+                                    <!--###### MODAL BOX FOOTER Part Start ######-->
+                                    <footer class="slds-modal__footer">
+                                        <lightning:button variant="neutral" 
+                                                          label="Cancel"
+                                                          title="Cancel"
+                                                          onclick="{! c.closeModel }"/>
+                                        <lightning:button variant="brand" 
+                                                          label="Ok"
+                                                          title="Apply Column"
+                                                          onclick="{! c.getUpdatedData }"/>
+                                    </footer>
+                                </div>
+                            </section>
+                            <div class="slds-backdrop slds-backdrop_open"></div>
+                            <!--###### MODAL BOX Part END Here ######-->
+                            
+                            
+                        </div>
+                        
+                    </aura:If>
+                </span>
+            </div>
+            <div class="slds-col fontstyle">
+                <span>
+                    <!--<lightning:button variant="brand" label="Add Filter" onclick="{!c.addFilter}" />-->
+                    
+                    <aura:If isTrue="{!v.showfilter}">   <!-- @@@@@ -->
+                        
+                        <div class="slds-m-around_xx-small">
+                            
+                            
+                            <!--Use aura:if tag to display Model Box, on the bese of conditions. [isOpen boolean attribute] -->   
+                            
+                            
+                            <!--###### MODAL BOX Start######--> 
+                            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                                <div class="slds-modal__container">
+                                    <!-- ###### MODAL BOX HEADER Start ######-->
+                                    <header class="slds-modal__header">
+                                        <lightning:buttonIcon iconName="utility:close"
+                                                              onclick="{! c.closeModel1 }"
+                                                              alternativeText="close"
+                                                              variant="bare-inverse"
+                                                              class="slds-modal__close"/>
+                                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Apply Filter</h2>
+                                    </header>
+                                    <!--###### MODAL BOX BODY Part Start######-->
+                                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                        <div class="slds-m-around_xx-small">
+                                            <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                                                <div class="slds-size_1-of-3">
+                                                    <div class="slds-box slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                                        <lightning:select aura:id="schCategory" name="schCategory" 
+                                                                          label="Fields" onchange="{!c.getSelectedValue}" value="{!v.fieldSelectedValue}">
+                                                            <option value="">--None--</option>
+                                                            <aura:iteration items="{!v.fieldColumn}" var="items">
+                                                                <option value="{!items}">{!items}</option>
+                                                            </aura:iteration>                                                                
+                                                        </lightning:select>
+                                                    </div>
+                                                </div>
+                                                <div class="slds-size_1-of-5">
+                                                    <div class="slds-box slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                                        <lightning:select aura:id="schCategory" name="schCategory" label="Operator" value="{!v.operator}" onchange="{!c.getOperator}">
+                                                            <option value="">--None--</option>
+                                                            <aura:iteration items="{!v.operatorColumn}" var="items">
+                                                                <option value="{!items.value}">{!items.label}</option>
+                                                            </aura:iteration>
+                                                            
+                                                        </lightning:select>
+                                                    </div>     
+                                                </div>
+                                                <aura:if  isTrue="{!v.hidevalueInput}" >
+                                                    <div class="slds-size_1-of-3" aura:id="valueField">
+                                                        <div class="slds-box slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                                            <aura:if  isTrue="{!and(v.fieldName!='Lead',or(v.typeValue=='DATE',v.typeValue=='DATETIME'))}" > 
+                                                                <lightning:input type="date" value="{!v.selectedValue}" name="input1" label="" />
+                                                            </aura:if>
+                                                            <aura:if  isTrue="{!and(v.typeValue=='PICKLIST',v.fieldName!='Lead')}" >
+                                                                <lightning:select aura:id="schCategory" name="schCategory" label="" value="{!v.selectedValue}">
+                                                                    <option value="">--None--</option>
+                                                                    <aura:iteration items="{!v.picklistValue}" var="items">
+                                                                        <option value="{!items.value}">{!items.label}</option>
+                                                                    </aura:iteration>
+                                                                    
+                                                                </lightning:select>
+                                                            </aura:if>
+                                                            <aura:if  isTrue="{!and(v.fieldName!='Lead',and(v.typeValue=='STRING',v.fieldName!='Counselor Name'))}" > 
+                                                                <lightning:input type="text" name="input1" label="" value="{!v.selectedValue}"/>
+                                                            </aura:if>
+                                                            <aura:if  isTrue="{!and(v.typeValue=='BOOLEAN',and(v.fieldName!='Lead',v.fieldName!='Counselor Name'))}" >
+                                                                <lightning:input type="checkbox" label="" name="red" value="{!v.selectedValue}" style="margin-top: 25px;"
+                                                                                 onchange="{!c.getBoolValue}" checked="{!v.selectedValue}"
+                                                                                 />
+                                                            </aura:if>
+                                                            <aura:if  isTrue="{!v.fieldName=='Lead'}" > 
+                                                                <c:lookupComponent  objectAPIName="Lead"                                                                                    
+                                                                                   selectRecordId="{!v.LeadLookUpId}" 
+                                                                                   aura:id="leadIdlookUP"/> 
+                                                            </aura:if>
+                                                                  <aura:if  isTrue="{!v.fieldName=='Counselor Name'}" > 
+                                                                <c:lookupComponent  objectAPIName="User"                                                                                    
+                                                                                   selectRecordId="{!v.LeadLookUpId}" 
+                                                                                   aura:id="counselorLookUpId"/> 
+                                                            </aura:if>
+                                                        </div>
+                                                    </div>
+                                                </aura:if>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                    <!--###### MODAL BOX FOOTER Part Start ######-->
+                                    <footer class="slds-modal__footer">
+                                        <lightning:button variant="neutral" 
+                                                          label="Cancel"
+                                                          title="Cancel"
+                                                          onclick="{!c.closeModel1}"/>
+                                        <lightning:button variant="brand" 
+                                                          label="Ok"
+                                                          title="Apply Column"
+                                                          onclick="{!c.applyFilter}"/>
+                                    </footer>
+                                </div>
+                            </section>
+                            <div class="slds-backdrop slds-backdrop_open"></div>
+                            <!--###### MODAL BOX Part END Here ######-->
+                            
+                            
+                        </div>
+                        
+                    </aura:If>
+                </span>
+            </div>
+            <div class="slds-col fontstyle">
+                <span>
+                    <!--<lightning:button variant="brand" label="RemoveAll Filters" onclick="{!c.removeFilter}" />-->
+                </span>
+            </div>
+        </div>
+        
+        <html>     <!-- table starts here -->
+            <div aura:id="table-scrollId" class="table-scroll" >
+                <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_col-bordered">
+                    <thead >
+                        <tr class="slds-text-title--caps">
+                            <c:IterationComponent showDetail="{!v.showDetail}" sortingIcon="{!v.sortOrder}" conditionTypeOptions="{!v.conditionTypeOptions}"/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:If isTrue="{!v.showData}">
+                            <c:DataDisplayCmp ltngCurrTime="{!v.ltngCurrTime}" whichpage="{!v.whichpage}" LeadId="{!v.LeadId}" recordId="{!v.recordId}"  mydata="{!v.PaginationList}" showDetail="{!v.showDetail}"/> 
+                        </aura:If>
+                    </tbody>
+                </table>
+                <aura:If isTrue="{!v.showError}"><p style="font-size: 20px;color: red;"><center>No Record Found</center></p></aura:If>
+            </div>
+        </html>   <!-- table ends here -->
+        
+        <!-- FOOTER STARTS HERE --> 
+        <div class="slds-docked-form-footer">
+            
+            <lightning:layout multipleRows="true" horizontalAlign="center">
+                
+                <lightning:layoutItem padding="around-small" flexibility="auto">
+                    <lightning:button label="First" iconName="utility:left" iconPosition="left"
+                                      onclick="{!c.onFirst}" disabled="{! v.currentPageNumber == 1}"/>
+                    <lightning:button iconName="utility:chevronleft" iconPosition="left"
+                                      onclick="{!c.onPrev}" disabled="{! v.currentPageNumber == 1}"/>
+                    <span class="slds-p-horizontal_x-small">
+                        <a onclick="{!c.processMe}" name="1" 
+                           class="{! (v.currentPageNumber == 1) ? 'selected' : ''}">1</a>
+                    </span>
+                    <span class="slds-p-horizontal_xxx-small">
+                        <a>...</a>
+                    </span>
+                    
+                    <aura:iteration items="{!v.pageList}" var="item">
+                        <span class="slds-p-horizontal_x-small">
+                            <a onclick="{!c.processMe}" name="{!item}"
+                               class="{! (v.currentPageNumber == item) ? 'selected' : ''}">{!item}</a>
+                        </span>
+                    </aura:iteration>
+                    
+                    <span class="slds-p-horizontal_xxx-small">
+                        <a>...</a>
+                    </span>
+                    <span class="slds-p-horizontal_x-small">
+                        <a onclick="{!c.processMe}" name="{!v.totalPages}"
+                           class="{! (v.currentPageNumber == v.totalPages) ? 'selected' : ''}">{!v.totalPages}</a>
+                    </span>
+                    <lightning:button iconName="utility:chevronright" iconPosition="right" 
+                                      disabled="{! v.currentPageNumber == v.totalPages}" onclick="{!c.onNext}"/>
+                    <lightning:button label="Last" iconName="utility:right" iconPosition="right" 
+                                      disabled="{! v.currentPageNumber == v.totalPages}" onclick="{!c.onLast}"/>
+                </lightning:layoutItem>
+            </lightning:layout>
+            
+        </div>
+    </aura:If>
+    <aura:If isTrue="{!!v.showDetail}">
+        <!--<c:CounsellingSessionRecordDetail  whichpage="{!v.whichpage}" brokerFields="{!v.brokerFields}" LeadName="{!v.LeadName}" recordId="{!v.recordId}" LeadId="{!v.LeadId}" showDetail="{!v.showDetail}"/>-->
+        <c:LightningCardForCounselingSession recordId="{!v.recordId}"/>
+    </aura:If>
+</aura:component>

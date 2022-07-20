@@ -1,0 +1,186 @@
+<aura:component controller="counselloeListViewController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="filetype" type="List" default="['.png', '.jpg', '.jpeg','.doc','.docx','.xls','.xlsx','.pdf']" />
+    <aura:attribute name="multiple" type="Boolean" default="true" />
+    <aura:attribute name="selectedDocumentId" type="string"/>hasPreviewOpen
+    <aura:attribute name="hasModalOpen" type="boolean" default="false"/>
+    <aura:attribute name="myAttachments" type="Object[]" description="for storing the apex class object"/>
+    <aura:attribute name="showUploadAttach" type="Boolean"  />
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="encryptedToken" type="String" />
+    <aura:registerEvent name="cmpEvent" type="c:CloseEvent"/> 
+    <aura:handler name="init" value="{!this}" action="{!c.initData}"/>
+    
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+        <aura:If isTrue="{!v.hideSpinner}">
+            <div class="slds-spinner_container" >
+                <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+                    <span class="slds-assistive-text">Loading, Please Wait...</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>      
+        </aura:If> 
+        <div class="slds-modal__container">
+            
+            <!-- ###### MODAL BOX HEADER Start ######-->
+            <header class="slds-modal__header">
+                <lightning:buttonIcon iconName="utility:close"
+                                      onclick="{! c.closeModel }"
+                                      alternativeText="close"
+                                      variant="bare-inverse"                                     
+                                      class="slds-modal__close closeBtncss"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Upload Documents</h2>
+            </header>
+            <!--###### MODAL BOX BODY Part Start######-->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <html>
+                     <strong>
+                    <table>
+                      <!--  <tr  class="slds-line-height_reset" style="font-family: Poppins;"> -->
+                          <tr> 
+                            <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                
+                             <lightning:fileUpload label="TAXES"
+                                                      name="fileUploader"
+                                                      disabled="{!v.disabledtaxes}"
+                                                      multiple="true"
+                                                      accept="{!v.filetype}"
+                                                      recordId="{!v.recordId}"
+                                                      fileFieldName="Guest_Record_fileupload__c"
+                                                      fileFieldValue="{!v.encryptedToken}"
+                                                      onuploadfinished="{!c.handleUploadFinishedTaxes}" />  
+                            </td>
+                            <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                <lightning:fileUpload label="BUSINESS PLANS"
+                                                      name="fileUploader"
+                                                      multiple="true"
+                                                      disabled="{!v.disabledBusinessPlans}"
+                                                      accept="{!v.filetype}"
+                                                      recordId="{!v.recordId}"
+                                                      fileFieldName="Guest_Record_fileupload__c"
+                                                      fileFieldValue="{!v.encryptedToken}"
+                                                      onuploadfinished="{!c.handleUploadFinishedBusinessPlans}" /> 
+                            </td>
+                        </tr>
+                        <tr>
+                            <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                <lightning:fileUpload label="PERMITS"
+                                                      name="fileUploader"
+                                                      multiple="true"
+                                                      disabled="{!v.disabledPermits}"
+                                                      accept="{!v.filetype}"
+                                                      recordId="{!v.recordId}"
+                                                      fileFieldName="Guest_Record_fileupload__c"
+                                                      fileFieldValue="{!v.encryptedToken}"
+                                                      onuploadfinished="{!c.handleUploadFinishedPermits}" /> 
+                            </td>
+                            <td> 
+                                <lightning:fileUpload label="CERTIFICATES"
+                                                      name="fileUploader"
+                                                      multiple="true"
+                                                      disabled="{!v.disabledCertificates}"
+                                                      accept="{!v.filetype}"
+                                                      recordId="{!v.recordId}"
+                                                      fileFieldName="Guest_Record_fileupload__c"
+                                                      fileFieldValue="{!v.encryptedToken}"
+                                                      onuploadfinished="{!c.handleUploadFinishedCertificates}" /> 
+                                
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> 
+                                <lightning:fileUpload label="FINANCIAL DOCUMENTS"
+                                                      name="fileUploader"
+                                                      multiple="true"
+                                                      disabled="{!v.disabledfinancialdocs}"
+                                                      accept="{!v.filetype}"
+                                                      recordId="{!v.recordId}"
+                                                      fileFieldName="Guest_Record_fileupload__c"
+                                                      fileFieldValue="{!v.encryptedToken}"
+                                                      onuploadfinished="{!c.handleUploadFinishedFinancialDocs}" /> 
+                                
+                            </td>
+                            
+                            
+                        
+                            <td>
+                                <lightning:fileUpload label="OTHER DOCUMENTS"
+                                                      name="fileUploader"
+                                                      multiple="true"
+                                                      disabled="{!v.disabledOtherdocs}"
+                                                      accept="{!v.filetype}"
+                                                      recordId="{!v.recordId}"
+                                                      fileFieldName="Guest_Record_fileupload__c"
+                                                      fileFieldValue="{!v.encryptedToken}"
+                                                      onuploadfinished="{!c.handleUploadFinishedOther}" />
+                            </td>
+                        </tr>
+                    </table>
+                          </strong>
+                </html><br/>
+                
+                <div class="slds-scrollable_y;" style="height:15rem;" >
+                    <div class="slds-form--compound">
+                        <table class="slds-table slds-table--bordered;slds-hide">  
+                            <thead>  
+                                <tr>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >                                
+                                        <div class="slds-truncate a"  title="Document Name"  >Document Name</div> 
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Size(BYTES)</div>
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Type</div>
+                                    </th>
+                                    
+                                </tr> 
+                            </thead>  
+                            <tbody>
+                                <aura:iteration items="{!v.myAttachments}" var="obj">  
+                                    <tr>  
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            
+                                            <a onclick="{!c.previewFile}" title="{!obj.ContentDocumentId}"> {!obj.Title}
+                                                
+                                            </a>
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.ContentDocument.ContentSize}
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.FileExtension}
+                                        </td>                             
+                                    </tr>  
+                                </aura:iteration>  
+                            </tbody>  
+                        </table>  
+                        
+                    </div>
+                </div>
+                
+                
+            </div>
+            <!--###### MODAL BOX FOOTER Part Start ######-->
+            
+        </div>
+        <aura:if isTrue="{!v.hasModalOpen}">
+            <section onclick="{!c.closeModelPreview}"
+                     role="dialog"
+                     aria-modal="true"
+                     class="slds-modal slds-fade-in-open"> 
+                <div class="slds-modal__container">
+                    <div class="slds-modal__content slds-p-around_medium slds-text-align_center"
+                         style="background: transparent;">
+                        <div style="width: 50%; margin: 0 auto; text-align: left">
+                            <!--<lightning:fileCard> to preview file using content document Id -->
+                            <lightning:fileCard fileId="{!v.selectedDocumentId}"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open"></div>
+</aura:component>

@@ -1,0 +1,101 @@
+<aura:component  implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="recordId" type="String"/>  
+    <aura:attribute name="hideSpinner" type="Boolean"  description="shoe hide spinner"/>
+    <aura:attribute name="whichpage" type="Integer"/>
+    <aura:attribute name="whichId" type="String"/>
+    <aura:attribute name="LeadId" type="String"/>
+    <aura:attribute name="singleQst" type="object"/>
+    <aura:attribute name="LeadName" type="String"/>
+    <aura:attribute name="showModal" type="Boolean" default="false"/>
+    <aura:attribute name="confirmModal" type="Boolean" default="false"/>
+    <aura:attribute name="indexNumber" type="Integer"/>
+    <aura:attribute name="showDetail" type="Boolean"  description="shoe hide spinner"/>
+    <aura:attribute name="mydata" type="object" description="for storing the apex class object"/> 
+    <aura:handler name="cmpEvent" event="c:QuestionEvent" action="{!c.handleComponentEvent}"/>
+    <aura:registerEvent name="disEvent" type="c:DisclosureEvent"/>
+    
+    
+    <aura:iteration items="{!v.mydata}" var="obj" indexVar="index1">      
+        <tr  class="slds-hint-parent" style="font-family: Poppins;background-color: azure;">            
+            <td scope="col"  >                    
+                <ui:outputTextArea aura:id="oTextarea" value="{!obj.Question}"/>
+            </td> 
+            
+            <td scope="col"  class="" > 
+                {!obj.answer}                
+            </td> 
+            <td scope="col"  class="" >                    
+                <a href=""  title="{!obj}" name="{!index1}" style="font-family: Poppins;font-size: 10px;" onclick="{!c.editQuestion}">EDIT</a> 
+            </td> 
+        </tr> 
+        <aura:if  isTrue="{!and(obj.expanded,obj.items.length>0)}" > 
+            <tr class="slds-hint-parent">
+                <td colspan="3">                    
+                    <table class="slds-table slds-table--bordered">                    
+                        <aura:iteration items="{!obj.items}" var="objinner" indexVar="indexinner">
+                            
+                            
+                            <tr  class="slds-hint-parent" style="font-family: Poppins;">            
+                                <td scope="col" width="20%" class="" >                    
+                                    *&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <ui:outputTextArea aura:id="oTextarea" value="{!objinner.Question}"/> 
+                                </td> 
+                                
+                                <td scope="col"  width="20%"  >                    
+                                    {!objinner.answer} 
+                                </td> 
+                                <td scope="col"  width="20%" > 
+                                    <a href=""  title="{!index1}" style="font-family: Poppins;font-size: 10px;"  name="{!indexinner}" onclick="{!c.editSubQuestion}">EDIT</a>
+                                    
+                                </td> 
+                            </tr>                                    
+                            
+                            
+                        </aura:iteration>                          
+                    </table>                
+                </td> 
+            </tr>
+        </aura:if>
+    </aura:iteration>     
+    <aura:if  isTrue="{!v.showModal}" >
+        <c:QuestionModal showModal="{!v.showModal}" hideSpinner="{!v.hideSpinner}"
+                         mydata="{!v.mydata}" whichId="{!v.whichId}" 
+                         Question="{!v.singleQst}" recordId="{!v.recordId}"/>
+    </aura:if>
+    <aura:if  isTrue="{!v.confirmModal}" >
+        <div class="slds-m-around_xx-small">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">             
+                    <header class="slds-modal__header">
+                        <lightning:buttonIcon iconName="utility:close"
+                                              onclick="{!c.closeAlertModel}"
+                                              alternativeText="close"
+                                              variant="bare-inverse"
+                                              class="slds-modal__close"/>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Are you sure delete sub-question? </h2>
+                    </header>       
+                    
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        
+                        
+                        
+                    </div>
+                    
+                    <!--###### MODAL BOX FOOTER Part Start ######-->
+                    <footer class="slds-modal__footer">
+                        <lightning:button variant="neutral" 
+                                          label="No"
+                                          title="Cancel"
+                                          onclick="{!c.closeAlertModel}"/>
+                        <lightning:button variant="brand" 
+                                          label="Yes"
+                                          title="Apply Column"
+                                          onclick="{!c.applyConfirm}"/>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+            <!--###### MODAL BOX Part END Here ######--> 
+        </div>
+    </aura:if>
+</aura:component>

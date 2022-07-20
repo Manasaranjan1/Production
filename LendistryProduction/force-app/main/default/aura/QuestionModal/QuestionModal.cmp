@@ -1,0 +1,96 @@
+<aura:component controller="DisclosureController"  implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="questionId" type="String"/>
+    <aura:attribute name="hideSpinner" type="Boolean"  description="shoe hide spinner"/>
+    <aura:attribute name="whichId" type="String"/>
+    <aura:attribute name="recordId" type="String"/> 
+    <aura:attribute name="showModal" type="Boolean" />
+    <aura:attribute name="Question" type="object"/>
+    <aura:attribute name="mydata" type="object" description="for storing the apex class object"/>
+    <aura:registerEvent name="cmpEvent" type="c:QuestionEvent"/>
+    <div class="slds-m-around_xx-large">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">             
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon iconName="utility:close"
+                                          onclick="{!c.closeModel}"
+                                          alternativeText="close"
+                                          variant="bare-inverse"
+                                          class="slds-modal__close"/>
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Edit Question</h2>
+                </header>       
+                
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    
+                    
+                            <table width="100%">
+                                
+                                <tr>
+                                    <td style="width: 10px;"> <b>Question</b> </td>
+                                    <td>
+                                        <ui:outputTextArea aura:id="oTextarea" value="{!v.Question.Question}"/>
+                                         
+                                        </td>
+                                </tr>
+                                
+                                <tr>
+                                    <td> <b>Answer</b> </td>
+                                    <aura:If isTrue="{!or(v.Question.questionType=='text',v.Question.questionType=='Text')  }">
+                                        <td>
+                                            <lightning:textarea type="text" label="" name="time" value="{!v.Question.answer}"/>
+                                        </td>
+                                    </aura:If>
+                                    <aura:If isTrue="{!v.Question.questionType=='number'}">
+                                        <td>
+                                            <lightning:input type="number" label="" name="time" value="{!v.Question.answer}" min="0"/>
+                                        </td>
+                                    </aura:If>
+                                    <aura:If isTrue="{!v.Question.questionType=='checkbox'}">
+                                        <td>
+                                            <lightning:input type="checkbox" value="{!v.Question.answer}" />
+                                           
+                                        </td>
+                                    </aura:If>
+                                    <aura:If isTrue="{!v.Question.questionType=='DropDown'}">
+                                        <td style="width: 200px;">
+                                            <lightning:select name="mySelect" label="" aura:id="mySelect" value="{!v.Question.answer}">
+                                                <aura:iteration items="{!v.Question.options}" var="item">
+                                                    <option text="{!item}" value="{!item}" selected="{!item.selected}"/>
+                                                </aura:iteration>
+                                            </lightning:select>                                
+                                        </td>
+                                    </aura:If>
+                                     <aura:If isTrue="{!or(v.Question.questionType=='RadioButton',v.Question.questionType=='radio')}">
+                                        <td>
+                                            <lightning:radioGroup name="radioGroup"
+                                                                  label=""
+                                                                  options="{!v.Question.options}"
+                                                                  value="{!v.Question.answer}"
+                                                                  type="radio"/>
+                                           
+                                        </td>
+                                    </aura:If>
+                                </tr>
+                                
+                            </table>
+                            
+                        
+                    
+                </div>
+                
+                <!--###### MODAL BOX FOOTER Part Start ######-->
+                <footer class="slds-modal__footer">
+                    <lightning:button variant="neutral" 
+                                      label="Cancel"
+                                      title="Cancel"
+                                      onclick="{!c.closeModel}"/>
+                    <lightning:button variant="brand" 
+                                      label="Update"
+                                      title="Apply Column"
+                                      onclick="{!c.updateQuestion}"/>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+        <!--###### MODAL BOX Part END Here ######--> 
+    </div>
+</aura:component>

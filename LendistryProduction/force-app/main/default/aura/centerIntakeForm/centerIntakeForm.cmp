@@ -1,0 +1,414 @@
+<aura:component controller="centerCompCls" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    <!--Declare Attributes-->
+    
+    <!-- create 2 aura handler with waiting and donewaiting events--> 
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    <!--create a component attributs -->
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="param1" type="String" />
+    <!-- call doInit function on component load -->  
+    <aura:handler name="init" value="this" action="{!c.doInit}"/>
+    <aura:attribute name="activeSections" type="List" default="['A']" />
+    <aura:attribute name="activeSectionsMessage" type="String"  />
+    <aura:attribute name="leadObject" type="Lead" default="{ 'sobjectType': 'Lead'}" />
+    <aura:attribute name="nuOfEmp" type="Integer" />
+    <!--Raj -->
+    <aura:attribute name="UseofFunds0" type="String" />
+    <aura:attribute name="noOfEmps" type="Integer" />
+    <aura:attribute name="UseofFunds2" type="String" />
+    <aura:attribute name="UseofFunds3" type="String" />
+    <aura:attribute name="UseofFunds4" type="String" />
+    <aura:attribute name="UseofFunds5" type="String" />
+    <!-- Rahul -->
+    <aura:attribute name="UseofFunds6" type="String" />
+    <aura:attribute name="UseofFunds7" type="String" />
+    <aura:attribute name="UseofFunds8" type="String" />
+    <aura:attribute name="UseofFunds9" type="String" />
+    <aura:attribute name="UseofFunds10" type="String" />
+    <aura:attribute name="UseofFunds11" type="String" />
+    <aura:attribute name="WBE" type="Boolean" />
+    <aura:attribute name="MBE" type="Boolean" />
+    <aura:attribute name="HIRE" type="Boolean" />
+    <aura:attribute name="LSBE" type="Boolean" />
+    <aura:attribute name="SBE" type="Boolean" />
+    
+    <!-- aura attributes-->  
+    <aura:attribute name="listControllingValues" type="list" default="[]" description="to store controller field values"/>
+    <aura:attribute name="listDependingValues" type="list" default="['--None--']" description="to store dependent field values"/>
+    <aura:attribute name="listSubDependingValues" type="list" default="['--None--']" description="to store dependent field values"/>
+    
+    <aura:attribute name="depnedentFieldMap" type="map" description="map to store dependent values with controlling value"/>
+    <aura:attribute name="subDepnedentFieldMap" type="map" description="map to store sub dependent values with controlling value"/>
+    <aura:attribute name="bDisabledDependentFld" type="boolean" default="true"/> 
+    <aura:attribute name="bDisabledSubDependentFld" type="boolean" default="true"/> 
+    
+    <aura:attribute name="controllingFieldAPI" type="string" default="What_does_your_Business_do__c" description="store field API name of Controller field"/>
+    <aura:attribute name="dependingFieldAPI" type="string" default="What_type_of_Business_is_it__c" description="store field API name of dependent field"/>
+    <aura:attribute name="subDependingFieldAPI" type="string" default="Tell_us_more__c" description="store field API name of sub dependent field"/>
+    
+    <aura:attribute name="showdiv" type="boolean" default="false" />
+   <!-- <aura:attribute name="cmdList" type="ZIp_Code_County_Mapping__mdt[]"/> --> 
+    <aura:attribute name="cmdMap" type="Map" default="{}"/>
+    
+    <div style="background-color: white;">
+        <!-- <hr/> -->  <img src="{!$Resource.CenterLogo}" class="logoContainer" /> <!-- <hr/> --> 
+    </div>
+    
+    <!--loading spinner start... style=Brand Medium (blue dots)-->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- Loading spinner end-->   
+    <lightning:layoutItem class="slds-p-around--medium" >   
+        <lightning:accordion
+                             allowMultipleSectionsOpen="true"
+                             onsectiontoggle="{! c.handleSectionToggle }"
+                             activeSectionName="{! v.activeSections }"
+                             >
+            <lightning:accordionSection name="A" label="Client Information"  >
+                <aura:set attribute="body">
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_6-of-12">
+                            <span>
+                                <div class="row">
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.FirstName}" name="input1" label="Business Owner First Name" required="true" />
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.Email}" type="email" name="input1" label="Email Address"  required="true" pattern="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$" /> 
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.City_Owner_1__c}" name="input1" label="City" required="true" pattern="[a-zA-Z ]+$" /> 
+                                   <!-- <lightning:input aura:id="fieldId" type="text" value="{!v.leadObject.Zip_Code_Owner_1__c}" name="input1" label="Zip Code" required="true" maxlength="5" />-->
+                                    <span onchange="{!c.callKeyUp}">    
+                                      <lightning:input aura:id="ZipId" type="text" value="{!v.leadObject.Zip_Code_Owner_1__c}" name="input1" label="Zip Code" pattern="^\d{5}$" required="true" maxlength="5" />            
+                                    </span>
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.County__c}" name="input1" label="County" readonly="true" pattern="[a-zA-Z ]+$" />
+
+                                    <lightning:input aura:id="fieldId" type="tel" maxlength="10" value="{!v.leadObject.Phone}" name="phone" label="Phone Number (Main Contact) " required="true" pattern="^\d{10}$"  />
+                                </div>
+                            </span>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12" >
+                            <span>
+                                <div class="row">
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.LastName}" name="input1" label="Business Owner Last Name" required="true" />
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.Street_Owner_1__c}" name="input1" label="Street Address" required="true" /> 
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.State_Owner_1__c}" name="input1" label="State"  required="true" pattern="[a-zA-Z ]+$" /> 
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.DBA__c}" name="input1" label="DBA [Please leave blank if not Applicable]" required="false" /> 
+                                    <lightning:input aura:id="fieldId" type="number" value="{!v.leadObject.of_Ownership_Owner__c}" name="input1" label="Percent of ownership (do not use %)" maxlength="3" max="100" required="true"  /> 
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                </aura:set>
+            </lightning:accordionSection>
+            <span></span> <br/>
+            <lightning:accordionSection name="B" label="Business Information">
+                <aura:set attribute="body">
+                    <div class="slds-grid slds-gutters">
+                        <!--  <div class="slds-col">  -->
+                        <div class="slds-col slds-size_6-of-12">
+                            <span>
+                                <div class="row">
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.Company}" name="input1" label="Business Name" required="true" />
+                                    
+                                    <!-- <lightning:input value="{!v.leadObject.Women_Owned__c}" name="input1" label="Is your business Women Owned" required="true" /> -->
+                                    <lightning:select aura:id="fieldId" value="{!v.leadObject.Women_Owned__c}" name="select1" label="Is your business Women Owned" required="true">
+                                        <option value ="None"> --None-- </option>
+                                        <option value ="Yes"> Yes </option>
+                                        <option value ="No"> No </option>
+                                    </lightning:select>                                     
+                                    
+                                    <!-- <lightning:input value="{!v.leadObject.LGBTQ__c}" name="input1" label="LGBTQ" required="true" /> -->
+                                    <lightning:select aura:id="fieldId" value="{!v.leadObject.LGBTQ__c}" name="select1" label="LGBTQ" required="true">
+                                        <option value ="None"> --None-- </option>
+                                        <option value ="Yes"> Yes </option>
+                                        <option value ="No"> No </option>
+                                    </lightning:select>  
+                                    
+                                    
+                                    <!--   <lightning:input value="{!v.leadObject.Disabled__c}" name="input1" label="Disabled" required="true" /> -->
+                                    <lightning:select aura:id="fieldId" value="{!v.leadObject.Disabled__c}" name="select1" label="Disabled" required="true">
+                                        <option value ="None"> --None-- </option>
+                                        <option value ="Yes"> Yes </option>
+                                        <option value ="No"> No </option>
+                                    </lightning:select>             
+                                    
+                                    <!-- <lightning:inputField value="{!v.leadObject.Ethnicity__c}" name="input1" label="Ethnicity" required="true" />
+                                
+                                     <force:inputField aura:id="Ethnicity" value="{!v.leadObject.Ethnicity__c}" change="{!c.handleChange}" /> -->                                           
+                                    <lightning:select aura:id="fieldId" value="{!v.leadObject.Ethnicity__c}" name="select1" label="Ethnicity" required="true">
+                                        <option value ="None"> --None-- </option>
+                                        <option value ="Hispanic or Latino"> Hispanic or Latino </option>
+                                        <option value ="Not Hispanic or Latino"> Not Hispanic or Latino </option>
+                                        <option value ="Not Disclosed"> Not Disclosed </option>
+                                        <option value ="No"> No </option>
+                                    </lightning:select>  
+                                    <!--2nd PICK DD--> <!-- <lightning:input value="{!v.leadObject.What_type_of_Business_is_it__c}" name="input1" label="What type of business is it?" /> -->
+                                    
+                                    <lightning:select aura:id="fieldId" name="dependentFld"
+                                                      value="{!v.leadObject.What_type_of_Business_is_it__c}"
+                                                      label="What type of business is it?"
+                                                      disabled="{!v.bDisabledDependentFld}"
+                                                      onchange="{!c.onSubControllerFieldChange}">
+                                        <aura:iteration items="{!v.listDependingValues}" var="val">
+                                            <option value="{!val}">{!val}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    
+                                    <!--*** --> <!-- <lightning:input value="{!v.leadObject.Are_you_looking_for_business_capital__c}" name="input1" label="Are you looking for business capital?" required="true" /> -->
+                                    <lightning:select aura:id="fieldId" value="{!v.leadObject.Are_you_looking_for_business_capital__c}" name="select1" label="Are you looking for business capital?" required="true">
+                                        <option value ="None"> --None-- </option>
+                                        <option value ="Yes"> Yes </option>
+                                        <option value ="No"> No </option>
+                                    </lightning:select>   
+                                    
+                                    
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.Street}" name="input1" label="Business Street" required="true" />
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.State}" name="input1" label="Business State" required="true" pattern="[a-zA-Z ]+$" />
+                                    
+                                    <!-- NumberOfEmployees : is a standard field value="{!v.leadObject.NumberOfEmployees}" -->                         
+                                    <lightning:input type="number" value="{!v.noOfEmps}" name="input1" aura:id="noOfEmps" label="Number of Employees" />
+                                    <br/>   <!-- which fields we can map with Lead Object -->
+                                    
+                                    
+                                    <span style="text-decoration: underline;font-size: 18px;font-weight: bold;color: #8363c4;">Use of Funds</span>
+                                    <lightning:input Styleclass="commonLabelCls" type="checkbox" class="label" label="Acquire Another Business" name="input2" onchange="{!c.handleFilesChange0}" aura:id="checkbox0"/>
+                                    <lightning:input type="checkbox" label="Consolidate Debt" name="input2" onchange="{! c.handleFilesChange1 }" aura:id="checkbox1" />
+                                    <lightning:input type="checkbox" label="Hire New Staff" name="input2"  onchange="{! c.handleFilesChange2 }" aura:id="checkbox2"/>
+                                    <lightning:input type="checkbox" label="Open a New Location" name="input2"  onchange="{! c.handleFilesChange3 }"  aura:id="checkbox3" />
+                                    <lightning:input type="checkbox" label="Remodel Current Location" name="input2"  onchange="{! c.handleFilesChange4 }" aura:id="checkbox4"/>
+                                    <lightning:input type="checkbox" label="Leasehold Improvement" name="input2"  onchange="{! c.handleFilesChange5 }" aura:id="checkbox5"/>
+                                    
+                                </div>
+                            </span>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12" >
+                            <span>
+                                <div class="row">
+                                    <lightning:input aura:id="fieldId" type="tel" maxlength="10" value="{!v.leadObject.Business_Phone__c}" name="input1"  label="Business Phone" required="true"  pattern="^\d{10}$"  />
+                                    
+                                    <!--   <lightning:input value="{!v.leadObject.Race__c}" name="input1" label="Race" required="true" /> -->
+                                    <lightning:select aura:id="fieldId" value="{!v.leadObject.Race__c}" name="select1" label="Race" required="true">
+                                        <option value ="None"> --None-- </option>
+                                        <option value ="American Indian or Alaska Native"> American Indian or Alaska Native </option>
+                                        <option value ="Asian"> Asian </option>
+                                        <option value ="Black or African-American"> Black or African-American </option>
+                                        <option value ="Native Hawaiian or Pacific Islander"> Native Hawaiian or Pacific Islander </option>
+                                        <option value ="White"> White  </option>
+                                        <option value ="Not Disclosed"> Not Disclosed </option>
+                                    </lightning:select>            
+                                    
+                                    <!-- <lightning:input value="{!v.leadObject.Veteran__c}" name="input1" label="Are you a veteran?" required="true" /> -->
+                                    
+                                    <lightning:select aura:id="fieldId" value="{!v.leadObject.Veteran__c}" name="select1" label="Are you a veteran?" required="true">
+                                        <option value ="None"> --None-- </option>
+                                        <option value ="Yes"> Yes </option>
+                                        <option value ="No"> No </option>
+                                    </lightning:select> 
+                                    
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.Business_Start_Date__c}" type="Date"
+                                                     name="BusinessStartDate" label="Date Business Started" required="true" onchange="{!c.checkfutureDate}"/> 
+                                    <p><lightning:formattedText aura:id="fteError" class="error-text" value="Date cannot be future" /></p>
+                                    <!--1st PICK DD--> <!-- <lightning:input value="{!v.leadObject.What_does_your_Business_do__c}" name="input1" label="What does your business do?" required="true" /> -->
+                                    <lightning:select name="controllerFld"
+                                                      value="{!v.leadObject.What_does_your_Business_do__c}"
+                                                      label="What does your business do?"
+                                                      onchange="{!c.onControllerFieldChange}">
+                                        <aura:iteration items="{!v.listControllingValues}" var="val">    
+                                            <option value="{!val}">{!val}</option>
+                                        </aura:iteration>
+                                    </lightning:select> 
+                                    
+                                    <!--3rd PICK DD--> <!-- <lightning:input value="{!v.leadObject.Tell_us_more__c}" name="input1" label="Tell us more" required="true" /> -->
+                                    <lightning:select name="subDependentFld"
+                                                      value="{!v.leadObject.Tell_us_more__c}"
+                                                      label="Tell us more"
+                                                      disabled="{!v.bDisabledSubDependentFld}">
+                                        <aura:iteration items="{!v.listSubDependingValues}" var="val">
+                                            <option value="{!val}">{!val}</option>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    
+                                    
+                                    <lightning:input value="{!v.leadObject.Amount_of_capital__c}" name="input1" label="Amount of capital? (numbers only)" />
+                                    <lightning:input aura:id="fieldId" value="{!v.leadObject.City}" name="input1" label="Business City" pattern="[a-zA-Z ]+$"  required="true" /> 
+                                    <lightning:input aura:id="fieldId" type="text" value="{!v.leadObject.PostalCode}" name="input1" label="Business Zip Code" pattern="^\d{5}$" maxlength="5" required="true" /> 
+                                    
+                                    <!--  ****  <lightning:input value="{!v.leadObject.Gross_Annual_Revenue__c}" name="input1" label="Gross Annual Revenue" required="true" /> -->
+                                    <lightning:select aura:id="fieldId" value="{!v.leadObject.Gross_Annual_Revenue__c}" name="select1" label="Gross Annual Revenue" required="true">
+                                        <option value ="None"> --None-- </option>
+                                        <option value ="$0/Start-Up"> $0/Start-Up </option>
+                                        <option value ="0-$50K"> 0-$50K </option>
+                                        <option value ="$50K-$200K"> $50K-$200K </option>
+                                        <option value ="$200K-$500K"> $200K-$500K </option>
+                                        <option value ="$500K-$750K"> $500K-$750K </option>
+                                        <option value ="$750K+"> $750K+ </option>
+                                    </lightning:select>         
+                                    
+                                    <br/>
+                                    
+                                    <span></span>  <br/>
+                                    
+                                    <lightning:input type="checkbox" label="Working Capital" name="input2" onchange="{! c.handleFilesChange6 }" aura:id="checkbox6"/>
+                                    <lightning:input type="checkbox" label="Advertising /Marketing" name="input2" onchange="{! c.handleFilesChange7 }" aura:id="checkbox7"/>
+                                    <lightning:input type="checkbox" label="Develop a New Product" name="input2" onchange="{! c.handleFilesChange8 }" aura:id="checkbox8"/>
+                                    <lightning:input type="checkbox" label="Equipment Purchase" name="input2" onchange="{! c.handleFilesChange9 }" aura:id="checkbox9"/>
+                                    <lightning:input type="checkbox" label="Inventory Purchase" name="input2" onchange="{! c.handleFilesChange10 }" aura:id="checkbox10"/>
+                                    <lightning:input type="checkbox" label="Tenant Improvement" name="input2" onchange="{! c.handleFilesChange11 }" aura:id="checkbox11"/>
+                                </div>
+                            </span>
+                        </div>
+                        
+                        
+                    </div>
+                </aura:set>
+            </lightning:accordionSection>
+            <span></span> <br/>
+            <!-- THIRD SECTION -->
+            <lightning:accordionSection name="C" label="What services are you interested in?">
+                <aura:set attribute="body">
+                    <div class="slds-grid slds-gutters" >
+                        <div class="slds-col slds-size_6-of-12">
+                            <span>
+                                <div class="row">
+                                    <!-- FIRST SUBSECTION --> 
+                                    <br/>
+                                    <span style="text-decoration: underline;font-size: 18px;font-weight: bold;color: #8363c4;">One-on-One Consulting</span>
+                                    <br/><!-- modified by Raj-->
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Business_plan_development__c}" label="Business Plan Development" name="input2" checked="{!v.leadObject.Business_plan_development__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.RestaurantHospitality__c}" label="Restaurant/Hospitality" name="input2" checked="{!v.leadObject.RestaurantHospitality__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Access_to_capital__c}" label="Access to Capital" name="input2" checked="{!v.leadObject.Access_to_capital__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Accounting__c}" label="Accounting" name="input2" checked="{!v.leadObject.Accounting__c}"/>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <span>
+                                <div class="row">
+                                    <span></span><br/><br/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Government_contracting__c}" label="Government Contracting" name="input2" checked="{!v.leadObject.Government_contracting__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Procurement_certification__c}" label="Procurement (Certification)" name="input2" checked="{!v.leadObject.Procurement_certification__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Quickbooks__c}" label="Quickbooks" name="input2" checked="{!v.leadObject.Quickbooks__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Branding_and_Messaging__c}" label="Branding and Messaging" name="input2" checked="{!v.leadObject.Branding_and_Messaging__c}"/>
+                                    <!--    <lightning:input type="checkbox" value="{!v.leadObject.Social_Media__c}" label="Social Media" name="input2" checked="{!v.leadObject.Social_Media__c}"/> -->
+                                </div>
+                            </span>
+                        </div>
+                    </div>
+                    <br/>
+                    <!-- SECOND SUBSECTION -->
+                    <div class="slds-grid slds-gutters" >
+                        <div class="slds-col slds-size_6-of-12">
+                            <span>
+                                <div class="row">
+                                    <span style="text-decoration: underline;font-size: 18px;font-weight: bold;color: #8363c4;">Online courses</span>
+                                    <br/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Website_Design__c}" label="Website Design" name="input2" checked="{!v.leadObject.Website_Design__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Marketingretooling_in_a_COVID19_Env__c}" label="Marketing/retooling in a COVID-19 Enviornment" name="input2" checked="{!v.leadObject.Marketingretooling_in_a_COVID19_Env__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Business_Taxes__c}" label="Business Taxes" name="input2" checked="{!v.leadObject.Business_Taxes__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Financial_Accounting__c}" label="Financial Accounting" name="input2" checked="{!v.leadObject.Financial_Accounting__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Excel__c}" label="Excel" name="input2" checked="{!v.leadObject.Excel__c}"/> 
+                                </div>
+                            </span>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <span>
+                                <div class="row">
+                                    <span></span><br/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Social_Media1__c}" label="Social Media" name="input2" checked="{!v.leadObject.Social_Media1__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Understanding_your_FICO_score__c}" label="Understanding your FICO score" name="input2" checked="{!v.leadObject.Understanding_your_FICO_score__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Business_Insurance__c}" label="Business Insurance" name="input2" checked="{!v.leadObject.Business_Insurance__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Quickbooks1__c}" label="Quickbooks" name="input2" checked="{!v.leadObject.Quickbooks1__c}"/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Pitching_to_Investors__c}" label="Raising Money for your Business" name="input2" checked="{!v.leadObject.Pitching_to_Investors__c}"/> 
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Powerpoint__c}" label="Powerpoint" name="input2" checked="{!v.leadObject.Powerpoint__c}"/>
+                                </div>
+                            </span>
+                        </div>                              
+                    </div>                
+                    <br/>
+                    <!-- =====================================-->
+                    <!-- THIRD SUBSECTION -->
+                    <div class="slds-grid slds-gutters" >
+                        <div class="slds-col slds-size_6-of-12">
+                            <span>
+                                <div class="row">
+                                    <span style="text-decoration: underline;font-size: 18px;font-weight: bold;color: #8363c4;">Do you have any of the following certifications?</span>
+                                    <br/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.WBE__c}" aura:id="WBECheckbox" label="WBE Certified" name="input2" onchange="{!c.WBEClicked}" />
+                                    <aura:if isTrue="{!v.WBE}">
+                                        <lightning:input type="Date" value="{!v.leadObject.DOEWBE__c}" label="WBE Expiration Date " name="input2" />
+                                    </aura:if>
+                                    <lightning:input type="checkbox" aura:id="WBECheckbox1" label="MBE Certified" name="input2" value="{!v.leadObject.MBE__c}" onchange="{!c.WBEClicked1}" />
+                                    <aura:if isTrue="{!v.MBE}">
+                                        <lightning:input type="Date" value="{!v.leadObject.DOEMBE__c}" label="MBE Expiration Date " name="input2" />
+                                    </aura:if>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.Other1__c}" aura:id="WBECheckbox2" label="Other" name="input2" onchange="{!c.WBEClicked2}" />
+                                    <aura:if isTrue="{!v.HIRE}">
+                                        <lightning:input type="Date" value="{!v.leadObject.DOEOther__c}" label="Other Date" name="input2" />
+                                    </aura:if>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="slds-col slds-size_6-of-12">
+                            <span>
+                                <div class="row">
+                                    <span> </span>
+                                    <br/>
+                                    <lightning:input type="checkbox" value="{!v.leadObject.LSBE__c}" aura:id="LSBECheckbox" label="LSBE Certified" name="input2" onchange="{!c.LSBEClicked}" />
+                                    <aura:if isTrue="{!v.LSBE}">
+                                        <lightning:input type="Date" value="{!v.leadObject.DOELSBE__c}" label="LSBE Expiration Date " name="input2" />
+                                    </aura:if>
+                                    <lightning:input type="checkbox" aura:id="SBECheckbox" label="SBE Certified" name="input2" value="{!v.leadObject.SBE__c}" onchange="{!c.SBEClicked}" />
+                                    <aura:if isTrue="{!v.SBE}">
+                                        <lightning:input type="Date" value="{!v.leadObject.DOESBE__c}" label="SBE Expiration Date " name="input2" />
+                                    </aura:if>
+                                </div>
+                            </span>
+                        </div>                              
+                    </div>                
+                    <br/>
+                    <!-- =====================================-->
+                    <!-- THIRD SUBSECTION -->
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning:layoutItem class="slds-align_absolute-right" size = "6">
+                                <span styleclass="selectList">
+                                    <lightning:select  aura:id="HearaboutId" value="{!v.leadObject.How_did_you_hear_about_us__c}" name="select1" label="How did you hear about us?" required="true" onchange="{!c.Pickilistvalue}">
+                                        <option value ="None"> --None-- </option>
+                                        <option value ="Social Media"> Social Media	 </option>
+                                        <option value ="Peer Referral"> Peer Referral </option>
+                                        <option value ="Google/Search Engine"> Google/Search Engine </option>
+                                        <option value ="Television"> Television </option>
+                                        <option value ="Third-Party Review"> Third-Party Review </option>
+                                        <option value ="Business Builder"> Business Builder </option>
+                                        <option value ="Center Business Advisor"> Center Business Advisor </option>
+                                        <option value ="SBDC"> SBDC </option>
+                                        <option value ="Inclusive Action for the City"> Inclusive Action for the City </option>
+                                        <option value ="Asian Pacific Islander Small Business Program"> Asian Pacific Islander Small Business Program </option>
+                                        <option value ="Vermont Slauson Economic Development Corporation">Vermont Slauson Economic Development Corporation</option>
+                                        <option value ="CDC Small Business Finance"> CDC Small Business Finance </option>
+                                    </lightning:select> 
+                                </span>
+                            </lightning:layoutItem>
+                        </div>   
+                        <div class="slds-col slds-size_1-of-2">
+                            <aura:if isTrue="{!v.showdiv}"> 
+                                <lightning:layoutItem class="slds-align_absolute-right" size = "6">
+                                    <lightning:input aura:id="fieldId" type="text" value="{!v.leadObject.Reffered_Advisor__c}" name="input1" label="Reffered Advisor" max="200" required="true" />
+                                </lightning:layoutItem>
+                            </aura:if>
+                        </div>
+                    </div>
+                    
+                </aura:set>
+            </lightning:accordionSection>
+        </lightning:accordion>
+    </lightning:layoutItem>
+    <div class="slds-align_absolute-center" style="height:5rem">
+        <lightning:button variant="brand" label="Submit" title="Submit" onclick="{! c.submitJSMethod }" />
+    </div>    
+</aura:component>

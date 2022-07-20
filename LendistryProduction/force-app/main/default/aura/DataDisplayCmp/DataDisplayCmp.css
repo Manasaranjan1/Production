@@ -1,0 +1,17 @@
+.THIS .xyz{
+    background-color: green;
+}
+
+.THIS .xyz1 {
+    text-align: center;
+    font-family: verdana;
+    font-size: 20px;
+    font-size: 2.5em;
+    margin-left: 100px;
+    margin-right: auto;
+}
+.THIS .xyz2{
+    left: 700px;
+    background-color: lightblue;
+    color: black;
+}

@@ -1,0 +1,82 @@
+<aura:component controller = "CounsellorlListcontroller" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="showDetail" type="Boolean" description="shoe hide spinner"/>
+    <aura:attribute name="showUploadAttach" type="Boolean" default="false" description="shoe hide spinner"/>
+    <aura:attribute name="showDownLoadAttach" type="Boolean" default="false" description="shoe hide spinner"/>
+    <aura:attribute name="showCSessions" type="Boolean" default="false" description="shoe hide spinner"/>
+    
+    <aura:attribute name="recordId" type="String"/>  
+    <aura:attribute name="isOpen" type="boolean" default="false"/> 
+    <aura:attribute name="showCounsellor" type="boolean" default="false"/> 
+    <aura:handler name="cmpEvent" event="c:CloseEvent" action="{!c.handleComponentEvent}"/>
+    <aura:attribute name="whichpage" type="Integer" default="2" />
+    <aura:attribute name="LeadId" type="String"/>
+    <aura:attribute name="viewLeadBtn" type="String" default="View Lead"/>
+    <aura:attribute name="DisplayCSessionsBtn" type="String" default="Generate Report"/>
+    <aura:attribute name="LeadName" type="String"/>
+    <aura:attribute name="property" type="Counseling_Session__c"/>
+    <aura:attribute name="brokerFields" type="String[]"/>
+    <aura:attribute name="showViewOrEdit" type="Boolean" default="false"/>
+    <aura:attribute name="isUpdate" type="Boolean" default="false"/>  
+    <aura:attribute name="showModal" type="Boolean" default="false"/>
+    <aura:registerEvent name="handleColumn" type="c:Eqnx_IterationComponentEvt" description="its a handler for clear the picklist"/>
+    <aura:attribute name="hideSpinner" type="Boolean" default="false" description="shoe hide spinner"/>
+    <div >
+        <button class="slds-button slds-button_brand" onclick="{!c.back}">
+            
+            <p style="color:white">&larr;&nbsp;Back</p>
+        </button>
+         <button class="slds-button slds-button_brand" onclick="{!c.OpenChangeCounselorModal}">
+                 
+                <p style="color:white">&nbsp;Change Counselor</p>
+            </button>
+        <div class="slds-grid slds-wrap slds-float_right">
+            <button class="slds-button slds-button_brand" onclick="{!c.openModel}">
+                <lightning:buttonIcon iconName="utility:preview" variant="brand" Name="preview" alternativeText="preview" title="preview"> preview </lightning:buttonIcon>
+                
+                <p style="color:white"> {!v.viewLeadBtn}</p>
+            </button>
+            <!--New -->
+          <!--  <button class="slds-button slds-button_brand" onclick="{!c.openCSModel}">
+                <lightning:buttonIcon iconName="utility:preview" variant="brand" Name="preview" alternativeText="preview" title="preview"> preview </lightning:buttonIcon>             
+                <p style="color:white"> {!v.DisplayCSessionsBtn}</p>
+            </button>  -->
+            <!--New end-->
+            
+            <button class="slds-button slds-button_brand" onclick="{!c.OpenUploadModal}">
+                <lightning:buttonIcon iconName="utility:upload" variant="brand" Name="upload" alternativeText="upload" title="upload"> Upload </lightning:buttonIcon>           
+                <p style="color:white">&nbsp;Upload Document</p>
+            </button>
+            
+            <button class="slds-button slds-button_brand" onclick="{!c.OpenDownLoadModal}">
+                <lightning:buttonIcon iconName="utility:download" variant="brand" Name="Download" alternativeText="download" title="download"> Download </lightning:buttonIcon>
+                
+                <p style="color:white">&nbsp;Download Document</p>
+            </button>
+        </div>
+    </div>
+    
+    <br/>
+    <aura:If isTrue="{!v.isOpen}">        
+        <c:LeadDetailPageComponent isOpen="{!v.isOpen}" recordId="{!v.recordId}" />
+    </aura:If>
+    
+    <!--New -->
+    <aura:If isTrue="{!v.showCSessions}">        
+       <!-- <c:DisplayTotalHours recordId="{!v.recordId}" showCSessions="{!v.showCSessions}"  /> -->
+        <!--<c:GenerateReport recordId="{!v.recordId}" showCSessions="{!v.showCSessions}" /> -->
+    </aura:If>
+    <!--New -->
+    
+    <aura:If isTrue="{!v.showUploadAttach}">
+      <!--  <c:DemoFileUpload recordId="{!v.recordId}" showUploadAttach="{!v.showUploadAttach}"/> -->
+       <c:FileUploadComp recordId="{!v.recordId}" showUploadAttach="{!v.showUploadAttach}"/>
+    </aura:If>
+    
+    <aura:If isTrue="{!v.showDownLoadAttach}">
+       <!-- <c:DownLoadComponent recordId="{!v.recordId}" showDownLoadAttach="{!v.showDownLoadAttach}"/> -->
+        <c:FileDownloadComp recordId="{!v.recordId}" showDownLoadAttach="{!v.showDownLoadAttach}"/>
+    </aura:If>
+     <aura:If isTrue="{!v.showCounsellor}">
+        <c:ChangeCounselorComponent recordId="{!v.recordId}" showCounsellor="{!v.showCounsellor}"/>
+    </aura:If>
+</aura:component>

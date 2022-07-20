@@ -1,0 +1,102 @@
+.THIS .slds-table_cell
+{
+    background-color:Red;
+}
+.THIS.sldsColor
+{
+    background-color:Yellow;
+}
+.THIS .FirstColColor {
+        background: #f3f3f3;
+        font-weight: bold;
+}
+.THIS .TotalColor
+{
+    background: #d9d5e8;
+    
+}
+.THIS .WhiteColor{
+    background: #f3f3f3;
+}
+.THIS .PurpleColor
+{
+    background: #c9eceb;;
+}
+.THIS .DisplayRightSide
+{
+    right: 40px;
+    position: absolute;
+    font-size: x-large;
+    font-style: unset;
+    font-family: monospace;
+    font-weight: bold;
+}
+.THIS .PanelBackground
+{
+    font-size: x-large;
+    font-style: unset;
+    font-family: monospace;
+    font-weight: bold;
+}
+.THIS .tableHeader
+{
+        background-color: #9e48ec !important;
+    color: white;
+}
+
+.THIS .slds-modal__container {
+    margin: 0 auto;
+    width: 100%;
+    /* max-width: 40rem; */
+    /* min-width: 20rem; */
+}
+.THIS .slds-grow {
+    flex-grow: 1;
+    width: fit-content;
+}
+.THIS .slds-form-element__label {
+   font-size: medium;
+    font-family: sans-serif;
+    font-style: normal;
+}
+.THIS .vl {
+  border-left: 6px solid green;
+  height: 126px;
+}
+.THIS .OwnerTD
+{
+    flex-grow: 1;
+    width: min-content;
+}
+.THIS .slds-input {
+    min-width: 70px;
+}
+.THIS label.uiLabel {
+    padding-right: 12px;
+}
+
+.THIS .field{
+  padding: 5px;
+  border: 1px solid #dce4ec;
+  border-radius: 2px;
+}
+.THIS .attach-to-bottom{
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    width: 100%;
+}
+.THIS .AcordianClass
+{
+     background-color: #5d3e96;
+    color: white;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+.THIS .TextClass
+{
+    color: #243B73 !important;
+    font-weight: bold;
+    font-family: sans-serif;
+
+}

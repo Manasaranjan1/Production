@@ -1,0 +1,797 @@
+<aura:component controller="FileUploadController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <!-- 'parentId' Aura Attribute for store the Id (AccountId) for Parent Record where we are attach our file -->  
+   <!-- <aura:attribute name="parentId" type="Id" default="a216w000000J6Iz" /> --> <!-- default="a216w000000IzD9"  -->
+    <aura:attribute name="recordId" type="string"  />  
+    <!--'showLoadingSpinner' attribute for show/hide the uploading image and msg in aura:if-->
+    
+    <aura:attribute name="showLoadingSpinner" type="boolean" default="false" />
+    <aura:attribute name="showLoadingSpinner1" type="boolean" default="false" />
+    <aura:attribute name="showLoadingSpinner2" type="boolean" default="false" />
+    
+    <aura:attribute name="showLoadingSpinner3" type="boolean" default="false" />
+    <aura:attribute name="showLoadingSpinner4" type="boolean" default="false" />
+    
+    <aura:attribute name="showLoadingSpinner5" type="boolean" default="false" />
+    <aura:attribute name="showLoadingSpinner6" type="boolean" default="false" />
+    
+    <aura:attribute name="upInputField1" type="boolean" default="false" />
+    <aura:attribute name="upButton1" type="boolean" default="false" />
+    
+    <aura:attribute name="upInputField2" type="boolean" default="false" />
+    <aura:attribute name="upButton2" type="boolean" default="false" />
+    
+    <aura:attribute name="upInputField3" type="boolean" default="false" />
+    <aura:attribute name="upButton3" type="boolean" default="false" />
+    
+    <aura:attribute name="upInputField4" type="boolean" default="false" />
+    <aura:attribute name="upButton4" type="boolean" default="false" />
+    
+    <aura:attribute name="upInputField5" type="boolean" default="false" />
+    <aura:attribute name="upButton5" type="boolean" default="false" />
+    
+    <aura:attribute name="upInputField6" type="boolean" default="false" />
+    <aura:attribute name="upButton6" type="boolean" default="false" />
+    
+    <!-- Upload Progress Bar -->
+    <!--<aura:attribute name="progress" type="Integer" default="0"/>   -->
+    
+    
+    <!-- 'fileName' attribute for display the selected file name -->  
+    <aura:attribute name="fileName1" type="String" default="No File Selected.." />
+    <aura:attribute name="fileName2" type="String" default="No File Selected.." /> 
+    
+    <aura:attribute name="fileName3" type="String" default="No File Selected.." />
+    <aura:attribute name="fileName4" type="String" default="No File Selected.." />
+    
+    <aura:attribute name="fileName5" type="String" default="No File Selected.." />
+    <aura:attribute name="fileName6" type="String" default="No File Selected.." />
+    
+    <!-- 'DocCategory' attribute to display Document Category -->  
+    <aura:attribute name="DocCategory1" type="String" default="Taxes" />
+    <aura:attribute name="DocCategory2" type="String" default="Business Plans" /> 
+    
+    <aura:attribute name="DocCategory3" type="String" default="Permits" />
+    <aura:attribute name="DocCategory4" type="String" default="Certificates" />
+    
+    <aura:attribute name="DocCategory5" type="String" default="Financial Documents" />
+    <aura:attribute name="DocCategory6" type="String" default="Other Documents" />
+    
+    <aura:attribute name="isModalOpen" type="boolean" default="false"/>
+    
+    <aura:attribute name="selectedDocumentId" type="string"/>
+    <aura:attribute name="myAttachments" type="Object[]" description="for storing the apex class object"/>
+    <aura:attribute name="hasModalOpen" type="boolean" default="false"/>
+    
+    <aura:attribute name="showUploadAttach" type="boolean" default="false"/>
+    <aura:handler name="init" value="{!this}" action="{!c.initData}"/>    
+    <!-- ******* WAITING SPINNER  *********** -->
+    <!-- * https://www.sfdcpoint.com/salesforce/loading-spinner-in-lightning-component/  * -->
+    
+    <!--aura handler with waiting and donewaiting events-->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>   
+    <aura:attribute name="spinner" type="boolean" default="FALSE"/>
+    <!-- <aura:attribute name="accListToDisplay" type="Account[]" />     -->
+    
+    <!--loading spinner start-->
+    <!-- <aura:renderif isTrue="{!v.spinner}">
+        
+     </aura:renderif>  -->     
+    <!-- Loading spinner end-->   
+    
+    <!-- ******* WAITING SPINNER  END *********** -->
+	<!-- NEW CODE -->
+	<div class="slds-m-around_xx-large">
+       <!-- <lightning:button variant="brand"
+                          label="UPLOAD"
+                          title="UPLOAD"
+                          onclick="{! c.openModel }" />  -->
+        <!--Use aura:if tag to display/hide popup based on isModalOpen value-->  
+     <aura:if isTrue="{!v.isModalOpen}">         
+       <!-- Modal/Popup Box starts here-->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" 
+                 aria-modal="true" aria-describedby="modal-content-id-1" 
+                 class="slds-modal slds-fade-in-open">
+          
+           <aura:If isTrue="{!v.spinner}">
+            <div class="slds-spinner_container" >
+                <div class="slds-spinner--brand slds-spinner slds-spinner--large" role="alert">
+                    <span class="slds-assistive-text">Loading, Please Wait...</span>
+                    <div class="slds-spinner__dot-a"></div>
+                    <div class="slds-spinner__dot-b"></div>
+                </div>
+            </div>      
+          </aura:If> 
+        
+          <div class="slds-modal__container">
+            
+            <!-- ###### MODAL BOX HEADER Start ######-->
+            <header class="slds-modal__header">
+                <lightning:buttonIcon iconName="utility:close"
+                                      onclick="{!c.closeModel }"
+                                      alternativeText="close"
+                                      variant="bare-inverse"                                     
+                                      class="slds-modal__close closeBtncss btnClose"/>
+                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Upload Documents</h2>
+            </header>
+            <!--###### MODAL BOX BODY Part Start######-->
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                <html>
+                     <strong>
+                    <table>
+                      <!--  <tr  class="slds-line-height_reset" style="font-family: Poppins;"> -->
+					     <!-- 1 And 2  -->
+                          <tr>
+                            <!-- 1 -->						  
+                            <td scope="col"  class="pointerCss fontSizecssChild" > 
+                 				 
+                                  <div class="slds-col">
+                    <!-- <span> 1 </span>   -->
+                    <span>
+                        <div class="slds-m-left_x-small">  <!-- Left Margin -->
+                            <div class=" slds-box">           
+                                <!-- Lightning Input with file type and on file change call the 'handleFilesChange' controller -->  
+                                <strong>
+                                    <lightning:input aura:id="fileId1" 
+                                                 onchange="{!c.handleFilesChange1}" 
+                                                 type="file" 
+                                                 name="file"
+                                                 class="inputcss"    
+                                                 label="TAXES" 
+                                                 multiple="false"
+                                                 disabled="{!v.upInputField1}"/></strong>
+                                <div Style="color:#070A8C" class="slds-text-body_small">{!v.fileName1} </div>
+                                
+                                <!--use aura:if for show-hide the loading spinner image--> 
+                                
+                              <!--  <aura:if isTrue="{!v.showLoadingSpinner1}">
+                                    <div class="slds-text-body_small slds-text-color_success">Uploading... 
+                                        <img src="/auraFW/resources/aura/images/spinner.gif" 
+                                             class="spinner-img" 
+                                             alt="Loading"/>
+                                    </div>
+                                </aura:if>   --> 
+                                
+                              <!--  <br/>  -->
+                                
+                                <!--    <button class="slds-button slds-button_brand" 
+                  onclick="{!c.doSave1}"> Upload Attachment </button>  -->               
+                                
+                                <!-- <lightning:button label="Cancel" onclick="{!c.handleCancel}" class="slds-m-top-medium" /> -->
+                                <lightning:button label="Upload Attachment" onclick="{!c.doSave1}"
+                                                  variant="brand" 
+                                                  class="slds-m-top--medium saveBtncss"
+                                                  disabled="{!v.upButton1}"/>    
+                                
+                            </div>  
+                        </div>   <!-- Left Margin --> 
+                    </span>
+                </div>  <!-- slds col 1 : close -->
+
+
+                            </td>
+							<!-- 2 -->
+                            <td scope="col"  class="pointerCss fontSizecssChild" > 
+							
+                                 <div class="slds-col">
+                    <!-- <span> 2 </span>   -->   
+                    <span>
+                        <div class="slds-m-right_x-small">  <!-- Right Margin -->
+                            
+                            <div class=" slds-box">           
+                                <!-- Lightning Input with file type and on file change call the 'handleFilesChange' controller -->  
+                                <strong><lightning:input aura:id="fileId2" 
+                                                 onchange="{!c.handleFilesChange2}" 
+                                                 type="file" 
+                                                 name="file" 
+                                                 label="BUSINESS PLANS" 
+                                                 multiple="false"
+                                                         disabled="{!v.upInputField2}"/> </strong>
+                                <div Style="color:#070A8C" class="slds-text-body_small">{!v.fileName2} </div>
+                                
+                                <!--use aura:if for show-hide the loading spinner image--> 
+                                
+                             <!--   <aura:if isTrue="{!v.showLoadingSpinner2}">
+                                    <div class="slds-text-body_small slds-text-color_success">Uploading... 
+                                        <img src="/auraFW/resources/aura/images/spinner.gif" 
+                                             class="spinner-img" 
+                                             alt="Loading"/>
+                                    </div>
+                                </aura:if>   --> 
+                                
+                               <!-- <br/>--> 
+                                
+                                <!--  <button class="slds-button slds-button_brand" 
+                  onclick="{!c.doSave2}"> Upload Attachment </button>  -->               
+                                
+                                <!-- <lightning:button label="Cancel" onclick="{!c.handleCancel}" class= "slds-m-top-medium" />  -->
+                                
+                                <lightning:button label="Upload Attachment" onclick="{!c.doSave2}"
+                                                  variant="brand" 
+                                                  class="slds-m-top--medium saveBtncss"
+                                                  disabled="{!v.upButton2}"/>    
+                                
+                            </div> 
+                        </div>   <!-- Right Margin -->  
+                    </span>
+                </div>   <!-- slds col 2 : close --> 
+
+
+                            </td>
+                        </tr>
+						
+						<!-- 3 And 4  -->
+                        <tr>
+						  <!-- 3 -->
+                            <td scope="col"  class="pointerCss fontSizecssChild" > 
+          
+                        		  
+								  <div class="slds-col">
+                    <!-- <span> 3 </span>   -->
+                    <span>
+                        <div class="slds-m-left_x-small">  <!-- Left Margin -->
+                            <div class=" slds-box">           
+                                <!-- Lightning Input with file type and on file change call the 'handleFilesChange' controller -->  
+                               <strong> <lightning:input aura:id="fileId3" 
+                                                 onchange="{!c.handleFilesChange3}" 
+                                                 type="file" 
+                                                 name="file" 
+                                                 label="PERMITS" 
+                                                 multiple="false"
+                                                 disabled="{!v.upInputField3}"/> </strong>
+                                <div Style="color:#070A8C" class="slds-text-body_small ">{!v.fileName3} </div>
+                                
+                                <!--use aura:if for show-hide the loading spinner image--> 
+                                
+                              <!--  <aura:if isTrue="{!v.showLoadingSpinner3}">
+                                    <div class="slds-text-body_small slds-text-color_success">Uploading... 
+                                        <img src="/auraFW/resources/aura/images/spinner.gif" 
+                                             class="spinner-img" 
+                                             alt="Loading"/>
+                                    </div>
+                                </aura:if> -->  
+                                
+                              <!--  <br/>  -->
+                                
+                                <!--    <button class="slds-button slds-button_brand" 
+                  onclick="{!c.doSave3}"> Upload Attachment </button>  -->               
+                                
+                                <!--   <lightning:button label="Cancel" onclick="{!c.handleCancel}" class="slds-m-top-medium" />  -->
+                                <lightning:button label="Upload Attachment" onclick="{!c.doSave3}"
+                                                  variant="brand" 
+                                                  class="slds-m-top--medium saveBtncss"
+                                                  disabled="{!v.upButton3}"/>    
+                                
+                            </div>  
+                        </div>   <!-- Left Margin --> 
+                    </span>
+                </div>  <!-- slds col 3 : close -->
+													  
+													  
+                            </td>
+							<!-- 4 -->
+                            <td scope="col"  class="pointerCss fontSizecssChild"> 
+                        
+						
+          						 <div class="slds-col">
+                    <!-- <span> 4 </span>   -->   
+                    <span>
+                        <div class="slds-m-right_x-small">  <!-- Right Margin -->
+                            
+                            <div class=" slds-box">           
+                                <!-- Lightning Input with file type and on file change call the 'handleFilesChange' controller -->  
+                               <strong> <lightning:input aura:id="fileId4" 
+                                                 onchange="{!c.handleFilesChange4}" 
+                                                 type="file" 
+                                                 name="file" 
+                                                 label="CERTIFICATES" 
+                                                 multiple="false"
+                                                 disabled="{!v.upInputField4}"/> </strong>
+                                <div Style="color:#070A8C" class="slds-text-body_small">{!v.fileName4} </div>
+                                
+                                <!--use aura:if for show-hide the loading spinner image--> 
+                                
+                              <!--  <aura:if isTrue="{!v.showLoadingSpinner4}">
+                                    <div class="slds-text-body_small slds-text-color_success">Uploading... 
+                                        <img src="/auraFW/resources/aura/images/spinner.gif" 
+                                             class="spinner-img" 
+                                             alt="Loading"/>
+                                    </div>
+                                </aura:if>  --> 
+                                
+                              <!--  <br/> -->
+                                
+                                <!--  <button class="slds-button slds-button_brand" 
+                  onclick="{!c.doSave4}"> Upload Attachment </button>  -->               
+                                
+                                <!-- <lightning:button label="Cancel" onclick="{!c.handleCancel}" class="slds-m-top-medium" /> -->
+                                <lightning:button label="Upload Attachment" onclick="{!c.doSave4}"
+                                                  variant="brand" 
+                                                  class="slds-m-top--medium saveBtncss"
+                                                  disabled="{!v.upButton4}" />    
+                                
+                            </div> 
+                        </div>   <!-- Right Margin -->  
+                    </span>
+                </div>   <!-- slds col 4 : close -->
+                        
+
+						
+                            </td>
+                        </tr>
+						
+						<!-- 5 And 6  -->
+                        <tr>
+                           <!-- 5 --> 
+                            <td scope="col"  class="pointerCss fontSizecssChild"> 
+
+
+           
+                        		    <div class="slds-col">
+                    <!-- <span> 3 </span>   -->
+                    <span>
+                        <div class="slds-m-left_x-small">  <!-- Left Margin -->
+                            <div class=" slds-box">           
+                                <!-- Lightning Input with file type and on file change call the 'handleFilesChange' controller -->  
+                               <strong> <lightning:input aura:id="fileId5" 
+                                                 onchange="{!c.handleFilesChange5}" 
+                                                 type="file" 
+                                                 name="file" 
+                                                 label="FINANCIAL DOCUMENTS" 
+                                                 multiple="false"
+                                                         disabled="{!v.upInputField5}"/>  </strong>
+                                <div Style="color:#070A8C" class="slds-text-body_small ">{!v.fileName5} </div>
+                                
+                                <!--use aura:if for show-hide the loading spinner image--> 
+                                
+                               <!-- <aura:if isTrue="{!v.showLoadingSpinner5}">
+                                    <div class="slds-text-body_small slds-text-color_success">Uploading... 
+                                        <img src="/auraFW/resources/aura/images/spinner.gif" 
+                                             class="spinner-img" 
+                                             alt="Loading"/>
+                                    </div>
+                                </aura:if> -->  
+                                
+                               <!-- <br/> -->
+                                
+                                <!--    <button class="slds-button slds-button_brand" 
+                  onclick="{!c.doSave3}"> Upload Attachment </button>  -->               
+                                
+                                <!--   <lightning:button label="Cancel" onclick="{!c.handleCancel}" class="slds-m-top-medium" />  -->
+                                <lightning:button label="Upload Attachment" onclick="{!c.doSave5}"
+                                                  variant="brand" 
+                                                  class="slds-m-top--medium saveBtncss"
+                                                  disabled="{!v.upButton5}"/>    
+                                
+                            </div>  
+                        </div>   <!-- Left Margin --> 
+                    </span>
+                </div>  <!-- slds col 5 : close -->
+
+
+                                
+                            </td>
+                            
+                            <!-- 6 -->
+                            <td scope="col"  class="pointerCss fontSizecssChild">
+
+
+                        
+           						 <div class="slds-col">
+                    <!-- <span> 6 </span>   -->   
+                    <span>
+                        <div class="slds-m-right_x-small">  <!-- Right Margin -->
+                            
+                            <div class=" slds-box">           
+                                <!-- Lightning Input with file type and on file change call the 'handleFilesChange' controller -->  
+                             <strong>
+                                 
+                                <lightning:input aura:id="fileId6" 
+                                                 onchange="{!c.handleFilesChange6}" 
+                                                 type="file" 
+                                                 name="file"
+                                                 label="OTHER DOCUMENTS" 
+                                                 multiple="false"
+                                                 disabled="{!v.upInputField6}"/>
+                               
+                              </strong> 
+                                <div Style="color:#070A8C" class="slds-text-body_small ">{!v.fileName6} </div>
+                                
+                                <!--use aura:if for show-hide the loading spinner image--> 
+                                
+                               <!-- <aura:if isTrue="{!v.showLoadingSpinner6}">
+                                    <div class="slds-text-body_small slds-text-color__success">Uploading... 
+                                        <img src="/auraFW/resources/aura/images/spinner.gif" 
+                                             class="spinner-img" 
+                                             alt="Loading"/>
+                                    </div>
+                                </aura:if>  --> 
+                                
+                              <!--  <br/> -->
+                                
+                                <!--  <button class="slds-button slds-button_brand" 
+                  onclick="{!c.doSave4}"> Upload Attachment </button>  -->               
+                                
+                                <!-- <lightning:button label="Cancel" onclick="{!c.handleCancel}" class="slds-m-top-medium" /> -->
+                                <lightning:button label="Upload Attachment" onclick="{!c.doSave6}"
+                                                  variant="brand" 
+                                                  
+                                                  class="slds-m-top--medium saveBtncss"
+                                                  disabled="{!v.upButton6}" />    
+                                
+                            </div> 
+                        </div>   <!-- Right Margin -->  
+                    </span>
+                </div>   <!-- slds col 6 : close -->  
+
+
+                            </td>
+                        </tr>
+                    </table>
+                  </strong>
+                </html><br/>
+                
+              <!-- Accordian Sections START -->
+              <lightning:accordion aura:id="accordion" activeSectionName="F">
+                  
+                <!--Taxes-->
+                <lightning:accordionSection name="A" class="slds-scrollable" label="Taxes">    <!-- 1 -->
+                    <aura:set attribute="body">
+	                   		                                            
+                    <div class="slds-scrollable_y;" style="height:10rem;" >
+                       <div class="slds-form--compound">
+                        <table class="slds-table  slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_col-bordered">  
+                            <thead>  
+                                <tr>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >                                
+                                        <div class="slds-truncate a"  title="Document Name"  >Document Name</div> 
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Document Category</div>
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Size(BYTES)</div>
+                                    </th>
+                                    
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Type</div>
+                                    </th>
+                                    
+                                </tr> 
+                            </thead>  
+                            <tbody>    
+                                <aura:iteration items="{!v.myAttachments}" var="obj">
+                                    <aura:if isTrue="{!obj.Doc_Category__c=='Taxes'}">
+                                      <tr>  
+                                        <td scope="col"  class="pointerCss fontSizecssChild" >                                             
+                                            <a onclick="{!c.previewFile}" title="{!obj.ContentDocumentId}"> {!obj.Title} </a>                                            
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.Doc_Category__c}
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.ContentDocument.ContentSize}
+                                        </td>
+                                        
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.FileExtension}
+                                        </td>                             
+                                    </tr> 
+                                   </aura:if>     
+                                </aura:iteration>    
+                                
+                            </tbody>  
+                        </table>                        
+                      </div>
+                    </div>
+				  </aura:set>
+                </lightning:accordionSection>
+                <!--Taxes end --> 
+                
+                <!--Business Plans-->
+                <lightning:accordionSection name="B" class="slds-scrollable" label="Business Plans">    <!-- 1 -->
+                    <aura:set attribute="body">
+	                   		                                            
+                    <div class="slds-scrollable_y;" style="height:10rem;" >
+                    <div class="slds-form--compound">
+                        <table class="slds-table  slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_col-bordered">  
+                            <thead>  
+                                <tr>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >                                
+                                        <div class="slds-truncate a"  title="Document Name"  >Document Name</div> 
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Document Category</div>
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Size(BYTES)</div>
+                                    </th>
+                                    
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Type</div>
+                                    </th>
+                                    
+                                </tr> 
+                            </thead>  
+                            <tbody>    <!-- Business Plans  -->
+                                <aura:iteration items="{!v.myAttachments}" var="obj">
+                                    <aura:if isTrue="{!obj.Doc_Category__c=='Business Plans'}">
+                                      <tr>  
+                                        <td scope="col"  class="pointerCss fontSizecssChild" >                                             
+                                            <a onclick="{!c.previewFile}" title="{!obj.ContentDocumentId}"> {!obj.Title}                                                
+                                            </a>
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.Doc_Category__c}
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.ContentDocument.ContentSize}
+                                        </td>
+                                        
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.FileExtension}
+                                        </td>                             
+                                    </tr> 
+                                   </aura:if>     
+                                </aura:iteration>    
+                                
+                            </tbody>  
+                        </table>                        
+                      </div>
+                    </div>
+				  </aura:set>
+                </lightning:accordionSection>
+                <!--Business Plans end --> 
+                
+                <!--Permits-->
+                <lightning:accordionSection name="C" class="slds-scrollable" label="Permits">    <!-- 1 -->
+                    <aura:set attribute="body">
+	                   		                                            
+                    <div class="slds-scrollable_y;" style="height:10rem;" >
+                    <div class="slds-form--compound">
+                        <table class="slds-table  slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_col-bordered">  
+                            <thead>  
+                                <tr>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >                                
+                                        <div class="slds-truncate a"  title="Document Name"  >Document Name</div> 
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Document Category</div>
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Size(BYTES)</div>
+                                    </th>
+                                    
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Type</div>
+                                    </th>
+                                    
+                                </tr> 
+                            </thead>  
+                            <tbody>       <!--Permits-->
+                                <aura:iteration items="{!v.myAttachments}" var="obj">
+                                    <aura:if isTrue="{!obj.Doc_Category__c=='Permits'}">
+                                      <tr>  
+                                        <td scope="col"  class="pointerCss fontSizecssChild" >                                             
+                                            <a onclick="{!c.previewFile}" title="{!obj.ContentDocumentId}"> {!obj.Title}                                                
+                                            </a>
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.Doc_Category__c}
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.ContentDocument.ContentSize}
+                                        </td>
+                                        
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.FileExtension}
+                                        </td>                             
+                                    </tr> 
+                                   </aura:if>     
+                                </aura:iteration>    
+                                
+                            </tbody>  
+                        </table>                        
+                      </div>
+                    </div>
+				  </aura:set>
+                </lightning:accordionSection>
+                <!--Permits end -->  
+                
+                <!--Certificates-->
+                <lightning:accordionSection name="D" class="slds-scrollable" label="Certificates">    <!-- 1 -->
+                    <aura:set attribute="body">
+	                   		                                            
+                    <div class="slds-scrollable_y;" style="height:10rem;" >
+                    <div class="slds-form--compound">
+                        <table class="slds-table  slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_col-bordered">  
+                            <thead>  
+                                <tr>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >                                
+                                        <div class="slds-truncate a"  title="Document Name"  >Document Name</div> 
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Document Category</div>
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Size(BYTES)</div>
+                                    </th>
+                                    
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Type</div>
+                                    </th>
+                                    
+                                </tr> 
+                            </thead>  
+                            <tbody>      <!--Certificates--> 
+                                <aura:iteration items="{!v.myAttachments}" var="obj">
+                                    <aura:if isTrue="{!obj.Doc_Category__c=='Certificates'}">
+                                      <tr>  
+                                        <td scope="col"  class="pointerCss fontSizecssChild" >                                             
+                                            <a onclick="{!c.previewFile}" title="{!obj.ContentDocumentId}"> {!obj.Title}                                                
+                                            </a>
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.Doc_Category__c}
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.ContentDocument.ContentSize}
+                                        </td>
+                                        
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.FileExtension}
+                                        </td>                             
+                                    </tr> 
+                                   </aura:if>     
+                                </aura:iteration>    
+                                
+                            </tbody>  
+                        </table>                        
+                      </div>
+                    </div>
+				  </aura:set>
+                </lightning:accordionSection>
+                <!--Certificates end -->  
+                
+                <!--Financial Documents-->
+                <lightning:accordionSection name="E" class="slds-scrollable" label="Financial Documents">    <!-- 1 -->
+                    <aura:set attribute="body">
+	                   		                                            
+                    <div class="slds-scrollable_y;" style="height:10rem;" >
+                    <div class="slds-form--compound">
+                        <table class="slds-table  slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_col-bordered">  
+                            <thead>  
+                                <tr>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >                                
+                                        <div class="slds-truncate a"  title="Document Name"  >Document Name</div> 
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Document Category</div>
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Size(BYTES)</div>
+                                    </th>
+                                    
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Type</div>
+                                    </th>
+                                    
+                                </tr> 
+                            </thead>  
+                            <tbody>     <!--Financial Documents-->
+                                <aura:iteration items="{!v.myAttachments}" var="obj">
+                                    <aura:if isTrue="{!obj.Doc_Category__c=='Financial Documents'}">
+                                      <tr>  
+                                        <td scope="col"  class="pointerCss fontSizecssChild" >                                             
+                                            <a onclick="{!c.previewFile}" title="{!obj.ContentDocumentId}"> {!obj.Title}                                                
+                                            </a>
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.Doc_Category__c}
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.ContentDocument.ContentSize}
+                                        </td>
+                                        
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.FileExtension}
+                                        </td>                             
+                                    </tr> 
+                                   </aura:if>     
+                                </aura:iteration>    
+                                
+                            </tbody>  
+                        </table>                        
+                      </div>
+                    </div>
+				  </aura:set>
+                </lightning:accordionSection>
+                <!--Financial Documents end --> 
+                
+                <!--Other Documents-->
+                <lightning:accordionSection name="F" class="slds-scrollable" label="Other Documents">    <!-- 1 -->
+                    <aura:set attribute="body">
+	                   		                                            
+                    <div class="slds-scrollable_y;" style="height:10rem;" >
+                    <div class="slds-form--compound">
+                        <table class="slds-table  slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_col-bordered">  
+                            <thead>  
+                                <tr>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >                                
+                                        <div class="slds-truncate a"  title="Document Name"  >Document Name</div> 
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Document Category</div>
+                                    </th>
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Size(BYTES)</div>
+                                    </th>
+                                    
+                                    <th   scope="col" style="background-color: #070A8C;color:#EAEEF3;"  class="pointerCss slds-is-sortable slds-text-title--caps"  >
+                                        <div class="slds-truncate a"  title="Document Name"   >Type</div>
+                                    </th>
+                                    
+                                </tr> 
+                            </thead>  
+                            <tbody>     <!--Other Documents-->
+                                <aura:iteration items="{!v.myAttachments}" var="obj">
+                                    <aura:if isTrue="{!obj.Doc_Category__c=='Other Documents'}">
+                                      <tr>  
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+											<a onclick="{!c.previewFile}" title="{!obj.ContentDocumentId}"> {!obj.Title}  </a>
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.Doc_Category__c}
+                                        </td>
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.ContentDocument.ContentSize}
+                                        </td>
+                                        
+                                        <td scope="col"  class="pointerCss fontSizecssChild" > 
+                                            {!obj.FileExtension}
+                                        </td>                             
+                                    </tr> 
+                                   </aura:if>     
+                                </aura:iteration>    
+                                
+                            </tbody>  
+                        </table>                        
+                      </div>
+                    </div>
+				  </aura:set>
+                </lightning:accordionSection>
+                <!--Other Documents end -->  
+                     
+                  
+              </lightning:accordion>
+             </div>            
+            <!-- Accordian Sections END -->
+                
+            </div>  
+            <!--###### MODAL BOX FOOTER Part Start ######-->         
+                          
+          <aura:if isTrue="{!v.hasModalOpen}">
+            <section onclick="{!c.closeModelPreview}"
+                     role="dialog"
+                     aria-modal="true"
+                     class="slds-modal slds-fade-in-open"> 
+                <div class="slds-modal__container">
+                    <div class="slds-modal__content slds-p-around_medium slds-text-align_center"
+                         style="background: transparent;">
+                        <div style="width: 50%; margin: 0 auto; text-align: left">
+                            <!--<lightning:fileCard> to preview file using content document Id -->
+                            <lightning:fileCard fileId="{!v.selectedDocumentId}"/>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </aura:if>
+     </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+     </aura:if> 
+    </div>
+	<!-- NEW CODE STOPS -->
+    
+</aura:component>

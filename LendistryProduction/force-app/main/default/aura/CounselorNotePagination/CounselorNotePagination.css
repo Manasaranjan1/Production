@@ -1,0 +1,7 @@
+.THIS .columns {
+    width:204px!important;
+    max-width: 10px!important
+}
+.THIS th.columnPre {
+      width: 5%
+}

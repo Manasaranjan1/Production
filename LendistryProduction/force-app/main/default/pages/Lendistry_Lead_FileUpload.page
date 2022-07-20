@@ -1,0 +1,506 @@
+<apex:page sidebar="false" showHeader="false" docType="html-5.0">
+    
+    
+    <style type="text/CSS">
+        .LD_Thankyouapp{
+        margin: 0px auto;
+        font-size: 1.5em;
+        padding: 15px 5px;
+        font-weight: 600;
+        color: #462d78;}
+        
+        .LT_check{
+        line-height: normal;
+        font-weight: 600 !important;
+        font-size: 1.4em !important;
+        color: #080707 !important;
+        }
+        
+        .slds-scope .slds-checkbox .slds-checkbox_faux, .slds-scope .slds-checkbox .slds-checkbox--faux{
+        border: 1px solid;
+        }
+        
+        .LT_file{
+        width: 95% !important;
+        background-color: rgba(99, 99, 99, 0.8) !important;
+        /* background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, #505050), color-stop(1, #707070) ); */
+        /* background-position: center top; */
+        border-radius: 18px !important;
+        border: 2px solid #808080 !important;
+        color: #FFF !important;
+        font: 17px Arial, Helvetica, sans-serif !important;
+        text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+        padding: 8px 10px !important;
+        }
+        
+        button.slds-button.slds-button_neutral.LT_submit{
+        color: #fff;
+        text-transform: uppercase;
+        background: #462d78;
+        font-size: 20px;
+        line-height: 20px;
+        vertical-align: middle;
+        font-weight: 400;
+        text-align: center;
+        border-radius: 4px;
+        border: 1px solid #462d78;
+        outline: 0!important;
+        cursor: pointer;
+        box-shadow: none;
+        padding: 12px 25px;
+        }
+        
+        .slds-form-element__row{
+        display:flex;
+        margin: 10px 5px 25px;
+        }
+        
+        #loader{
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display:none;
+        }
+        
+        .LT_nav{
+        width: 90%;
+        margin: 20px auto;
+        padding: 15px 0px;
+        }
+        
+        .LT_UploadFiles{
+        width: 85%;
+        margin: 0px auto;
+        }
+        
+        .is-divider.divider.clearfix{
+        height: 3px;
+        display: block;
+        background-color: rgba(0,0,0,0.1);
+        margin: 1em 0 1em;
+        width: 100%;
+        }
+        
+        label.slds-form-element__label  {
+        color: #4a4a56;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 16px !important;
+        font-weight: 700;
+        font-style: normal;
+        height: 80px;
+        vertical-align: bottom;
+        display: table-cell !important;
+        padding: 0px 15px 5px 0px !important;
+        }
+        
+        .LT_showupload{
+        border-bottom: solid grey;
+        border-width:0 0 2px 0;
+        height: 35px;
+        display:none;
+        }
+        
+        .modal , .slds-modal__container {
+        display: none; 
+        position: fixed; 
+        z-index: 1; 
+        padding-top: 100px; 
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%; 
+        overflow: auto; 
+        background-color: rgb(0,0,0); 
+        background-color: rgba(0,0,0,0.4); 
+        }
+        
+        .modal-content {
+        background-color: #462d78;
+        margin: auto;
+        border: 1px solid #462d78;
+        width: 100%;
+        max-height: 500px;
+        overflow: auto;
+        color: #fff;
+        padding: 0px 10px;
+        font-size: 1.2em;
+        position: relative;
+        border-radius: 3px;
+        top: 115px;
+        margin-top: -130px;
+        }
+        
+        .modalclose{
+        width: 60%;
+        margin: 0 auto;
+        position: relative;
+        }
+        
+        .close , .close:hover {
+        color: #fff !important;
+        float: right;
+        font-size: 35px;
+        font-weight: bold;
+        position: absolute;
+        text-decoration:none !important;
+        top: 65px;
+        right: 0px;
+        }
+        /*.LT_filepadding{
+        margin: 0px 40px 0px;
+        }*/
+        /*.LT_fileviewpadding{
+        margin: 50px 0px 0px;
+        }*/
+        
+        .LT_Uploadtext{
+        font-size: 1.4em !important;
+        /* color: #462d78 !important; */
+        line-height: normal;
+        font-weight: 600 !important;
+        margin: 30px 25px 25px 10px !important;
+        width: 100%;
+        vertical-align: bottom;
+        display: table-cell !important;
+        padding: 0px;
+        }
+        
+        .LT_showfile {        
+        border: 1px solid;
+        max-height: 130px;
+        border-color: rgba(99, 99, 99, 0.8);
+        padding: 5px 7px;
+        font-weight: 600;
+        color: #462d78;
+        border-radius: 5px;
+        }
+        
+        .LT_uploadlist li {
+        font-size: 16px;
+        font-weight: 500;
+        margin-top: 8px;
+        }
+        
+        ol.LT_uploadlist {
+        width: 95%;
+        }
+        
+        .LT_tooltip{
+        color: #fff;
+        background: #462d78;
+        position: absolute;
+        width: 100%;
+        padding: 10px;
+        bottom: 18px;
+        left: 0;
+        width:50%;
+        }
+        
+        input ~ .LT_tooltip{
+        display:none;    
+        }
+        
+        input:hover ~ .LT_tooltip{
+        display:inline-block;position:absolute    
+        }
+        
+         .content-container.policy-madal {
+        margin: 15px 15px;
+        font-size: 16px;
+        }
+        
+        button.slds-button.slds-button_neutral {
+        /*border: 1px solid rgb(221, 219, 218);
+        transition: border .15s linear;
+        background: rgba(70, 45, 120, 1) !important;
+        border-color: rgba(70, 45, 120, 1);
+        color: rgb(255, 255, 255);*/
+        }
+        
+        .LT_termandcondition {
+        max-width: 60% !important;
+        width: 60% !important;
+        }
+        
+        .LT_command{
+            padding: 11px 10px !important;
+        }
+        
+        .LT_showfile li {
+        display: inline-block;
+        font-size: 15px;
+        }
+        
+        .LT_mintext{
+        height:215px;
+        }
+        
+        .LT_secmintext{
+        height:188px ;
+        }
+         
+        @media only screen and (max-width: 992px) {
+        /*.LT_filepadding{
+        margin: 20px 5px 0px;
+        } 
+        .LT_fileviewpadding{
+        margin: 30px 0px ;
+        }*/
+        }
+                
+        @media (min-width:768px) and (max-width:810px){
+        .LT_Uploadtext{
+            margin: 30px 0px 25px 10px !important;
+        }
+        
+        .LT_mintext {
+        height: 245px;
+        }
+        
+        .LT_secmintext{
+         height: 260px;
+        }
+        
+        .LT_uploadlist li{
+            font-size: 15px;
+        }
+        
+        .LT_UploadFiles {
+         width: 95%;
+        }
+        }
+        
+        @media (min-width:811px) and (max-width:880px){
+        .LT_mintext {
+        height: 225px;
+        }
+        
+         .LT_uploadlist li{
+            font-size: 15px;
+        }
+        
+        .LT_UploadFiles {
+         width: 95%;
+        }
+        
+        .LT_Uploadtext{
+            margin: 30px 0px 25px 10px !important;
+        }
+        }
+
+        
+        @media (min-width:881px) and (max-width:1030px){
+        .LT_uploadlist li{
+            font-size: 15px;
+        }
+        
+        .LT_Uploadtext{
+            margin: 30px 0px 25px 10px !important;
+        }
+       
+        .LT_secmintext{
+         height: 255px;
+        }
+        }
+        
+        @media (min-width:881px) and (max-width:942px){
+        .LT_mintext {
+        height: 248px;
+        }
+        }
+        
+         @media (min-width:50px) and (max-width:767px){
+         .Ld_divres{
+        width:90% !important;
+        }
+        
+        .slds-form-element__row{
+        display: block;
+        }
+        
+        .slds-form-element__row .slds-size_6-of-12{
+        width: 100% !important;
+        padding: 0 !important;
+        margin-bottom: 20px;
+        
+        }
+        
+        input.slds-input.LT_input, textarea.slds-input.LT_input , select.LT_input{
+        width:100%;
+        }
+        
+        .LT_mintext, .LT_secmintext{
+        height:auto !important;
+        margin: 15px 10px 20px !important;
+        }
+        
+        .LT_UploadFiles {
+        width: 95%;
+        }
+        }
+        
+        @media only screen and (min-device-width: 320px) and (max-device-width: 480px){
+        .Ld_divres{
+        width:90% !important;
+        }
+        
+           .slds-form-element__row{
+        display: block;
+        }
+        
+        .slds-form-element__row .slds-size_6-of-12{
+        width: 100% !important;
+        padding: 0 !important;
+        margin-bottom: 50px;
+        
+        }
+        
+        input.slds-input.LT_input, textarea.slds-input.LT_input , select.LT_input{
+            width: 93% !important;
+        }
+        
+        .LT_mintext, .LT_secmintext{
+        height:auto;
+        margin: 15px 10px 20px !important;
+        }
+        
+        .LD_tandC{
+        font-size: 1.5em !important;
+        margin-top: 45px;
+        }
+        
+        .LD_finish{
+        padding: 15px 40px;
+        font-size: 1.8em;
+        }
+        
+        }
+
+    </style>
+    
+    <apex:slds />
+    <apex:pagemessages />
+    <apex:form id="theFormId">
+        <apex:actionFunction action="{!FinishMethod}" name="FinishMethod"/>
+        <div class="LT_nav">
+            <apex:image id="theImage" value="{!$Resource.LendistryLogo}" width="200" height="200" alt="LendistryLogo"/>
+           
+
+        </div>
+        
+        <div class="slds-col slds-size_8-of-12 Ld_divres" style="margin:0 auto 15px; font-size: large;font-weight: bold;font-family: inherit;" >
+            <apex:image value="{!$Resource.lendistrywebfromThankImg}" width="100%" height="100%"  alt="Lendistry Items needed"/>
+            <p style="padding-left: 3%;font-size: large;font-weight: bold;font-family: inherit;">For step-by-step instructions on how to complete these steps, <a href="https://lendistry.com/wp-content/uploads/2021/01/PPP-Required-Documents-01.27.21.pdf" target="_blank" >please CLICK HERE.</a>
+            </p>
+        </div>
+       
+       <div class="slds-col slds-size_11-of-12 LD_Thankyouapp Ld_divres" style="text-align:center">
+           
+
+        </div> 
+       
+    </apex:form>
+    
+    <div id="myModal" class="modal">
+        <div class="modalclose">
+              <a href="" class="close" onclick="" id="btnClosePopup">&times;</a>
+        
+        <div class="modal-content" id="">
+            <div class="content-container policy-madal slds-m-top_x-small"> 
+                <div class="main-authorization">
+                    <p>
+                        <span>CONSENT TO CREDIT REPORTING:</span>
+                        
+                        The Borrower and Owner(s)/Officer(s) identified above (individually,
+                        
+                        an "Applicant") each represents, acknowledges and agrees that (1) all information and documents
+                        
+                        provided to Lendistry are true, accurate and complete, (2) Applicant will immediately notify LENDISTRY
+                        
+                        of any change in such information or financial condition, (3) Applicant authorizes LENDISTRY to disclose
+                        
+                        all information and documents that LENDISTRY may obtain excluding credit reports to other persons or
+                        
+                        entities (collectively, "Assignees") that may be involved with or acquire commercial loans. (4) By
+                        
+                        agreeing to this authorization, I authorize LENDISTRY and/or Assignees to investigate my credit history
+                        
+                        and financial records including my banking records. As part of such investigation, I authorize LENDISTRY,
+                        
+                        to request and obtain consumer credit reports in connection with the opening, monitoring, renewal, and
+                        
+                        extension of this and other accounts with Experian. If I request, LENDISTRY will tell me whether my
+                        
+                        consumer credit report was requested, and, if so, the name and address of the consumer credit
+                        
+                        reporting agency that furnished the report. (5) LENDISTRY Assignees, and each of their representatives,
+                        
+                        successors, assigns and designees (collectively, "Recipients") are authorized to request and receive any
+                        
+                        investigative reports, credit reports, statements from creditors or financial institutions, verification of
+                        
+                        information, or any other information that a Recipient deems necessary, (6) Applicant waives and
+                        
+                        releases any claims against Recipients and any information providers arising from any act or omission
+                        
+                        relating to requesting, receiving or release of information, and (7) each Owner/Officer represents that
+                        
+                        he or she is authorized to sign this form on behalf of Borrower, Business and any additional Owners
+                        
+                        listed within the application.         
+                    </p>
+                    
+                    <div class="sub-authorization">      
+                        <p>       
+                            <span>TCPA DISCLOSURE &amp; CONSENT:</span>
+                            
+                            By marking &quot;I accept the Terms and Conditions,&quot; notwithstanding any
+                            
+                            current or prior election to opt in or opt out of receiving telemarketing calls or SMS messages (including
+                            
+                            text messages) from Recipients, you expressly consent to receiving marketing and other calls and
+                            
+                            messages, to a landline, wireless or similar devices, including auto-dialed and prerecorded message
+                            
+                            calls, and SMS messages (including text messages) from Recipients, at telephone numbers that you have
+                            
+                            provided. Message and data rates may apply. Consent may be revoked at any time and by any
+                            
+                            reasonable means.
+                            
+                        </p>
+                        
+                        <p>
+                            <span>E-SIGN ACT CONSENT TO ELECTRONIC DISCLOSURES:</span>
+                            
+                            By marking &quot;I accept the Terms and Conditions,&quot;
+                            
+                            you expressly consent to receiving disclosures and documents electronically. If you do not consent to
+                            
+                            receiving disclosures and documents electronically, you will not be able to receive a loan from Lendistry.
+                            
+                            Your consent applies to all the documents and disclosures that we provide to you electronically in
+                            
+                            connection with your application for a Lendistry loan. If you want to withdraw consent before you have
+                            
+                            finished applying for the loan, you may do so by withdrawing your application. Withdrawal of consent
+                            
+                            will not be effective for documents that we have already provided to you electronically.
+                            
+                        </p>                
+                        
+                        <p>LENDISTRY is a licensed California Financial Lender, License # 60DBO66872</p>      
+                    </div>
+                </div>
+            </div>
+         
+
+            <button class="slds-button slds-button--neutral" id="btnCancel">Close</button>
+            </div>
+        </div>
+    </div>
+  
+
+</apex:page>

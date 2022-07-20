@@ -1,0 +1,31 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="search" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="profileMenu" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="navBar" type="Aura.Component[]" required="false"/>
+    <aura:attribute name="newHeader" type="Aura.Component[]" required="false"/>
+      
+  <!--  <div class="slds-float_right">
+        <a onclick="{!c.logout}" style="width: 200px;" title="Logout"><img src="{!$Resource.logout}"/></a>
+    </div>  -->
+    
+    <div class="slds-float_right">
+        <div class="notifications">
+            <forceCommunity:notifications/>
+        </div>
+        <div class="searchRegion">
+            {!v.search}
+        </div>
+        <div class="profileMenuRegion">
+            {!v.profileMenu}
+        </div>
+        <div class="navigation">
+            {!v.navBar}
+        </div>
+        <div class="newHeader">
+            {!v.newHeader}
+        </div>
+        <div class="mainContentArea">
+            {!v.body}
+        </div>  
+    </div>
+</aura:component>

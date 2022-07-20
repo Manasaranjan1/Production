@@ -1,0 +1,7 @@
+<apex:page >
+    <script>
+    window.onload = function() {
+        location.href = "https://www.smartbizloans.com/apply?partner_id=lendistry&sb_apply_form=paycheck_protection";
+    }
+    </script>
+</apex:page>

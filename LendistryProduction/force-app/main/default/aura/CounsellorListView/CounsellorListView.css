@@ -1,0 +1,221 @@
+.THIS .selected{
+    color:orange;
+}
+.THIS .HeaderCss{
+    background-color: lightgray;
+    margin-top: 20px;   
+    word-wrap: break-word;    
+    font-family: Poppins;
+}
+.THIS .xyz{
+    background-color: green;
+}
+
+.THIS .xyz1 {
+    text-align: center;
+    font-family: verdana;
+    font-size: 20px;
+    font-size: 2.5em;
+      margin-left: 100px;
+  margin-right: auto;
+}
+.THIS .xyz2{
+    left: 700px;
+     background-color: lightblue;
+    color: black;
+}
+
+.THIS .widthCss{
+    width: 37%;
+}
+.THIS .widthEntries{
+    width: 60px;
+    margin-top: 7px;
+}
+.THIS .pointerCss{
+    cursor: pointer;  
+    
+}
+.THIS .actionWidth{
+    width: 100px;
+}
+.THIS .grayBackground{
+    background-color: lightgray;
+}
+.THIS .checkBoxCss{
+    padding: 5px 12px;
+    
+}
+.THIS .checkBoxPadding{
+    padding-bottom: 27px;
+    margin-top: 20px;
+}
+.THIS .overflowCss{
+    overflow: hidden;
+}
+
+.THIS .a {
+    position: relative ;
+    
+    line-height: 1.5em;
+    overflow: auto;
+    margin: 0; 
+    white-space: pre-wrap; 
+    word-wrap: break-word;
+    cursor: pointer !important;
+}
+.THIS .aTodayDue {
+    position: relative ;
+    font-weight: normal;  
+    overflow: auto;
+    max-width:600px;
+    word-wrap:break-word;
+    cursor: pointer !important;
+
+}
+
+.THIS .aa {
+    color: rgb(0, 109, 204);
+    text-decoration: none;
+    transition: color .1s linear;
+    position: relative;
+    width: 250px;
+    /* overflow: auto; */
+    margin: 0;
+    cursor: pointer !important;
+    /* padding: 1.5em; */
+    /* white-space: pre-wrap; */
+    /* word-wrap: break-word;*/
+}
+
+.THIS.pageBtn{
+    width: 20px; 
+    height: 15px;
+}
+
+.THIS .refreshBtn{
+    background-color:red !important
+}
+.THIS .aFollwUp{
+    color:blue;
+    font-weight: bold;
+    font-size:10px;
+}
+.THIS .bFollwUp{
+    color:grey;
+    font-weight: normal;
+    font-size:10px;
+}
+
+
+
+.THIS .paddingCss {
+    padding: 0 0 !important;    
+    
+}
+.THIS .slds-table th  .slds-table td {
+    /* padding: .25rem .5rem; */
+    white-space: nowrap;
+    position: relative;
+}
+.THIS .loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    margin-left: 1000%;
+    animation: spin 2s linear infinite;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.THIS .calCss{
+       border-color: rgb(194, 57, 52);
+}
+.THIS .calCss2{
+       border-color: white;
+}
+.THIS .clanderCss{
+        width: 106px;
+}
+.THIS .html {
+  box-sizing: border-box;
+}
+.THIS .intro {
+  max-width: 1280px;
+  margin: 1em auto;
+}
+.THIS .table-scroll {
+  position: relative;
+  width:100%;
+  z-index: 1;
+  margin: auto;
+  overflow: auto;
+  height: 64vh;
+  background: #fff;
+}
+.THIS .table-scroll .table {
+  width: 100%;
+  min-width: 1280px;
+  margin: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+.THIS .table-wrap {
+  position: relative;
+}
+.THIS .table-scroll th {
+    border-top: 1px solid #dddddd;
+    padding: 5px 10px;
+    vertical-align: top;
+}
+.THIS .table .tbody td {
+    padding: 8px 10px;
+}
+.THIS .table-scroll td {
+  padding: 5px 10px;
+  vertical-align: top;
+}
+.THIS .table-scroll thead th {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-bottom-color: transparent;
+}
+.THIS.mainCss {
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 10px;
+    margin: 0;
+    color: #333;
+}
+
+.THIS .table-scroll thead tr.slds-text th {
+	top: 40px;   
+}
+.THIS .slds-input__icon {
+    right: -1.25rem;
+}
+.THIS.toggle {
+    display: none;
+}
+.THIS .toggle {
+    display: none;
+}
+.THIS .alignCenter{
+   padding-left: 96%;
+}
+.THIS .ltgCardCls{
+    font-family: Poppins;
+    font-weight: bold;
+}
+.THIS .btncssb{
+    height: 20px;
+}
+.THIS .fontstyle{
+    font-family: Poppins;
+}

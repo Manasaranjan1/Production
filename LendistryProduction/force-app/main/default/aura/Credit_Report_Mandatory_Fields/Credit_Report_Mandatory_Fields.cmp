@@ -1,0 +1,38 @@
+<aura:component Controller="CreditReportCTRL" implements="force:hasRecordId,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    <aura:attribute name="recordId" type="Id" />
+    <aura:attribute name="LeadFieldValues" type="List" />
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+        <thead>
+            <tr class="slds-line-height_reset">
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="Field Name">Field Name</div>
+                </th>
+                <th class="" scope="col">
+                    <div class="slds-truncate" title="Status">Status</div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <aura:iteration items="{!v.LeadFieldValues}" var="cus" indexVar="key">
+                <tr class="slds-hint-parent">
+                    <td data-label="Field Name">
+                        <div class="slds-truncate" title="{!cus.key}">{!cus.key}</div>
+                    </td>
+                    <td data-label="Status">
+                        <aura:if isTrue="{!cus.value == true}">
+                            <div style="background-color:orange" class="slds-truncate" title="{!cus.value}">
+                                Field is Mandatory Field for Credit Report
+                            </div>
+                            <aura:set attribute="else">
+                                <div style="background-color:lightgreen" class="slds-truncate" title="{!cus.value}">
+                                    Field Ready to Use Credit Report
+                                </div>
+                            </aura:set>
+                        </aura:if>
+                    </td>
+                </tr>
+            </aura:iteration>
+        </tbody>
+    </table>
+</aura:component>

@@ -1,0 +1,32 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="availablePickList" type="String[]" 
+                    description="Available picklists"/>
+    <aura:attribute name="brokerFields" type="String[]"/>
+    <aura:attribute name="finalString" type="String"  description="for show hide add note action"/>
+    <aura:attribute name="mapOfFieldset" type="Object"  description="for show hide add note action"/>
+    <aura:attribute name="conditionTypeOptions" type="List" default="[{'label':'--none--','value':''}]" description="used ofr display the pipeline picklist"/>
+    <aura:attribute name="selectedPickList" type="String[]" description="Available picklists"/>
+    <aura:registerEvent name="handleColumn" type="c:Eqnx_IterationComponentEvt" description="its a handler for clear the picklist"/>
+    
+    <div class="slds-grid" style="">
+        <div >
+            <ui:inputSelect multiple="true" aura:Id="availablePList" >
+                <aura:iteration items="{!v.availablePickList}" var="val">
+                    <ui:inputSelectOption text="{!val}" label="{!val}" value="true"/>
+                </aura:iteration>
+            </ui:inputSelect>
+        </div>
+        <div><br/><br/>
+            <lightning:button class="slds-button" label=">>" onclick="{! c.selectValues }"/><br/>
+            <lightning:button class="slds-button" label="&lt;&lt;" onclick="{! c.deselectValues }"/>
+        </div>
+        <div>
+            <ui:inputSelect multiple="true" aura:Id="selectedPList">
+                <aura:iteration items="{!v.selectedPickList}" var="val">
+                    <ui:inputSelectOption text="{!val}" label="{!val}" value="true"/>
+                </aura:iteration>
+            </ui:inputSelect>
+        </div>
+    </div>
+    
+</aura:component>

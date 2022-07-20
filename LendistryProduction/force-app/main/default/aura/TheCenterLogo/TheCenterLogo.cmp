@@ -1,0 +1,147 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" 
+                controller = "CounsellorlListcontroller"             
+                access="global" >
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- Newly ADDed  -->
+    <aura:attribute name="ltngCurrTime" type="String" default="00:00:00"/>
+    
+    <aura:attribute name="ltngIsDisplayed" type="boolean" default="false"/> 
+    <aura:attribute name="DisableStart" type="boolean" default="false"/> 
+    <aura:attribute name="DisableStop" type="boolean" default="false"/>
+    <aura:attribute name="DisableReset" type="boolean" default="false"/>
+    
+    <aura:attribute name="TimeinHour" type="string" default="0"/> 
+    <aura:attribute name="DisableBtn" type="Boolean" default="false"/>
+    
+    <aura:attribute name="TimeinMM" type="string" default="0"/> 
+    <aura:attribute name="TimeinHH" type="string" default="0"/>
+    <aura:attribute name="DisableBtn2" type="Boolean" default="false"/>
+    <aura:attribute name="Message" type="string" default="Please Enter Time"/> 
+    <aura:attribute name="whichpage" type="Integer" default="2" />
+    <aura:attribute name="showViewOrEdit" type="Boolean" default="false"/>
+    
+
+
+    <!-- Newly ADDed  -->
+    
+    <div class="slds-grid slds-gutters" >
+        <div style="margin-left:-11px;">
+            <span> <img src="{!$Resource.CenterLogo}" style="width: 200px;"/></span>
+        </div>
+                
+        <!-- Newly Added --> 
+      <!--<div style="margin-left:110px;">
+            <br/>
+            <c:CountdownTimer />
+        </div>-->
+        
+        <!-- Newly Added --> 
+       <aura:if isTrue="{!v.recordId}">
+            <!--<c:theAutomaticTimeTracking name="theAutomaticTimeTracking" />-->
+            <aura:set attribute="else" >
+                <div class="slds-hidden">
+                   <!-- <c:theAutomaticTimeTracking name="theAutomaticTimeTracking" />-->
+                </div>
+                
+            </aura:set>
+  		</aura:if> 
+        <!-- Newly Added --> 
+        
+        <!-- Time Tracker Start -->            
+        <div class="slds-col">
+            <div class="slds-card slds-align_absolute-center" 
+                                    style="width:230px;padding:8px; height:70px;padding:2px;" >
+                <div class="slds-grid slds-wrap" >
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" >
+                        {!v.ltngCurrTime}
+                    </div>
+                    <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" style="color:white">
+                        <lightning:button variant="brand" label="Start" 
+                                          onclick="{! c.handleStartClick }" 
+                                          disabled="{!v.DisableStart}" class="whiteCss"/>
+                        <lightning:button variant="brand" label="Stop" 
+                                          onclick="{! c.handleStopClick }" 
+                                          disabled="{!v.DisableStop}" class="whiteCss"/>
+                        <lightning:button variant="brand" label="Reset" 
+                                          onclick="{! c.handleResetClick }" 
+                                          disabled="{!v.DisableReset}" class="whiteCss"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Time Tracker EnD -->
+        
+        <!-- Input Time Field HH MM Part 2 -->
+        
+        <div class="slds-col">        
+            <div class="slds-card" style="width:210px;padding:2px; height:70px;padding:2px;" >
+                <div class="slds-grid slds-wrap" >
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-align_absolute-center" >
+                        
+                    </div> 
+                    
+                    
+                    <div class="slds-col slds-size_1-of-1 slds-align_absolute-center">                       
+                        
+                        <div>                              
+                            <lightning:input type="text" 
+                                             name="input2"
+                                             style="width:60px"
+                                             label="HH" value="{!v.TimeinHH}" aura:id="hh" maxlength="2" />
+                            
+                        </div>&nbsp;
+                        <div>  
+                            <lightning:input type="text" 
+                                             name="input3"
+                                             style="width:60px"
+                                             label="MM" value="{!v.TimeinMM}" aura:id="mm" maxlength="2" />
+                        </div> &nbsp;&nbsp;   
+                        
+                        <div>
+                            <span>
+                                <br/>
+                                <lightning:button variant="brand" 
+                                                  label="OK"  class="whiteCss"
+                                                  title="Ok" onclick="{!c.saveTime2}" disabled="{!v.DisableBtn2}" />
+                            </span>    
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>      
+        <!-- Input Time Field HH MM Part 2 -->
+        
+        
+        <!-- Newly Added Close -->
+        
+        <!-- Noti bell Logout -->
+        <div class="slds-col">       
+            <span>  <br/> <br/>
+              <div class="slds-grid slds-wrap slds-float_right">
+                  <div class="slds-col slds-size_1-of-2">
+                    <c:NotificationBellicon/>
+                    <!-- <a onclick="{!c.back}" title="Back"><img src="{!$Resource.back}"/></a>  -->
+                  </div>
+        
+                  <div class="slds-col slds-size_1-of-2">
+                    <a onclick="{!c.logout}" title="Logout"><img src="{!$Resource.logout}"/></a>
+                  </div>                  
+              </div>    
+            </span>
+         </div> 
+       <!-- Noti bell Logout --> 
+      
+    </div>
+    
+    
+    <!--<button class="slds-button slds-button_brand" onclick="{!c.back}">
+         <lightning:icon iconName="utility:chevronleft" size="medium" alternativeText="left" />
+        <p style="color:white">&nbsp;Back</p>
+    </button>-->
+    
+</aura:component>
